@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    combobox (0.1.0)
+    hotwire_combobox (0.1.0)
       rails (>= 7.0.7.2)
 
 GEM
@@ -161,7 +161,7 @@ PLATFORMS
   arm64-darwin-22
 
 DEPENDENCIES
-  combobox!
+  hotwire_combobox!
   puma
   sprockets-rails
   sqlite3

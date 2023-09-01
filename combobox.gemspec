@@ -1,7 +1,7 @@
 require_relative "lib/combobox/version"
 
 Gem::Specification.new do |spec|
-  spec.name        = "combobox"
+  spec.name        = "hotwire_combobox"
   spec.version     = Combobox::VERSION
   spec.authors     = ["Jose Farias"]
   spec.email       = ["jose@farias.mx"]
