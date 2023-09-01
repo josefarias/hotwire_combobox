@@ -5,8 +5,8 @@ Gem::Specification.new do |spec|
   spec.version     = Combobox::VERSION
   spec.authors     = ["Jose Farias"]
   spec.email       = ["jose@farias.mx"]
-  spec.homepage    = "https://jose.omg.lol/"
-  spec.summary     = "A combobox implementation for Ruby on Rails."
+  spec.homepage    = "https://github.com/josefarias/combobox"
+  spec.summary     = "A combobox implementation for Ruby on Rails"
   spec.description = "A combobox implementation for Ruby on Rails."
   spec.license     = "MIT"
 
