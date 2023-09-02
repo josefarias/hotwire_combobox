@@ -22,7 +22,20 @@ $ gem install hotwire_combobox
 ```
 
 ## Contributing
-Contribution directions go here.
+
+### Setup
+```bash
+$ bin/setup
+```
+
+### Running the tests
+```bash
+$ bundle exec rake app:test
+```
+
+```bash
+$ bundle exec rake app:test:system
+```
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
