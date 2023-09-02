@@ -4,7 +4,7 @@ module Combobox
 
     initializer "combobox.view_helpers" do
       ActiveSupport.on_load :action_controller do
-        helper Combobox::ApplicationHelper
+        helper Combobox::Helper
       end
     end
 
