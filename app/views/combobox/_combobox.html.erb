@@ -1,1 +1,9 @@
-<input type="text" role="combobox" data-controller="combobox">
+<%= tag.div data: parent_data do %>
+  <%= tag.input **attrs %>
+
+  <%= tag.ul id: listbox_id, hidden: "", role: :listbox, data: { "combobox-target": "listbox" } do |ul| %>
+    <% options.each do |option| %>
+      <%= tag.li option, role: :option %>
+    <% end %>
+  <% end %>
+<% end %>
