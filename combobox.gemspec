@@ -5,14 +5,14 @@ Gem::Specification.new do |spec|
   spec.version     = Combobox::VERSION
   spec.authors     = ["Jose Farias"]
   spec.email       = ["jose@farias.mx"]
-  spec.homepage    = "https://github.com/josefarias/combobox"
+  spec.homepage    = "https://github.com/josefarias/hotwire_combobox"
   spec.summary     = "A combobox implementation for Ruby on Rails"
   spec.description = "A combobox implementation for Ruby on Rails."
   spec.license     = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/josefarias/combobox"
-  spec.metadata["changelog_uri"] = "https://github.com/josefarias/combobox"
+  spec.metadata["source_code_uri"] = "https://github.com/josefarias/hotwire_combobox"
+  spec.metadata["changelog_uri"] = "https://github.com/josefarias/hotwire_combobox"
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
     Dir["{app,config,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
