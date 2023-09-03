@@ -1,0 +1,8 @@
+<style>
+  .hotwire-combobox ul { padding: 0; }
+  .hotwire-combobox li { list-style: none; }
+</style>
+
+<%= combobox_tag "state",
+      id: "state-field",
+      options: @states.map { |state| render("state", state: state) } %>

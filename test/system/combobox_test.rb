@@ -27,6 +27,13 @@ class ComboboxTest < ApplicationSystemTestCase
     assert_selector "li[role=option]", text: "Alabama"
   end
 
+  test "options can contain html" do
+    visit html_combobox_path
+    open_combobox
+    assert_selector "ul[role=listbox]", id: "state-field-listbox"
+    assert_selector "li[role=option] p", text: "Alabama"
+  end
+
   private
     def open_combobox
       find("input[role=combobox]").click

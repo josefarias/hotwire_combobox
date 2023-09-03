@@ -37,5 +37,10 @@ $ bundle exec rake app:test
 $ bundle exec rake app:test:system
 ```
 
+### Running the dummy app
+```bash
+$ test/dummy/bin/rails s
+```
+
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
