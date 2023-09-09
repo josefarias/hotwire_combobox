@@ -117,6 +117,8 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.19.0)
+    minitest-focus (1.4.0)
+      minitest (>= 4, < 6)
     net-imap (0.3.7)
       date
       net-protocol
@@ -211,6 +213,7 @@ DEPENDENCIES
   debug
   hotwire_combobox!
   importmap-rails
+  minitest-focus
   propshaft
   puma
   selenium-webdriver
