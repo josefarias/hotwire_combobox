@@ -4,13 +4,6 @@ export default class extends Controller {
   static targets = [ "combobox", "listbox" ]
   static values = { expanded: Boolean }
 
-  connect() {
-    this.comboboxTarget.setAttribute("role", "combobox")
-    this.comboboxTarget.setAttribute("aria-owns", this.listboxTarget.id)
-    this.comboboxTarget.setAttribute("aria-controls", this.listboxTarget.id)
-    this.comboboxTarget.setAttribute("aria-haspopup", "listbox")
-  }
-
   toggle() {
     this.expandedValue = !this.expandedValue
   }

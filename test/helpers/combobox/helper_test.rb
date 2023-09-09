@@ -36,15 +36,28 @@ class Combobox::HelperTest < ApplicationViewTestCase
   test "passing open" do
     tag = combobox_tag :foo, open: true
 
-    assert_attrs tag, tag_name: :div, data_combobox_expanded_value: "true"
+    assert_attrs tag, tag_name: :div, "data-combobox-expanded-value": "true"
+  end
+
+  test "a11y attributes" do
+    tag = combobox_tag :foo, id: :foobar
+
+    assert_attrs tag, role: "combobox",
+      "aria-controls": "foobar-listbox", "aria-owns": "foobar-listbox",
+      "aria-haspopup": "listbox", "aria-autocomplete": "both"
   end
 
   private
     def assert_attrs(tag, tag_name: :input, **attrs)
       attrs = attrs.map do |k, v|
-        %Q(#{Regexp.escape(k).dasherize}="#{Regexp.escape(v)}".*)
+        %Q(#{escape(k)}="#{escape(v)}".*)
       end.join(" ")
 
       assert_match /<#{tag_name}.* #{attrs}/, tag
+    end
+
+    def escape(value)
+      special_characters = Regexp.union "[]".chars
+      value.to_s.gsub(special_characters) { |char| "\\#{char}" }
     end
 end
