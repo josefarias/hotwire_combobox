@@ -5,4 +5,4 @@
 
 <%= combobox_tag "state",
       id: "state-field",
-      options: @states.map { |state| render("state", state: state) } %>
+      options: html_combobox_options(@states) %>

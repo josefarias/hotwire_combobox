@@ -24,7 +24,7 @@ module Combobox
 
       def default_combobox_data(attrs, data)
         data.reverse_merge! \
-          "action": "click->combobox#toggle ",
+          "action": "focus->combobox#open blur->combobox#close input->combobox#filter",
           "combobox-target": "combobox"
       end
 
@@ -39,7 +39,8 @@ module Combobox
       def default_combobox_parent_data(attrs, data)
         data.reverse_merge! \
           "controller": token_list(:combobox, data.delete(:controller)),
-          "combobox-expanded-value": attrs.delete(:open)
+          "combobox-expanded-value": attrs.delete(:open),
+          "combobox-filterable-attribute-value": "data-filterable-as"
       end
 
       def combobox_listbox_id(id)

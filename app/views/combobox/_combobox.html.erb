@@ -1,9 +1,11 @@
 <%= tag.div class: "hotwire-combobox", data: parent_data do %>
   <%= tag.input **attrs %>
 
-  <%= tag.ul id: listbox_id, hidden: "", role: :listbox, data: { "combobox-target": "listbox" } do |ul| %>
+  <%= tag.ul id: listbox_id, hidden: "", role: :listbox,
+        data: { "combobox-target": "listbox" } do |ul| %>
     <% options.each do |option| %>
-      <%= tag.li option, role: :option %>
+      <%= tag.li option.content, role: :option,
+            data: { "filterable-as": option.filterable_as } %>
     <% end %>
   <% end %>
 <% end %>

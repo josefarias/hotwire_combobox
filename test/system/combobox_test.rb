@@ -34,6 +34,14 @@ class ComboboxTest < ApplicationSystemTestCase
     assert_selector "li[role=option] p", text: "Alabama"
   end
 
+  test "options are filterable" do
+    visit root_path
+    open_combobox
+    find("input[role=combobox]").send_keys("Flo")
+    assert_selector "li[role=option]", text: "Florida"
+    assert_no_selector "li[role=option]", text: "Alabama"
+  end
+
   private
     def open_combobox
       find("input[role=combobox]").click
