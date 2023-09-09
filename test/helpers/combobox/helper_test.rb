@@ -23,7 +23,7 @@ class Combobox::HelperTest < ApplicationViewTestCase
     form = ActionView::Helpers::FormBuilder.new :foo, nil, self, {}
     tag = combobox_tag :bar, form: form
 
-    assert_attrs tag, id: "foo_bar", name: "foo[bar]"
+    assert_attrs tag, name: "foo[bar]", id: "foo_bar"
   end
 
   test "passing an id overrides form builder" do
@@ -47,7 +47,16 @@ class Combobox::HelperTest < ApplicationViewTestCase
       "aria-haspopup": "listbox", "aria-autocomplete": "both"
   end
 
+  test "passing option value, falls back to id" do
+    option = OpenStruct.new id: 1, value: "foo"
+    assert_equal "foo", value_for_listbox_option(option)
+
+    option = OpenStruct.new id: 1
+    assert_equal 1, value_for_listbox_option(option)
+  end
+
   private
+    # `#assert_attrs` expects attrs to appear in the order they are passed.
     def assert_attrs(tag, tag_name: :input, **attrs)
       attrs = attrs.map do |k, v|
         %Q(#{escape(k)}="#{escape(v)}".*)

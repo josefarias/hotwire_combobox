@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "combobox", "listbox" ]
-  static values = { expanded: Boolean, filterableAttribute: String }
+  static targets = [ "combobox", "listbox", "valueField" ]
+  static values = { expanded: Boolean, filterableAttribute: String, autocompletableAttribute: String }
 
   open() {
     this.expandedValue = true
@@ -12,9 +12,16 @@ export default class extends Controller {
     this.expandedValue = false
   }
 
-  filter() {
+  filter(event) {
     const query = this.comboboxTarget.value.trim()
-    this.optionElements.forEach(applyFilter(query, { matching: this.filterableAttributeValue }))
+
+    this.allOptionElements.forEach(applyFilter(query, { matching: this.filterableAttributeValue }))
+
+    if (event.inputType === "deleteContentBackward") {
+      this.deselect(this.selectedOptionElement)
+    } else {
+      this.select(this.visibleOptionElements[0])
+    }
   }
 
   // private
@@ -37,8 +44,46 @@ export default class extends Controller {
     this.comboboxTarget.setAttribute("aria-expanded", false)
   }
 
-  get optionElements() {
+  select(target) {
+    this.allOptionElements.forEach(target => this.deselect(target))
+
+    if (target) {
+      if (this.hasSelectedClass) target.classList.add(this.selectedClass)
+
+      target.setAttribute("aria-selected", true)
+      this.valueFieldTarget.value = target.dataset.value
+
+      this.autocompleteWith(target)
+    }
+  }
+
+  deselect(target) {
+    if (target) {
+      if (this.hasSelectedClass) target.classList.remove(this.selectedClass)
+
+      target.setAttribute("aria-selected", false)
+      this.valueFieldTarget.value = null
+    }
+  }
+
+  autocompleteWith(target) {
+    const typedValue = this.comboboxTarget.value
+    const autocompletedValue = target.dataset.autocompletableAs
+
+    this.comboboxTarget.value = autocompletedValue
+    this.comboboxTarget.setSelectionRange(typedValue.length, autocompletedValue.length)
+  }
+
+  get allOptionElements() {
     return this.listboxTarget.querySelectorAll(`[${this.filterableAttributeValue}]`)
+  }
+
+  get visibleOptionElements() {
+    return [ ...this.allOptionElements ].filter(visible)
+  }
+
+  get selectedOptionElement() {
+    return this.listboxTarget.querySelector("[aria-selected=true]")
   }
 }
 
@@ -53,4 +98,8 @@ function applyFilter(query, { matching }) {
       target.hidden = false
     }
   }
+}
+
+function visible(target) {
+  return !(target.hidden || target.closest("[hidden]"))
 }

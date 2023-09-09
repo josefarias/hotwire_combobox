@@ -20,7 +20,7 @@ class ComboboxTest < ApplicationSystemTestCase
     assert_selector "li[role=option]", text: "Alabama"
   end
 
-  test "can be opened by default if configured that way" do
+  test "combobox can be opened by default if configured that way" do
     visit open_combobox_path
     assert_selector "input[aria-expanded=true]"
     assert_selector "ul[role=listbox]", id: "state-field-listbox"
@@ -40,6 +40,20 @@ class ComboboxTest < ApplicationSystemTestCase
     find("input[role=combobox]").send_keys("Flo")
     assert_selector "li[role=option]", text: "Florida"
     assert_no_selector "li[role=option]", text: "Alabama"
+  end
+
+  test "autocompletion" do
+    visit root_path
+
+    open_combobox
+
+    find("input[role=combobox]").send_keys("Flor")
+    assert_field "state-field-combobox", with: "Florida"
+    assert_field "state-field", type: "hidden", with: "FL"
+
+    find("input[role=combobox]").send_keys(:backspace)
+    assert_field "state-field-combobox", with: "Flor"
+    assert_field "state-field", type: "hidden", with: nil
   end
 
   private
