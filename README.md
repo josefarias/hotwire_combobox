@@ -39,7 +39,7 @@ $ bundle exec rake app:test:system
 
 ### Running the dummy app
 ```bash
-$ test/dummy/bin/rails s
+$ bin/rails s
 ```
 
 ## License

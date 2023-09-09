@@ -1,7 +1,7 @@
 class ComboboxesController < ApplicationController
   before_action :set_states
 
-  def new
+  def plain
   end
 
   def open
