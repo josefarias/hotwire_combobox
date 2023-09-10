@@ -4,7 +4,6 @@
   .selected { background-color: #f0f0f0; }
 </style>
 
-<%= combobox_tag "state",
-      id: "state-field",
+<%= combobox_tag "state", id: "state-field",
       options: html_combobox_options(@states),
       data: { "combobox-selected-class": "selected" } %>
