@@ -5,6 +5,7 @@ module Combobox
         h[:id] = default_combobox_value_field_id attrs, form, name
         h[:name] = default_combobox_value_field_name form, name
         h[:data] = default_combobox_value_field_data
+        h[:value] = form&.object&.public_send(name) || value
       end
 
       attrs[:type] ||= :text
@@ -38,7 +39,12 @@ module Combobox
 
       def default_combobox_data(data)
         data.reverse_merge! \
-          "action": "focus->combobox#open blur->combobox#close input->combobox#filter keydown->combobox#navigate",
+          "action": "
+            focus->combobox#open
+            input->combobox#filter
+            keydown->combobox#navigate
+            click@window->combobox#closeOnClickOutside
+            focusin@window->combobox#closeOnFocusOutside".squish,
           "combobox-target": "combobox"
       end
 

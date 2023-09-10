@@ -19,18 +19,31 @@ class Combobox::HelperTest < ApplicationViewTestCase
     assert_attrs tag, name: "foo"
   end
 
+  test "passing a value" do
+    tag = combobox_tag :foo, :bar
+
+    assert_attrs tag, value: "bar"
+  end
+
   test "passing a form builder object" do
     form = ActionView::Helpers::FormBuilder.new :foo, nil, self, {}
     tag = combobox_tag :bar, form: form
 
-    assert_attrs tag, name: "foo[bar]", id: "foo_bar"
+    assert_attrs tag, name: "foo[bar]", id: "foo_bar" # name is not "bar"
+  end
+
+  test "passing a form builder object overrides value" do
+    form = ActionView::Helpers::FormBuilder.new :foo, OpenStruct.new(bar: "foobar"), self, {}
+    tag = combobox_tag :bar, :baz, form: form
+
+    assert_attrs tag, value: "foobar" # not "baz"
   end
 
   test "passing an id overrides form builder" do
     form = ActionView::Helpers::FormBuilder.new :foo, nil, self, {}
     tag = combobox_tag :bar, form: form, id: :foobar
 
-    assert_attrs tag, id: "foobar"
+    assert_attrs tag, id: "foobar" # not "foo_bar"
   end
 
   test "passing open" do

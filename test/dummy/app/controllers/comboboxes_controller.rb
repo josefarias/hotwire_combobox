@@ -10,6 +10,9 @@ class ComboboxesController < ApplicationController
   def html
   end
 
+  def prefilled
+  end
+
   private
     State = Data.define(:content, :id, :filterable_as, :autocompletable_as)
 

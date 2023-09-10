@@ -5,12 +5,23 @@ export default class extends Controller {
   static targets = [ "combobox", "listbox", "valueField" ]
   static values = { expanded: Boolean, filterableAttribute: String, autocompletableAttribute: String }
 
+  connect() {
+    if (this.valueFieldTarget.value) {
+      this.selectOptionByValue(this.valueFieldTarget.value)
+    }
+  }
+
   open() {
     this.expandedValue = true
   }
 
   close() {
     this.expandedValue = false
+  }
+
+  selectOption(event) {
+    this.select(event.currentTarget)
+    this.commitSelection()
   }
 
   filter(event) {
@@ -29,6 +40,20 @@ export default class extends Controller {
 
   navigate(event) {
     this.keyHandlers[event.key]?.call(this, event)
+  }
+
+  closeOnClickOutside({ target }) {
+    if (this.element.contains(target)) return
+
+    this.close()
+  }
+
+  closeOnFocusOutside({ target }) {
+    if (!this.isOpen) return
+    if (this.element.contains(target)) return
+    if (target.matches("main")) return
+
+    this.close()
   }
 
   // private
@@ -94,6 +119,10 @@ export default class extends Controller {
     this.select(option, { force: true })
   }
 
+  selectOptionByValue(value) {
+    this.allOptions.find(option => option.dataset.value === value)?.click()
+  }
+
   deselect(option) {
     if (option) {
       if (this.hasSelectedClass) option.classList.remove(this.selectedClass)
@@ -124,6 +153,10 @@ export default class extends Controller {
     }
   }
 
+  get allOptions() {
+    return Array.from(this.allOptionElements)
+  }
+
   get allOptionElements() {
     return this.listboxTarget.querySelectorAll(`[${this.filterableAttributeValue}]`)
   }
@@ -138,6 +171,10 @@ export default class extends Controller {
 
   get selectedOptionIndex() {
     return [ ...this.visibleOptionElements ].indexOf(this.selectedOptionElement)
+  }
+
+  get isOpen() {
+    return this.expandedValue
   }
 }
 

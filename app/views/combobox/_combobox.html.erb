@@ -8,7 +8,9 @@
         data: { "combobox-target": "listbox" } do |ul| %>
     <% options.each do |option| %>
       <%= tag.li option.content, id: option.try(:id),
-            role: :option, data: {
+            role: :option, style: "cursor: pointer;",
+            data: {
+              "action": "click->combobox#selectOption",
               "filterable-as": option.try(:filterable_as),
               "autocompletable-as": option.try(:autocompletable_as),
               "value": value_for_listbox_option(option) } %>
