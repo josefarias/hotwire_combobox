@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
+  static classes = [ "selected" ]
   static targets = [ "combobox", "listbox", "valueField" ]
   static values = { expanded: Boolean, filterableAttribute: String, autocompletableAttribute: String }
 
@@ -49,10 +50,6 @@ export default class extends Controller {
 
     if (target) {
       if (this.hasSelectedClass) target.classList.add(this.selectedClass)
-
-      target.setAttribute("aria-selected", true)
-      this.valueFieldTarget.value = target.dataset.value
-
       this.autocompleteWith(target)
     }
   }
@@ -60,7 +57,15 @@ export default class extends Controller {
   deselect(target) {
     if (target) {
       if (this.hasSelectedClass) target.classList.remove(this.selectedClass)
+      this.executeSelect(target, { selected: false })
+    }
+  }
 
+  executeSelect(target, { selected }) {
+    if (selected) {
+      target.setAttribute("aria-selected", true)
+      this.valueFieldTarget.value = target.dataset.value
+    } else {
       target.setAttribute("aria-selected", false)
       this.valueFieldTarget.value = null
     }
@@ -70,8 +75,11 @@ export default class extends Controller {
     const typedValue = this.comboboxTarget.value
     const autocompletedValue = target.dataset.autocompletableAs
 
-    this.comboboxTarget.value = autocompletedValue
-    this.comboboxTarget.setSelectionRange(typedValue.length, autocompletedValue.length)
+    if (autocompletedValue.toLowerCase().startsWith(typedValue.toLowerCase())) {
+      this.comboboxTarget.value = autocompletedValue
+      this.comboboxTarget.setSelectionRange(typedValue.length, autocompletedValue.length)
+      this.executeSelect(target, { selected: true })
+    }
   }
 
   get allOptionElements() {
