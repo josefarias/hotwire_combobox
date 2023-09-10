@@ -38,7 +38,7 @@ module Combobox
 
       def default_combobox_data(data)
         data.reverse_merge! \
-          "action": "focus->combobox#open blur->combobox#close input->combobox#filter",
+          "action": "focus->combobox#open blur->combobox#close input->combobox#filter keydown->combobox#navigate",
           "combobox-target": "combobox"
       end
 
