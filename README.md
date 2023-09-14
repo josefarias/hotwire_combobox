@@ -42,5 +42,10 @@ $ bundle exec rake app:test:system
 $ bin/rails s
 ```
 
+### Releasing
+
+1. Bump the version in `lib/hotwire_combobox/version.rb`
+2. Run `bundle exec rake release`
+
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
