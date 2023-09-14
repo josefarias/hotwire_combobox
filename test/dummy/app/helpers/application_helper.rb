@@ -1,7 +1,7 @@
 module ApplicationHelper
   def html_combobox_options(options)
     options.map do |option|
-      OpenStruct.new \
+      Combobox::Option.new \
         id: option.id,
         content: render("comboboxes/state", state: option.content),
         filterable_as: option.filterable_as,
