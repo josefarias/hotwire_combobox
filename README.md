@@ -8,7 +8,7 @@ How to use my plugin.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "hotwire_combobox"
+gem "hotwire_combobox", require: "combobox"
 ```
 
 And then execute:
