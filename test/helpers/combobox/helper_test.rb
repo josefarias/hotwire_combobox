@@ -49,7 +49,7 @@ class Combobox::HelperTest < ApplicationViewTestCase
   test "passing open" do
     tag = combobox_tag :foo, open: true
 
-    assert_attrs tag, tag_name: :div, "data-combobox-expanded-value": "true"
+    assert_attrs tag, tag_name: :fieldset, "data-combobox-expanded-value": "true"
   end
 
   test "a11y attributes" do
