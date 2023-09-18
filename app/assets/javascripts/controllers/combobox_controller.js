@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static classes = [ "selected" ]
+  static classes = [ "selected", "invalid" ]
   static targets = [ "combobox", "listbox", "valueField" ]
   static values = { expanded: Boolean, filterableAttribute: String, autocompletableAttribute: String }
 
@@ -16,12 +16,13 @@ export default class extends Controller {
   }
 
   close() {
+    this.commitSelection()
     this.expandedValue = false
   }
 
   selectOption(event) {
     this.select(event.currentTarget)
-    this.commitSelection()
+    this.close()
   }
 
   filter(event) {
@@ -76,14 +77,13 @@ export default class extends Controller {
       cancel(event)
     },
     Enter(event) {
-      this.commitSelection()
+      this.close()
       cancel(event)
     }
   }
 
   commitSelection() {
     this.select(this.selectedOptionElement, { force: true })
-    this.close()
   }
 
   expandedValueChanged() {
@@ -109,8 +109,17 @@ export default class extends Controller {
 
     if (option) {
       if (this.hasSelectedClass) option.classList.add(this.selectedClass)
+      if (this.hasInvalidClass) this.comboboxTarget.classList.remove(this.invalidClass)
+
       this.maybeAutocompleteWith(option, { force })
       this.executeSelect(option, { selected: true })
+    } else {
+      if (this.valueIsInvalid) {
+        if (this.hasInvalidClass) this.comboboxTarget.classList.add(this.invalidClass)
+
+        this.comboboxTarget.setAttribute("aria-invalid", true)
+        this.comboboxTarget.setAttribute("aria-errormessage", `Please select a valid option for ${this.comboboxTarget.name}`)
+      }
     }
   }
 
@@ -175,6 +184,11 @@ export default class extends Controller {
 
   get isOpen() {
     return this.expandedValue
+  }
+
+  get valueIsInvalid() {
+    const isRequiredAndEmpty = this.comboboxTarget.required && !this.valueFieldTarget.value
+    return isRequiredAndEmpty
   }
 }
 

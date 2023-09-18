@@ -2,20 +2,20 @@ require "system_test_helper"
 
 class ComboboxTest < ApplicationSystemTestCase
   test "combobox is rendered" do
-    visit root_path
+    visit plain_combobox_path
 
     assert_selector "input[role=combobox]"
   end
 
   test "combobox is closed by default" do
-    visit root_path
+    visit plain_combobox_path
 
     assert_selector "input[aria-expanded=false]"
     assert_no_selector "li"
   end
 
   test "combobox can be opened" do
-    visit root_path
+    visit plain_combobox_path
 
     open_combobox
 
@@ -33,7 +33,7 @@ class ComboboxTest < ApplicationSystemTestCase
   end
 
   test "closing combobox by clicking outside" do
-    visit root_path
+    visit plain_combobox_path
 
     open_combobox
 
@@ -44,7 +44,7 @@ class ComboboxTest < ApplicationSystemTestCase
   end
 
   test "closing combobox by focusing outside" do
-    visit root_path
+    visit plain_combobox_path
 
     open_combobox
 
@@ -64,7 +64,7 @@ class ComboboxTest < ApplicationSystemTestCase
   end
 
   test "options are filterable" do
-    visit root_path
+    visit plain_combobox_path
 
     open_combobox
 
@@ -116,6 +116,30 @@ class ComboboxTest < ApplicationSystemTestCase
     assert_field "state-field-combobox", with: "Florid"
     assert_field "state-field", type: "hidden", with: nil
     assert_no_selector "li[role=option].selected"
+  end
+
+  test "clicking away locks in the current selection" do
+    visit html_combobox_path
+
+    open_combobox
+
+    find("input[role=combobox]").send_keys("lor")
+    find("body").click
+    assert_selector "input[aria-expanded=false]"
+    assert_field "state-field-combobox", with: "Florida"
+    assert_field "state-field", type: "hidden", with: "FL"
+  end
+
+  test "focusing away locks in the current selection" do
+    visit plain_combobox_path
+
+    open_combobox
+
+    find("input[role=combobox]").send_keys("lor")
+    find("body").send_keys(:tab)
+    assert_selector "input[aria-expanded=false]"
+    assert_field "state-field-combobox", with: "Florida"
+    assert_field "state-field", type: "hidden", with: "FL"
   end
 
   test "navigating with the arrow keys" do
@@ -177,6 +201,26 @@ class ComboboxTest < ApplicationSystemTestCase
     open_combobox
 
     assert_selector "li[role=option].selected", text: "Michigan"
+  end
+
+  test "combobox is invalid if required and empty" do
+    visit required_combobox_path
+
+    open_combobox
+
+    assert_no_selector "input[aria-invalid=true]"
+    find("input[role=combobox]").send_keys("Flor", :backspace, :enter)
+    assert_selector "input[aria-invalid=true]"
+  end
+
+  test "combobox is not invalid if empty but not required" do
+    visit plain_combobox_path
+
+    open_combobox
+
+    assert_no_selector "input[aria-invalid=true]"
+    find("input[role=combobox]").send_keys("Flor", :backspace, :enter)
+    assert_no_selector "input[aria-invalid=true]"
   end
 
   private

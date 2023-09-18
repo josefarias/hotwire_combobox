@@ -13,6 +13,9 @@ class ComboboxesController < ApplicationController
   def prefilled
   end
 
+  def required
+  end
+
   private
     def set_states
       @states = [
