@@ -1,6 +1,6 @@
 require "system_test_helper"
 
-class ComboboxTest < ApplicationSystemTestCase
+class HotwireComboboxTest < ApplicationSystemTestCase
   test "combobox is rendered" do
     visit plain_combobox_path
 
@@ -20,7 +20,7 @@ class ComboboxTest < ApplicationSystemTestCase
     open_combobox
 
     assert_selector "input[aria-expanded=true]"
-    assert_selector "ul[role=listbox]", id: "state-field-listbox"
+    assert_selector "ul[role=listbox]", id: "state-field-hw-listbox"
     assert_selector "li[role=option]", text: "Alabama"
   end
 
@@ -28,7 +28,7 @@ class ComboboxTest < ApplicationSystemTestCase
     visit open_combobox_path
 
     assert_selector "input[aria-expanded=true]"
-    assert_selector "ul[role=listbox]", id: "state-field-listbox"
+    assert_selector "ul[role=listbox]", id: "state-field-hw-listbox"
     assert_selector "li[role=option]", text: "Alabama"
   end
 
@@ -59,7 +59,7 @@ class ComboboxTest < ApplicationSystemTestCase
 
     open_combobox
 
-    assert_selector "ul[role=listbox]", id: "state-field-listbox"
+    assert_selector "ul[role=listbox]", id: "state-field-hw-listbox"
     assert_selector "li[role=option] p", text: "Alabama"
   end
 
@@ -79,12 +79,12 @@ class ComboboxTest < ApplicationSystemTestCase
     open_combobox
 
     find("input[role=combobox]").send_keys("Flor")
-    assert_field "state-field-combobox", with: "Florida"
+    assert_field "state-field-hw-combobox", with: "Florida"
     assert_field "state-field", type: "hidden", with: "FL"
     assert_selector "li[role=option].selected", text: "Florida"
 
     find("input[role=combobox]").send_keys(:backspace)
-    assert_field "state-field-combobox", with: "Flor"
+    assert_field "state-field-hw-combobox", with: "Flor"
     assert_field "state-field", type: "hidden", with: nil
     assert_no_selector "li[role=option].selected"
   end
@@ -95,7 +95,7 @@ class ComboboxTest < ApplicationSystemTestCase
     open_combobox
 
     find("input[role=combobox]").send_keys("lor")
-    assert_field "state-field-combobox", with: "lor"
+    assert_field "state-field-hw-combobox", with: "lor"
     assert_field "state-field", type: "hidden", with: "FL"
     assert_selector "li[role=option].selected", text: "Florida"
   end
@@ -107,13 +107,13 @@ class ComboboxTest < ApplicationSystemTestCase
 
     find("input[role=combobox]").send_keys("lor", :enter)
     assert_selector "input[aria-expanded=false]"
-    assert_field "state-field-combobox", with: "Florida"
+    assert_field "state-field-hw-combobox", with: "Florida"
     assert_field "state-field", type: "hidden", with: "FL"
     assert_no_selector "li[role=option].selected", text: "Florida" # because the list is closed
 
     find("input[role=combobox]").send_keys(:backspace)
     assert_selector "input[aria-expanded=true]"
-    assert_field "state-field-combobox", with: "Florid"
+    assert_field "state-field-hw-combobox", with: "Florid"
     assert_field "state-field", type: "hidden", with: nil
     assert_no_selector "li[role=option].selected"
   end
@@ -126,7 +126,7 @@ class ComboboxTest < ApplicationSystemTestCase
     find("input[role=combobox]").send_keys("lor")
     find("body").click
     assert_selector "input[aria-expanded=false]"
-    assert_field "state-field-combobox", with: "Florida"
+    assert_field "state-field-hw-combobox", with: "Florida"
     assert_field "state-field", type: "hidden", with: "FL"
   end
 
@@ -138,7 +138,7 @@ class ComboboxTest < ApplicationSystemTestCase
     find("input[role=combobox]").send_keys("lor")
     find("body").send_keys(:tab)
     assert_selector "input[aria-expanded=false]"
-    assert_field "state-field-combobox", with: "Florida"
+    assert_field "state-field-hw-combobox", with: "Florida"
     assert_field "state-field", type: "hidden", with: "FL"
   end
 
@@ -182,12 +182,12 @@ class ComboboxTest < ApplicationSystemTestCase
 
     open_combobox
 
-    assert_field "state-field-combobox", with: nil
+    assert_field "state-field-hw-combobox", with: nil
     assert_field "state-field", type: "hidden", with: nil
 
     find("li[role=option]", text: "Florida").click
     assert_selector "input[aria-expanded=false]"
-    assert_field "state-field-combobox", with: "Florida"
+    assert_field "state-field-hw-combobox", with: "Florida"
     assert_field "state-field", type: "hidden", with: "FL"
   end
 
@@ -195,7 +195,7 @@ class ComboboxTest < ApplicationSystemTestCase
     visit prefilled_combobox_path
 
     assert_selector "input[aria-expanded=false]"
-    assert_field "state-field-combobox", with: "Michigan"
+    assert_field "state-field-hw-combobox", with: "Michigan"
     assert_field "state-field", type: "hidden", with: "MI"
 
     open_combobox

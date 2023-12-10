@@ -1,9 +1,9 @@
 <style>
-  .hotwire-combobox ul { padding: 0; }
-  .hotwire-combobox li { list-style: none; }
+  .hw-combobox ul { padding: 0; }
+  .hw-combobox li { list-style: none; }
   .selected { background-color: #f0f0f0; }
 </style>
 
-<%= combobox_tag "state", id: "state-field",
+<%= hw_combobox_tag "state", id: "state-field",
       options: html_combobox_options(@states),
-      data: { "combobox-selected-class": "selected" } %>
+      data: { "hw-combobox-selected-class": "selected" } %>

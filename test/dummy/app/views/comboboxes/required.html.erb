@@ -2,5 +2,5 @@
   .invalid { border: 1px solid red; }
 </style>
 
-<%= combobox_tag "state", id: "state-field", required: true,
-      options: @states, data: { "combobox-invalid-class": "invalid" } %>
+<%= hw_combobox_tag "state", id: "state-field", required: true,
+      options: @states, data: { "hw-combobox-invalid-class": "invalid" } %>

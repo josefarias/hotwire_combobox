@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  mount Combobox::Engine => "/combobox"
+  mount HotwireCombobox::Engine => "/hotwire_combobox"
 
   get "plain_combobox", to: "comboboxes#plain"
   get "open_combobox", to: "comboboxes#open"
