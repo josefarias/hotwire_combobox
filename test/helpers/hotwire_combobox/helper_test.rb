@@ -1,6 +1,19 @@
 require "test_helper"
 
 class HotwireCombobox::HelperTest < ApplicationViewTestCase
+  test "hwoption instantiates a HotwireCombobox::Option" do
+    assert_instance_of HotwireCombobox::Option, hwbox_option(value: :foo, display: :bar)
+  end
+
+  test "hwoptions instantiates an array of HotwireCombobox::Option" do
+    options = hwbox_options [
+      { value: :foo, display: :bar },
+      { value: :foobar, display: :barfoo }
+    ]
+
+    assert options.all? { |option| HotwireCombobox::Option === option }
+  end
+
   test "passing an input type" do
     tag = hw_combobox_tag :foo, type: :search
 
@@ -62,10 +75,34 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
 
   test "passing option value, falls back to id" do
     option = OpenStruct.new id: 1, value: "foo"
-    assert_equal "foo", value_for_hw_listbox_option(option)
+    assert_equal "foo", hw_listbox_option_value(option)
 
     option = OpenStruct.new id: 1
-    assert_equal 1, value_for_hw_listbox_option(option)
+    assert_equal 1, hw_listbox_option_value(option)
+  end
+
+  test "content falls back to display" do
+    option = OpenStruct.new content: "foo"
+    assert_equal "foo", hw_listbox_option_content(option)
+
+    option = OpenStruct.new display: "bar"
+    assert_equal "bar", hw_listbox_option_content(option)
+  end
+
+  test "filterable_as falls back to display" do
+    option = OpenStruct.new filterable_as: "foo"
+    assert_equal "foo", hw_listbox_option_filterable_as(option)
+
+    option = OpenStruct.new display: "bar"
+    assert_equal "bar", hw_listbox_option_filterable_as(option)
+  end
+
+  test "autocompletable_as falls back to display" do
+    option = OpenStruct.new autocompletable_as: "foo"
+    assert_equal "foo", hw_listbox_option_autocompletable_as(option)
+
+    option = OpenStruct.new display: "bar"
+    assert_equal "bar", hw_listbox_option_autocompletable_as(option)
   end
 
   private

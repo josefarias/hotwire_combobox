@@ -1,5 +1,13 @@
 module HotwireCombobox
   module Helper
+    def hwbox_option(...)
+      HotwireCombobox::Option.new(...)
+    end
+
+    def hwbox_options(options)
+      options.map { |option| hwbox_option(**option) }
+    end
+
     def hw_combobox_tag(name, value = nil, form: nil, options: [], data: {}, input: {}, **attrs)
       value_field_attrs = {}.tap do |h|
         h[:id] = default_hw_combobox_value_field_id attrs, form, name
@@ -20,8 +28,24 @@ module HotwireCombobox
         parent_data: default_hw_combobox_parent_data(attrs, data)
     end
 
-    def value_for_hw_listbox_option(option)
+    def hw_listbox_option_id(option)
+      option.try(:id)
+    end
+
+    def hw_listbox_option_value(option)
       option.try(:value) || option.id
+    end
+
+    def hw_listbox_option_content(option)
+      option.try(:content) || option.try(:display)
+    end
+
+    def hw_listbox_option_filterable_as(option)
+      option.try(:filterable_as) || option.try(:display)
+    end
+
+    def hw_listbox_option_autocompletable_as(option)
+      option.try(:autocompletable_as) || option.try(:display)
     end
 
     private

@@ -7,13 +7,15 @@
   <%= tag.ul id: listbox_id, hidden: "", role: :listbox,
         data: { "hw-combobox-target": "listbox" } do |ul| %>
     <% options.each do |option| %>
-      <%= tag.li option.content, id: option.try(:id),
-            role: :option, style: "cursor: pointer;",
+      <%= tag.li hw_listbox_option_content(option),
+            id: hw_listbox_option_id(option),
+            role: :option,
+            style: "cursor: pointer;",
             data: {
               "action": "click->hw-combobox#selectOption",
-              "filterable-as": option.try(:filterable_as),
-              "autocompletable-as": option.try(:autocompletable_as),
-              "value": value_for_hw_listbox_option(option) } %>
+              "filterable-as": hw_listbox_option_filterable_as(option),
+              "autocompletable-as": hw_listbox_option_autocompletable_as(option),
+              "value": hw_listbox_option_value(option) } %>
     <% end %>
   <% end %>
 <% end %>
