@@ -45,6 +45,7 @@ $ bin/rails s
 ### Releasing
 
 1. Bump the version in `lib/hotwire_combobox/version.rb`
+2. Commit the change (e.g. `git commit -am "Bump to 0.1.0"`)
 2. Run `bundle exec rake release`
 
 ## License
