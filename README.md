@@ -2,6 +2,9 @@
 
 A combobox implementation for Ruby on Rails apps running on Hotwire.
 
+> [!WARNING]
+> This gem is pre-release software. It's not ready for production use yet and the API is subject to change.
+
 ## Installation
 Add this line to your application's Gemfile:
 
