@@ -49,34 +49,25 @@ Options are what you see when you open the combobox.
 
 The `options` argument takes an array of any objects which respond to:
 
-| Attribute                        | Description                                                                                                                                | Required? |
-|----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
-| `id`                             | Used as the option element's `id` attribute. Only required if `value` is not provided.                                                     | Required*         |
-| `value`                          | Used to populate the input element's `value` attribute. Falls back to calling `id` on the object if not provided.                          | Optional          |
-| `content` <br> **Supports HTML** | Used as the option element's content. Falls back to calling `display` on the object if not provided.                                       | Optional          |
-| `filterable_as`                  | Used to filter down the options when the user types into the input element. Falls back to calling `display` on the object if not provided. | Optional          |
-| `autocompletable_as`             | Used to autocomplete the input element when the user types into it. Falls back to calling `display` on the object if not provided.         | Optional          |
-| `display`                        | Used as a short-hand for other attributes. See the rest of the list for details.                                                           | Optional          |
-
+| Attribute          | Description                                                                                                                                |
+|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| id                 | Used as the option element's `id` attribute. Only required if `value` is not provided.                                                     |
+| value              | Used to populate the input element's `value` attribute. Falls back to calling `id` on the object if not provided.                          |
+| content <br> <small>**Supports HTML**</small> | Used as the option element's content. Falls back to calling `display` on the object if not provided.            |
+| filterable_as      | Used to filter down the options when the user types into the input element. Falls back to calling `display` on the object if not provided. |
+| autocompletable_as | Used to autocomplete the input element when the user types into it. Falls back to calling `display` on the object if not provided.         |
+| display            | Used as a short-hand for other attributes. See the rest of the list for details.                                                           |
 
 > [!NOTE]
 > The `id` attribute is required only if `value` is not provided.
 
-
-The gem provides a `HotwireCombobox::Option` class which you can use to create options:
-
-```ruby
-@states = [
-  HotwireCombobox::Option.new(value: "AL", display: "Alabama"),
-  # ...
-]
-```
-
-If you feel `HotwireCombobox::Option` is too verbose, you can also use the `hwbox_options` helper. It will destructure the hashes you pass to it and create `HotwireCombobox::Option` instances for you:
+You can use the `combobox_options` helper to create an array of option objects which respond to the above methods:
 
 ```ruby
-@states = hwbox_options [
+combobox_options [
   { value: "AL", display: "Alabama" },
+  { value: "AK", display: "Alaska" },
+  { value: "AZ", display: "Arizona" },
   # ...
 ]
 ```
@@ -107,6 +98,20 @@ The library will mark the element as invalid but this won't be noticeable in the
 
 > [!CAUTION]
 > Bad actors can still submit invalid values to the server. You should always validate the input on the server side.
+
+### Naming Conflicts
+
+Your application may have naming conflicts with this gem. If you do, the following config will turn off the `#combobox_options` method:
+
+```ruby
+# config/initializers/hotwire_combobox.rb
+
+HotwireCombobox.setup do |config|
+  config.bypass_convenience_methods = true
+end
+```
+
+You'll still be able to use `#hw_combobox_options` in place of `#combobox_options`.
 
 ## Contributing
 
