@@ -50,11 +50,11 @@ Options are what you see when you open the combobox.
 
 The `options` argument takes an array of any objects which respond to:
 
-| Attribute          | Description                                                                                                                                |
+| Method             | Description                                                                                                                                |
 |--------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
 | id                 | Used as the option element's `id` attribute. Only required if `value` is not provided.                                                     |
 | value              | Used to populate the input element's `value` attribute. Falls back to calling `id` on the object if not provided.                          |
-| content <br> <small>**Supports HTML**</small> | Used as the option element's content. Falls back to calling `display` on the object if not provided.            |
+| content            | **Supports HTML** <br> Used as the option element's content. Falls back to calling `display` on the object if not provided.                |
 | filterable_as      | Used to filter down the options when the user types into the input element. Falls back to calling `display` on the object if not provided. |
 | autocompletable_as | Used to autocomplete the input element when the user types into it. Falls back to calling `display` on the object if not provided.         |
 | display            | Used as a short-hand for other attributes. See the rest of the list for details.                                                           |
