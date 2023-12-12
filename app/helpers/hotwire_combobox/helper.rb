@@ -1,8 +1,13 @@
 module HotwireCombobox
   module Helper
+    class << self
+      delegate :bypass_convenience_methods?, to: :HotwireCombobox
+    end
+
     def hw_combobox_options(options)
       options.map { |option| hw_combobox_option(**option) }
     end
+    alias_method :combobox_options, :hw_combobox_options unless bypass_convenience_methods?
 
     def hw_combobox_tag(name, value = nil, form: nil, options: [], data: {}, input: {}, **attrs)
       value_field_attrs = {}.tap do |h|
@@ -23,11 +28,7 @@ module HotwireCombobox
         listbox_id: hw_combobox_listbox_id(value_field_attrs[:id]),
         parent_data: default_hw_combobox_parent_data(attrs, data)
     end
-
-    unless HotwireCombobox.bypass_convenience_methods?
-      alias_method :combobox_options, :hw_combobox_options
-      alias_method :combobox_tag, :hw_combobox_tag
-    end
+    alias_method :combobox_tag, :hw_combobox_tag unless bypass_convenience_methods?
 
     def hw_listbox_option_id(option)
       option.try(:id)
