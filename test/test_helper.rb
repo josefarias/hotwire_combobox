@@ -14,4 +14,9 @@ if ActiveSupport::TestCase.respond_to?(:fixture_path=)
   ActiveSupport::TestCase.fixtures :all
 end
 
+Dir.glob("test/lib/helpers/**/*.rb").each do |helper|
+  path = Pathname.new(helper).relative_path_from(Pathname.new("test"))
+  require path.to_s
+end
+
 require "application_view_test_case"

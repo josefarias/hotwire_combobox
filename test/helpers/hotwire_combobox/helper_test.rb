@@ -1,17 +1,25 @@
 require "test_helper"
 
 class HotwireCombobox::HelperTest < ApplicationViewTestCase
-  test "hwoption instantiates a HotwireCombobox::Option" do
-    assert_instance_of HotwireCombobox::Option, hwbox_option(value: :foo, display: :bar)
-  end
-
-  test "hwoptions instantiates an array of HotwireCombobox::Option" do
-    options = hwbox_options [
+  test "hw_combobox_options instantiates an array of `HotwireCombobox::Option`s" do
+    options = hw_combobox_options [
       { value: :foo, display: :bar },
       { value: :foobar, display: :barfoo }
     ]
 
     assert options.all? { |option| HotwireCombobox::Option === option }
+  end
+
+  test "combobox_options is an alias for hw_combobox_options" do
+    assert_equal \
+      HotwireCombobox::Helper.instance_method(:hw_combobox_options),
+      HotwireCombobox::Helper.instance_method(:combobox_options)
+  end
+
+  test "combobox_options is not defined when bypassing convenience methods" do
+    swap_config bypass_convenience_methods: true do
+      assert_not HotwireCombobox::Helper.instance_methods.include?(:combobox_options)
+    end
   end
 
   test "passing an input type" do

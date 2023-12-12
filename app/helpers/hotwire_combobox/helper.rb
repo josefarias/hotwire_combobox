@@ -1,11 +1,11 @@
 module HotwireCombobox
   module Helper
-    def hwbox_option(...)
-      HotwireCombobox::Option.new(...)
+    def hw_combobox_options(options)
+      options.map { |option| hw_combobox_option(**option) }
     end
 
-    def hwbox_options(options)
-      options.map { |option| hwbox_option(**option) }
+    unless HotwireCombobox.bypass_convenience_methods?
+      alias_method :combobox_options, :hw_combobox_options
     end
 
     def hw_combobox_tag(name, value = nil, form: nil, options: [], data: {}, input: {}, **attrs)
@@ -49,6 +49,10 @@ module HotwireCombobox
     end
 
     private
+      def hw_combobox_option(...)
+        HotwireCombobox::Option.new(...)
+      end
+
       def default_hw_combobox_value_field_id(attrs, form, name)
         attrs.delete(:id) || form&.field_id(name)
       end

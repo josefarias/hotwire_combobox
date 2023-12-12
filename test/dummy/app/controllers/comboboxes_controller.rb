@@ -17,14 +17,16 @@ class ComboboxesController < ApplicationController
   end
 
   private
+    delegate :combobox_options, to: "ApplicationController.helpers", private: true
+
     def set_states
-      @states = [
-        HotwireCombobox::Option.new(id: "AL", content: "Alabama", filterable_as: "Alabama", autocompletable_as: "Alabama"),
-        HotwireCombobox::Option.new(id: "FL", content: "Florida", filterable_as: "Florida", autocompletable_as: "Florida"),
-        HotwireCombobox::Option.new(id: "MI", content: "Michigan", filterable_as: "Michigan", autocompletable_as: "Michigan"),
-        HotwireCombobox::Option.new(id: "MN", content: "Minnesota", filterable_as: "Minnesota", autocompletable_as: "Minnesota"),
-        HotwireCombobox::Option.new(id: "MS", content: "Mississippi", filterable_as: "Mississippi", autocompletable_as: "Mississippi"),
-        HotwireCombobox::Option.new(id: "MO", content: "Missouri", filterable_as: "Missouri", autocompletable_as: "Missouri")
+      @states = combobox_options [
+        { id: "AL", display: "Alabama" },
+        { id: "FL", display: "Florida" },
+        { id: "MI", display: "Michigan" },
+        { id: "MN", display: "Minnesota" },
+        { id: "MS", display: "Mississippi" },
+        { id: "MO", display: "Missouri" }
       ]
     end
 end
