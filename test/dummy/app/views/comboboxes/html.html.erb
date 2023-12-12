@@ -4,6 +4,6 @@
   .selected { background-color: #f0f0f0; }
 </style>
 
-<%= hw_combobox_tag "state", id: "state-field",
+<%= combobox_tag "state", id: "state-field",
       options: html_combobox_options(@states),
       data: { "hw-combobox-selected-class": "selected" } %>

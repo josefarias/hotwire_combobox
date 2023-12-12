@@ -81,7 +81,7 @@ The combobox is completely unstyled by default. You can use the following CSS se
 * `.hw-combobox [role="listbox"]` targets the listbox which encloses all option elements.
 * `.hw-combobox [role="option"]` targets each option element inside the listbox.
 
-Additionally, you can pass the following [Stimulus class values](https://stimulus.hotwired.dev/reference/css-classes) to `hw_combobox_tag`:
+Additionally, you can pass the following [Stimulus class values](https://stimulus.hotwired.dev/reference/css-classes) to `combobox_tag`:
 
 * `data-hw-combobox-selected-class`: The class to apply to the selected option while shown inside an open listbox.
 * `data-hw-combobox-invalid-class`: The class to apply to the input element when the current value is invalid.
@@ -101,7 +101,10 @@ The library will mark the element as invalid but this won't be noticeable in the
 
 ### Naming Conflicts
 
-Your application may have naming conflicts with this gem. If you do, the following config will turn off the `#combobox_options` method:
+If your application has naming conflicts with this gem, the following config will turn:
+
+* `#combobox_tag` into `#hw_combobox_tag`
+* `#combobox_options` into `#hw_combobox_options`
 
 ```ruby
 # config/initializers/hotwire_combobox.rb
@@ -110,8 +113,6 @@ HotwireCombobox.setup do |config|
   config.bypass_convenience_methods = true
 end
 ```
-
-You'll still be able to use `#hw_combobox_options` in place of `#combobox_options`.
 
 ## Contributing
 
