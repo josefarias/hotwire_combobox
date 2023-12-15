@@ -16,6 +16,7 @@ export default class extends Controller {
   }
 
   close() {
+    if (!this.isOpen) return
     this.commitSelection()
     this.expandedValue = false
   }
@@ -47,7 +48,6 @@ export default class extends Controller {
     if (this.element.contains(target)) return
 
     this.close()
-    target.focus()
   }
 
   closeOnFocusOutside({ target }) {
@@ -56,7 +56,6 @@ export default class extends Controller {
     if (target.matches("main")) return
 
     this.close()
-    target.focus()
   }
 
   // private
