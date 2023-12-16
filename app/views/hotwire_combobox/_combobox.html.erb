@@ -1,21 +1,15 @@
-<%= tag.fieldset class: "hw-combobox", data: parent_data do %>
-  <%= hidden_field_tag value_field_attrs.delete(:name),
-        value_field_attrs.delete(:value), **value_field_attrs %>
+<%= tag.fieldset **component.fieldset_attrs do %>
+  <% hidden_field_attrs = component.hidden_field_attrs %>
+  <%= hidden_field_tag \
+        hidden_field_attrs.delete(:name),
+        hidden_field_attrs.delete(:value),
+        **hidden_field_attrs %>
 
-  <%= tag.input **attrs %>
+  <%= tag.input **component.input_attrs %>
 
-  <%= tag.ul id: listbox_id, hidden: "", role: :listbox,
-        data: { "hw-combobox-target": "listbox" } do |ul| %>
-    <% options.each do |option| %>
-      <%= tag.li hw_listbox_option_content(option),
-            id: hw_listbox_option_id(option),
-            role: :option,
-            style: "cursor: pointer;",
-            data: {
-              "action": "click->hw-combobox#selectOption",
-              "filterable-as": hw_listbox_option_filterable_as(option),
-              "autocompletable-as": hw_listbox_option_autocompletable_as(option),
-              "value": hw_listbox_option_value(option) } %>
+  <%= tag.ul **component.listbox_attrs do |ul| %>
+    <% component.listbox_options.each do |option| %>
+      <%= render option %>
     <% end %>
   <% end %>
 <% end %>

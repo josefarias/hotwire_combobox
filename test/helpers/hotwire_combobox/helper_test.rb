@@ -60,38 +60,6 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
       "aria-haspopup": "listbox", "aria-autocomplete": "both"
   end
 
-  test "passing option value, falls back to id" do
-    option = OpenStruct.new id: 1, value: "foo"
-    assert_equal "foo", hw_listbox_option_value(option)
-
-    option = OpenStruct.new id: 1
-    assert_equal 1, hw_listbox_option_value(option)
-  end
-
-  test "content falls back to display" do
-    option = OpenStruct.new content: "foo"
-    assert_equal "foo", hw_listbox_option_content(option)
-
-    option = OpenStruct.new display: "bar"
-    assert_equal "bar", hw_listbox_option_content(option)
-  end
-
-  test "filterable_as falls back to display" do
-    option = OpenStruct.new filterable_as: "foo"
-    assert_equal "foo", hw_listbox_option_filterable_as(option)
-
-    option = OpenStruct.new display: "bar"
-    assert_equal "bar", hw_listbox_option_filterable_as(option)
-  end
-
-  test "autocompletable_as falls back to display" do
-    option = OpenStruct.new autocompletable_as: "foo"
-    assert_equal "foo", hw_listbox_option_autocompletable_as(option)
-
-    option = OpenStruct.new display: "bar"
-    assert_equal "bar", hw_listbox_option_autocompletable_as(option)
-  end
-
   test "hw_combobox_options instantiates an array of `HotwireCombobox::Option`s" do
     options = hw_combobox_options [
       { value: :foo, display: :bar },
@@ -124,19 +92,4 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
       assert_not HotwireCombobox::Helper.instance_methods.include?(:combobox_tag)
     end
   end
-
-  private
-    # `#assert_attrs` expects attrs to appear in the order they are passed.
-    def assert_attrs(tag, tag_name: :input, **attrs)
-      attrs = attrs.map do |k, v|
-        %Q(#{escape(k)}="#{escape(v)}".*)
-      end.join(" ")
-
-      assert_match /<#{tag_name}.* #{attrs}/, tag
-    end
-
-    def escape(value)
-      special_characters = Regexp.union "[]".chars
-      value.to_s.gsub(special_characters) { |char| "\\#{char}" }
-    end
 end

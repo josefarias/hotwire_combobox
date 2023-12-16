@@ -2,12 +2,12 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static classes = [ "selected", "invalid" ]
-  static targets = [ "combobox", "listbox", "valueField" ]
+  static targets = [ "combobox", "listbox", "hiddenField" ]
   static values = { expanded: Boolean, filterableAttribute: String, autocompletableAttribute: String }
 
   connect() {
-    if (this.valueFieldTarget.value) {
-      this.selectOptionByValue(this.valueFieldTarget.value)
+    if (this.hiddenFieldTarget.value) {
+      this.selectOptionByValue(this.hiddenFieldTarget.value)
     }
   }
 
@@ -143,10 +143,10 @@ export default class extends Controller {
   executeSelect(option, { selected }) {
     if (selected) {
       option.setAttribute("aria-selected", true)
-      this.valueFieldTarget.value = option.dataset.value
+      this.hiddenFieldTarget.value = option.dataset.value
     } else {
       option.setAttribute("aria-selected", false)
-      this.valueFieldTarget.value = null
+      this.hiddenFieldTarget.value = null
     }
   }
 
@@ -188,7 +188,7 @@ export default class extends Controller {
   }
 
   get valueIsInvalid() {
-    const isRequiredAndEmpty = this.comboboxTarget.required && !this.valueFieldTarget.value
+    const isRequiredAndEmpty = this.comboboxTarget.required && !this.hiddenFieldTarget.value
     return isRequiredAndEmpty
   }
 }
