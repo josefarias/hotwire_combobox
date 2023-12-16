@@ -16,6 +16,9 @@ class ComboboxesController < ApplicationController
   def required
   end
 
+  def formbuilder
+  end
+
   private
     delegate :combobox_options, to: "ApplicationController.helpers", private: true
 

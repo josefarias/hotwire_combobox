@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get "html_combobox", to: "comboboxes#html"
   get "prefilled_combobox", to: "comboboxes#prefilled"
   get "required_combobox", to: "comboboxes#required"
+  get "formbuilder_combobox", to: "comboboxes#formbuilder"
 
   root to: "comboboxes#plain"
 end

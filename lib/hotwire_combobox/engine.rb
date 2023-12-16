@@ -3,8 +3,18 @@ module HotwireCombobox
     isolate_namespace HotwireCombobox
 
     initializer "hotwire_combobox.view_helpers" do
-      ActiveSupport.on_load :action_controller do
-        helper HotwireCombobox::Helper
+      ActiveSupport.on_load :action_view do
+        include HotwireCombobox::Helper
+
+        unless HotwireCombobox.bypass_convenience_methods?
+          module FormBuilderExtensions
+            def combobox(*args, **kwargs, &block)
+              @template.hw_combobox_tag *args, **kwargs.merge(form: self), &block
+            end
+          end
+
+          ActionView::Helpers::FormBuilder.include FormBuilderExtensions
+        end
       end
     end
 

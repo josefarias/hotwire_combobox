@@ -92,4 +92,8 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
       assert_not HotwireCombobox::Helper.instance_methods.include?(:combobox_tag)
     end
   end
+
+  test "combobox is defined on the formbuilder" do
+    assert ActionView::Helpers::FormBuilder.instance_methods.include?(:combobox)
+  end
 end

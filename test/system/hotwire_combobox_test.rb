@@ -223,6 +223,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_no_selector "input[aria-invalid=true]"
   end
 
+  test "combobox is rendered when using the formbuilder" do
+    visit formbuilder_combobox_path
+
+    assert_selector "input[role=combobox]"
+  end
+
   private
     def open_combobox
       find("input[role=combobox]").click
