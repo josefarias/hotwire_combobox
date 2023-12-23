@@ -69,6 +69,24 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     assert options.all? { |option| HotwireCombobox::Option === option }
   end
 
+  test "passing an ActiveRecord::Relation to combobox_options" do
+    options = combobox_options State.all, id: :id, display: :name
+
+    compliant = options.map.with_index do |option, i|
+      HotwireCombobox::Option === option &&
+        option.value == State.all[i].id &&
+        option.display == State.all[i].name
+    end.all?
+
+    assert compliant
+  end
+
+  test "passing a non-collection to combobox_options raises an error" do
+    assert_raises HotwireCombobox::Helper::NonCollectionOptions do
+      combobox_options :foo
+    end
+  end
+
   test "combobox_options is an alias for hw_combobox_options" do
     assert_equal \
       HotwireCombobox::Helper.instance_method(:hw_combobox_options),
