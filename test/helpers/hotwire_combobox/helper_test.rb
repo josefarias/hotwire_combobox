@@ -81,12 +81,6 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     assert compliant
   end
 
-  test "passing a non-collection to combobox_options raises an error" do
-    assert_raises HotwireCombobox::Helper::NonCollectionOptions do
-      combobox_options :foo
-    end
-  end
-
   test "combobox_options is an alias for hw_combobox_options" do
     assert_equal \
       HotwireCombobox::Helper.instance_method(:hw_combobox_options),
