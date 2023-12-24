@@ -3,7 +3,12 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static classes = [ "selected", "invalid" ]
   static targets = [ "combobox", "listbox", "hiddenField" ]
-  static values = { expanded: Boolean, filterableAttribute: String, autocompletableAttribute: String }
+  static values = {
+    expanded: Boolean,
+    nameWhenNew: String,
+    originalName: String,
+    filterableAttribute: String,
+    autocompletableAttribute: String }
 
   connect() {
     if (this.hiddenFieldTarget.value) {
@@ -27,13 +32,16 @@ export default class extends Controller {
   }
 
   filter(event) {
+    const isDeleting = event.inputType === "deleteContentBackward"
     const query = this.comboboxTarget.value.trim()
 
     this.open()
 
     this.allOptionElements.forEach(applyFilter(query, { matching: this.filterableAttributeValue }))
 
-    if (event.inputType === "deleteContentBackward") {
+    if (this.isValidNewOption(query, { ignoreAutocomplete: isDeleting })) {
+      this.selectNew(query)
+    } else if (isDeleting) {
       this.deselect(this.selectedOptionElement)
     } else {
       this.select(this.visibleOptionElements[0])
@@ -84,7 +92,9 @@ export default class extends Controller {
   }
 
   commitSelection() {
-    this.select(this.selectedOptionElement, { force: true })
+    if (!this.isValidNewOption(this.comboboxTarget.value, { ignoreAutocomplete: true })) {
+      this.select(this.selectedOptionElement, { force: true })
+    }
   }
 
   expandedValueChanged() {
@@ -106,7 +116,7 @@ export default class extends Controller {
   }
 
   select(option, { force = false } = {}) {
-    this.allOptionElements.forEach(option => this.deselect(option))
+    this.resetOptions()
 
     if (option) {
       if (this.hasSelectedClass) option.classList.add(this.selectedClass)
@@ -122,6 +132,17 @@ export default class extends Controller {
         this.comboboxTarget.setAttribute("aria-errormessage", `Please select a valid option for ${this.comboboxTarget.name}`)
       }
     }
+  }
+
+  selectNew(query) {
+    this.resetOptions()
+    this.hiddenFieldTarget.value = query
+    this.hiddenFieldTarget.name = this.nameWhenNewValue
+  }
+
+  resetOptions() {
+    this.allOptionElements.forEach(option => this.deselect(option))
+    this.hiddenFieldTarget.name = this.originalNameValue
   }
 
   selectIndex(index) {
@@ -152,15 +173,23 @@ export default class extends Controller {
 
   maybeAutocompleteWith(option, { force }) {
     const typedValue = this.comboboxTarget.value
-    const autocompletedValue = option.dataset.autocompletableAs
+    const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
 
     if (force) {
       this.comboboxTarget.value = autocompletedValue
       this.comboboxTarget.setSelectionRange(autocompletedValue.length, autocompletedValue.length)
-    } else if (autocompletedValue.toLowerCase().startsWith(typedValue.toLowerCase())) {
+    } else if (startsWith(autocompletedValue, typedValue)) {
       this.comboboxTarget.value = autocompletedValue
       this.comboboxTarget.setSelectionRange(typedValue.length, autocompletedValue.length)
     }
+  }
+
+  isValidNewOption(query, { ignoreAutocomplete = false } = {}) {
+    const typedValue = this.comboboxTarget.value
+    const autocompletedValue = this.visibleOptionElements[0]?.getAttribute(this.autocompletableAttributeValue)
+    const insufficentAutocomplete = !autocompletedValue || !startsWith(autocompletedValue, typedValue)
+
+    return query.length > 0 && this.allowNew && (ignoreAutocomplete || insufficentAutocomplete)
   }
 
   get allOptions() {
@@ -190,6 +219,10 @@ export default class extends Controller {
   get valueIsInvalid() {
     const isRequiredAndEmpty = this.comboboxTarget.required && !this.hiddenFieldTarget.value
     return isRequiredAndEmpty
+  }
+
+  get allowNew() {
+    return !!this.nameWhenNewValue
   }
 }
 
@@ -222,4 +255,8 @@ function wrapAroundAccess(array, index) {
 function cancel(event) {
   event.stopPropagation()
   event.preventDefault()
+}
+
+function startsWith(string, substring) {
+  return string.toLowerCase().startsWith(substring.toLowerCase())
 }

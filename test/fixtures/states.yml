@@ -1,0 +1,23 @@
+al:
+  abbreviation: AL
+  name: Alabama
+
+fl:
+  abbreviation: FL
+  name: Florida
+
+mi:
+  abbreviation: MI
+  name: Michigan
+
+mn:
+  abbreviation: MN
+  name: Minnesota
+
+ms:
+  abbreviation: MS
+  name: Mississippi
+
+mo:
+  abbreviation: MO
+  name: Missouri

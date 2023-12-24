@@ -29,10 +29,10 @@ class HotwireCombobox::Listbox::Option
 
     def data
       {
-        "action": "click->hw-combobox#selectOption",
-        "filterable-as": filterable_as,
-        "autocompletable-as": autocompletable_as,
-        "value": value
+        action: "click->hw-combobox#selectOption",
+        filterable_as: filterable_as,
+        autocompletable_as: autocompletable_as,
+        value: value
       }
     end
 

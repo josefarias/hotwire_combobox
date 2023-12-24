@@ -1,9 +1,9 @@
 class HotwireCombobox::Component
   include ActionView::Helpers::TagHelper
 
-  def initialize(name, value = nil, id: nil, form: nil, open: false, options: [], data: {}, input: {}, **rest)
+  def initialize(name, value = nil, id: nil, form: nil, name_when_new: nil, open: false, options: [], data: {}, input: {}, **rest)
     @combobox_attrs = input.reverse_merge(rest).with_indifferent_access # input: {} allows for specifying e.g. data attributes on the input field
-    @id, @name, @value, @form, @open, @options, @data = id, name, value, form, open, options, data
+    @id, @name, @value, @form, @name_when_new, @open, @options, @data = id, name, value, form, name_when_new, open, options, data
   end
 
   def fieldset_attrs
@@ -48,14 +48,16 @@ class HotwireCombobox::Component
   end
 
   private
-    attr_reader :id, :name, :value, :form, :open, :options, :data, :combobox_attrs
+    attr_reader :id, :name, :value, :form, :name_when_new, :open, :options, :data, :combobox_attrs
 
     def fieldset_data
       data.reverse_merge \
-        "controller": token_list("hw-combobox", data[:controller]),
-        "hw-combobox-expanded-value": open,
-        "hw-combobox-filterable-attribute-value": "data-filterable-as",
-        "hw-combobox-autocompletable-attribute-value": "data-autocompletable-as"
+        controller: token_list("hw-combobox", data[:controller]),
+        hw_combobox_expanded_value: open,
+        hw_combobox_name_when_new_value: name_when_new,
+        hw_combobox_original_name_value: hidden_field_name,
+        hw_combobox_filterable_attribute_value: "data-filterable-as",
+        hw_combobox_autocompletable_attribute_value: "data-autocompletable-as"
     end
 
 
@@ -68,7 +70,7 @@ class HotwireCombobox::Component
     end
 
     def hidden_field_data
-      { "hw-combobox-target": "hiddenField" }
+      { hw_combobox_target: "hiddenField" }
     end
 
     def hidden_field_value
@@ -86,21 +88,21 @@ class HotwireCombobox::Component
 
     def input_data
       combobox_attrs.fetch(:data, {}).reverse_merge! \
-        "action": "
+        action: "
           focus->hw-combobox#open
           input->hw-combobox#filter
           keydown->hw-combobox#navigate
           click@window->hw-combobox#closeOnClickOutside
           focusin@window->hw-combobox#closeOnFocusOutside".squish,
-        "hw-combobox-target": "combobox"
+        hw_combobox_target: "combobox"
     end
 
     def input_aria
       combobox_attrs.fetch(:aria, {}).reverse_merge! \
-        "controls": listbox_id,
-        "owns": listbox_id,
-        "haspopup": "listbox",
-        "autocomplete": "both"
+        controls: listbox_id,
+        owns: listbox_id,
+        haspopup: "listbox",
+        autocomplete: "both"
     end
 
 
@@ -109,6 +111,6 @@ class HotwireCombobox::Component
     end
 
     def listbox_data
-      { "hw-combobox-target": "listbox" }
+      { hw_combobox_target: "listbox" }
     end
 end

@@ -229,6 +229,73 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector "input[role=combobox]"
   end
 
+  test "new options can be allowed" do
+    assert_difference -> { State.count }, +1 do
+      visit new_options_combobox_path
+
+      find("#allow-new-hw-combobox").then do |combobox|
+        combobox.click
+        combobox.send_keys "Alaska", :enter
+      end
+
+      find("#disallow-new-hw-combobox").then do |combobox|
+        combobox.click
+        combobox.send_keys "Alabama", :enter
+      end
+
+      find("input[type=submit]").click
+    end
+
+    new_user = User.last
+    assert_equal "Alaska", new_user.favorite_state.name
+    assert_equal "Alabama", new_user.home_state.name
+  end
+
+  test "new options can be allowed when competing with an autocomplete suggestion" do
+    assert_difference -> { State.count }, +1 do
+      visit new_options_combobox_path
+
+      find("#allow-new-hw-combobox").then do |combobox|
+        combobox.click
+        combobox.send_keys "Ala"
+
+        assert_field "allow-new", type: "hidden", with: states(:al).id
+        assert_selector "li[role=option][aria-selected=true]", text: "Alabama"
+        assert_selector "input[name='user[favorite_state_id]']", visible: :hidden
+        assert_no_selector "input[name='user[favorite_state_attributes][name]']", visible: :hidden
+
+        combobox.send_keys :backspace
+        assert_field "allow-new", type: "hidden", with: "Ala" # backspace removes the autocompleted part, not the typed part
+        assert_no_selector "li[role=option][aria-selected=true]"
+        assert_no_selector "input[name='user[favorite_state_id]']", visible: :hidden
+        assert_selector "input[name='user[favorite_state_attributes][name]']", visible: :hidden
+
+        combobox.send_keys :enter
+
+        find("input[type=submit]").click
+      end
+    end
+
+    new_user = User.last
+    assert_equal "Ala", new_user.favorite_state.name
+  end
+
+  test "new options are sent as nil when they're not allowed" do
+    assert_no_difference -> { State.count } do
+      visit new_options_combobox_path
+
+      find("#disallow-new-hw-combobox").then do |combobox|
+        combobox.click
+        combobox.send_keys "Alaska", :enter
+      end
+
+      find("input[type=submit]").click
+    end
+
+    new_user = User.last
+    assert_nil new_user.home_state
+  end
+
   private
     def open_combobox
       find("input[role=combobox]").click

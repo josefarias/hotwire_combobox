@@ -1,5 +1,5 @@
 class ComboboxesController < ApplicationController
-  before_action :set_states
+  before_action :set_states, except: :new_options
 
   def plain
   end
@@ -19,17 +19,14 @@ class ComboboxesController < ApplicationController
   def formbuilder
   end
 
+  def new_options
+    @states = combobox_options State.all, id: :id, display: :name
+  end
+
   private
     delegate :combobox_options, to: "ApplicationController.helpers", private: true
 
     def set_states
-      @states = combobox_options [
-        { id: "AL", display: "Alabama" },
-        { id: "FL", display: "Florida" },
-        { id: "MI", display: "Michigan" },
-        { id: "MN", display: "Minnesota" },
-        { id: "MS", display: "Mississippi" },
-        { id: "MO", display: "Missouri" }
-      ]
+      @states = combobox_options State.all, id: :abbreviation, display: :name
     end
 end

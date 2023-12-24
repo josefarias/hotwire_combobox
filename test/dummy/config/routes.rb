@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   get "prefilled_combobox", to: "comboboxes#prefilled"
   get "required_combobox", to: "comboboxes#required"
   get "formbuilder_combobox", to: "comboboxes#formbuilder"
+  get "new_options_combobox", to: "comboboxes#new_options"
+
+  post "new_options_form", to: "new_options_forms#create"
 
   root to: "comboboxes#plain"
 end

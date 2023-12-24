@@ -89,7 +89,7 @@ Additionally, you can pass the following [Stimulus class values](https://stimulu
 
 ### Validity
 
-The hidden input can't have a value that's not in the list of options.
+Unless `name_when_new` is passed, the hidden input can't have a value that's not in the list of options.
 
 If a nonexistent value is typed into the combobox, the value of the hidden input will be set empty.
 

@@ -22,6 +22,14 @@ $ bundle exec rake app:test:system
 $ bin/rails s
 ```
 
+Make sure you restart the server after making changes to JS.
+
+## Populating the dummy app with fixtures
+
+```bash
+$ FIXTURES_PATH="../fixtures" RAILS_ENV=development test/dummy/bin/rails db:fixtures:load --trace
+```
+
 ## Releasing
 
 1. Bump the version in `lib/hotwire_combobox/version.rb` (e.g. `VERSION = "0.1.0"`)
