@@ -280,7 +280,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_equal "Ala", new_user.favorite_state.name
   end
 
-  test "new options are sent as nil when they're not allowed" do
+  test "new options are sent blank when they're not allowed" do
     assert_no_difference -> { State.count } do
       visit new_options_combobox_path
 
