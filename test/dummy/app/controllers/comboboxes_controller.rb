@@ -20,7 +20,6 @@ class ComboboxesController < ApplicationController
   end
 
   def new_options
-    @states = combobox_options State.all, display: :name
   end
 
   private

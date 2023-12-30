@@ -1,9 +1,20 @@
 class HotwireCombobox::Component
   include ActionView::Helpers::TagHelper
 
+  class << self
+    def options_from(options)
+      if HotwireCombobox::Option === options.first
+        options
+      else
+        HotwireCombobox::Helper.hw_combobox_options options, display: :to_combobox_display
+      end
+    end
+  end
+
   def initialize(name, value = nil, id: nil, form: nil, name_when_new: nil, open: false, options: [], data: {}, input: {}, **rest)
     @combobox_attrs = input.reverse_merge(rest).with_indifferent_access # input: {} allows for specifying e.g. data attributes on the input field
-    @id, @name, @value, @form, @name_when_new, @open, @options, @data = id, name, value, form, name_when_new, open, options, data
+    @options = self.class.options_from options
+    @id, @name, @value, @form, @name_when_new, @open, @data = id, name, value, form, name_when_new, open, data
   end
 
   def fieldset_attrs
