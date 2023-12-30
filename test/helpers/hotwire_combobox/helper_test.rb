@@ -70,7 +70,7 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
   end
 
   test "passing an ActiveRecord::Relation to combobox_options" do
-    options = combobox_options State.all, id: :id, display: :name
+    options = combobox_options State.all, display: :name
 
     compliant = options.map.with_index do |option, i|
       HotwireCombobox::Option === option &&
