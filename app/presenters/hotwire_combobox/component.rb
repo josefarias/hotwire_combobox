@@ -1,20 +1,18 @@
 class HotwireCombobox::Component
-  include ActionView::Helpers::TagHelper
-
   class << self
-    def options_from(options)
+    def options_from(view, options)
       if HotwireCombobox::Option === options.first
         options
       else
-        HotwireCombobox::Helper.hw_combobox_options options, display: :to_combobox_display
+        view.hw_combobox_options options, display: :to_combobox_display
       end
     end
   end
 
-  def initialize(name, value = nil, id: nil, form: nil, name_when_new: nil, open: false, options: [], data: {}, input: {}, **rest)
+  def initialize(view, name, value = nil, id: nil, form: nil, name_when_new: nil, open: false, options: [], data: {}, input: {}, **rest)
     @combobox_attrs = input.reverse_merge(rest).with_indifferent_access # input: {} allows for specifying e.g. data attributes on the input field
-    @options = self.class.options_from options
-    @id, @name, @value, @form, @name_when_new, @open, @data = id, name, value, form, name_when_new, open, data
+    @options = self.class.options_from view, options
+    @view, @id, @name, @value, @form, @name_when_new, @open, @data = view, id, name, value, form, name_when_new, open, data
   end
 
   def fieldset_attrs
@@ -59,11 +57,11 @@ class HotwireCombobox::Component
   end
 
   private
-    attr_reader :id, :name, :value, :form, :name_when_new, :open, :options, :data, :combobox_attrs
+    attr_reader :view, :id, :name, :value, :form, :name_when_new, :open, :options, :data, :combobox_attrs
 
     def fieldset_data
       data.reverse_merge \
-        controller: token_list("hw-combobox", data[:controller]),
+        controller: view.token_list("hw-combobox", data[:controller]),
         hw_combobox_expanded_value: open,
         hw_combobox_name_when_new_value: name_when_new,
         hw_combobox_original_name_value: hidden_field_name,
