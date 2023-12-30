@@ -59,9 +59,6 @@ The `options` argument takes an array of any objects which respond to:
 | autocompletable_as | Used to autocomplete the input element when the user types into it. Falls back to calling `display` on the object if not provided.         |
 | display            | Used as a short-hand for other attributes. See the rest of the list for details.                                                           |
 
-> [!NOTE]
-> The `id` attribute is required only if `value` is not provided.
-
 You can use the `combobox_options` helper to create an array of option objects which respond to the above methods:
 
 ```ruby

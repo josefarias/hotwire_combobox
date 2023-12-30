@@ -15,7 +15,7 @@ module HotwireCombobox
         options.map do |option|
           attrs = {}.tap do |attrs|
             attrs[:id] = option.public_send(methods[:id]) if methods[:id]
-            attrs[:value] = option.public_send(methods[:value] || methods[:id] || :id)
+            attrs[:value] = option.public_send(methods[:value] || :id)
             attrs[:display] = option.public_send(methods[:display]) if methods[:display]
           end
 
