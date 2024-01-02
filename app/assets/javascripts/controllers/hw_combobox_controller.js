@@ -12,8 +12,8 @@ export default class extends Controller {
     autocompletableAttribute: String }
 
   connect() {
-    if (this.hiddenFieldTarget.value) this.selectOptionByValue(this.hiddenFieldTarget.value)
-    if (!this.autocompletesList) this.listboxTarget.style.display = "none"
+    if (this.hiddenFieldTarget.value) this.#selectOptionByValue(this.hiddenFieldTarget.value)
+    if (!this.#autocompletesList) this.listboxTarget.style.display = "none"
   }
 
   open() {
@@ -21,13 +21,13 @@ export default class extends Controller {
   }
 
   close() {
-    if (!this.isOpen) return
-    this.commitSelection()
+    if (!this.#isOpen) return
+    this.#commitSelection()
     this.expandedValue = false
   }
 
   selectOption(event) {
-    this.select(event.currentTarget)
+    this.#select(event.currentTarget)
     this.close()
   }
 
@@ -37,20 +37,20 @@ export default class extends Controller {
 
     this.open()
 
-    this.allOptionElements.forEach(applyFilter(query, { matching: this.filterableAttributeValue }))
+    this.#allOptionElements.forEach(applyFilter(query, { matching: this.filterableAttributeValue }))
 
-    if (this.isValidNewOption(query, { ignoreAutocomplete: isDeleting })) {
-      this.selectNew(query)
+    if (this.#isValidNewOption(query, { ignoreAutocomplete: isDeleting })) {
+      this.#selectNew(query)
     } else if (isDeleting) {
-      this.deselect(this.selectedOptionElement)
+      this.#deselect(this.#selectedOptionElement)
     } else {
-      this.select(this.visibleOptionElements[0])
+      this.#select(this.#visibleOptionElements[0])
     }
   }
 
   navigate(event) {
-    if (this.autocompletesList) {
-      this.keyHandlers[event.key]?.call(this, event)
+    if (this.#autocompletesList) {
+      this.#keyHandlers[event.key]?.call(this, event)
     }
   }
 
@@ -61,73 +61,71 @@ export default class extends Controller {
   }
 
   closeOnFocusOutside({ target }) {
-    if (!this.isOpen) return
+    if (!this.#isOpen) return
     if (this.element.contains(target)) return
     if (target.matches("main")) return
 
     this.close()
   }
 
-  // private
+  expandedValueChanged() {
+    if (this.expandedValue) {
+      this.#expand()
+    } else {
+      this.#collapse()
+    }
+  }
 
-  keyHandlers = {
-    ArrowUp(event) {
-      this.selectIndex(this.selectedOptionIndex - 1)
+  #keyHandlers = {
+    ArrowUp: (event) => {
+      this.#selectIndex(this.#selectedOptionIndex - 1)
       cancel(event)
     },
-    ArrowDown(event) {
-      this.selectIndex(this.selectedOptionIndex + 1)
+    ArrowDown: (event) => {
+      this.#selectIndex(this.#selectedOptionIndex + 1)
       cancel(event)
     },
-    Home(event) {
-      this.selectIndex(0)
+    Home: (event) => {
+      this.#selectIndex(0)
       cancel(event)
     },
-    End(event) {
-      this.selectIndex(this.visibleOptionElements.length - 1)
+    End: (event) => {
+      this.#selectIndex(this.#visibleOptionElements.length - 1)
       cancel(event)
     },
-    Enter(event) {
+    Enter: (event) => {
       this.close()
       cancel(event)
     }
   }
 
-  commitSelection() {
-    if (!this.isValidNewOption(this.comboboxTarget.value, { ignoreAutocomplete: true })) {
-      this.select(this.selectedOptionElement, { force: true })
+  #commitSelection() {
+    if (!this.#isValidNewOption(this.comboboxTarget.value, { ignoreAutocomplete: true })) {
+      this.#select(this.#selectedOptionElement, { force: true })
     }
   }
 
-  expandedValueChanged() {
-    if (this.expandedValue) {
-      this.expand()
-    } else {
-      this.collapse()
-    }
-  }
-
-  expand() {
+  #expand() {
     this.listboxTarget.hidden = false
     this.comboboxTarget.setAttribute("aria-expanded", true)
   }
 
-  collapse() {
+  #collapse() {
     this.listboxTarget.hidden = true
     this.comboboxTarget.setAttribute("aria-expanded", false)
   }
 
-  select(option, { force = false } = {}) {
-    this.resetOptions()
+  #select(option, { force = false } = {}) {
+    this.#resetOptions()
 
     if (option) {
       if (this.hasSelectedClass) option.classList.add(this.selectedClass)
       if (this.hasInvalidClass) this.comboboxTarget.classList.remove(this.invalidClass)
 
-      this.maybeAutocompleteWith(option, { force })
-      this.executeSelect(option, { selected: true })
+      this.#maybeAutocompleteWith(option, { force })
+      this.#executeSelect(option, { selected: true })
     } else {
-      if (this.valueIsInvalid) {
+      if (this.#valueIsInvalid) {
         if (this.hasInvalidClass) this.comboboxTarget.classList.add(this.invalidClass)
 
         this.comboboxTarget.setAttribute("aria-invalid", true)
@@ -136,34 +134,34 @@ export default class extends Controller {
     }
   }
 
-  selectNew(query) {
-    this.resetOptions()
+  #selectNew(query) {
+    this.#resetOptions()
     this.hiddenFieldTarget.value = query
     this.hiddenFieldTarget.name = this.nameWhenNewValue
   }
 
-  resetOptions() {
-    this.allOptionElements.forEach(option => this.deselect(option))
+  #resetOptions() {
+    this.#allOptionElements.forEach(option => this.#deselect(option))
     this.hiddenFieldTarget.name = this.originalNameValue
   }
 
-  selectIndex(index) {
-    const option = wrapAroundAccess(this.visibleOptionElements, index)
-    this.select(option, { force: true })
+  #selectIndex(index) {
+    const option = wrapAroundAccess(this.#visibleOptionElements, index)
+    this.#select(option, { force: true })
   }
 
-  selectOptionByValue(value) {
-    this.allOptions.find(option => option.dataset.value === value)?.click()
+  #selectOptionByValue(value) {
+    this.#allOptions.find(option => option.dataset.value === value)?.click()
   }
 
-  deselect(option) {
+  #deselect(option) {
     if (option) {
       if (this.hasSelectedClass) option.classList.remove(this.selectedClass)
-      this.executeSelect(option, { selected: false })
+      this.#executeSelect(option, { selected: false })
     }
   }
 
-  executeSelect(option, { selected }) {
+  #executeSelect(option, { selected }) {
     if (selected) {
       option.setAttribute("aria-selected", true)
       this.hiddenFieldTarget.value = option.dataset.value
@@ -173,8 +171,8 @@ export default class extends Controller {
     }
   }
 
-  maybeAutocompleteWith(option, { force }) {
-    if (!this.autocompletesInline && !force) return
+  #maybeAutocompleteWith(option, { force }) {
+    if (!this.#autocompletesInline && !force) return
 
     const typedValue = this.comboboxTarget.value
     const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
@@ -188,52 +186,52 @@ export default class extends Controller {
     }
   }
 
-  isValidNewOption(query, { ignoreAutocomplete = false } = {}) {
+  #isValidNewOption(query, { ignoreAutocomplete = false } = {}) {
     const typedValue = this.comboboxTarget.value
-    const autocompletedValue = this.visibleOptionElements[0]?.getAttribute(this.autocompletableAttributeValue)
+    const autocompletedValue = this.#visibleOptionElements[0]?.getAttribute(this.autocompletableAttributeValue)
     const insufficentAutocomplete = !autocompletedValue || !startsWith(autocompletedValue, typedValue)
 
-    return query.length > 0 && this.allowNew && (ignoreAutocomplete || insufficentAutocomplete)
+    return query.length > 0 && this.#allowNew && (ignoreAutocomplete || insufficentAutocomplete)
   }
 
-  get allOptions() {
-    return Array.from(this.allOptionElements)
+  get #allOptions() {
+    return Array.from(this.#allOptionElements)
   }
 
-  get allOptionElements() {
+  get #allOptionElements() {
     return this.listboxTarget.querySelectorAll(`[${this.filterableAttributeValue}]`)
   }
 
-  get visibleOptionElements() {
-    return [ ...this.allOptionElements ].filter(visible)
+  get #visibleOptionElements() {
+    return [ ...this.#allOptionElements ].filter(visible)
   }
 
-  get selectedOptionElement() {
+  get #selectedOptionElement() {
     return this.listboxTarget.querySelector("[role=option][aria-selected=true]")
   }
 
-  get selectedOptionIndex() {
-    return [ ...this.visibleOptionElements ].indexOf(this.selectedOptionElement)
+  get #selectedOptionIndex() {
+    return [ ...this.#visibleOptionElements ].indexOf(this.#selectedOptionElement)
   }
 
-  get isOpen() {
+  get #isOpen() {
     return this.expandedValue
   }
 
-  get valueIsInvalid() {
+  get #valueIsInvalid() {
     const isRequiredAndEmpty = this.comboboxTarget.required && !this.hiddenFieldTarget.value
     return isRequiredAndEmpty
   }
 
-  get allowNew() {
+  get #allowNew() {
     return !!this.nameWhenNewValue
   }
 
-  get autocompletesList() {
+  get #autocompletesList() {
     return this.autocompleteValue === "both" || this.autocompleteValue === "list"
   }
 
-  get autocompletesInline() {
+  get #autocompletesInline() {
     return this.autocompleteValue === "both" || this.autocompleteValue === "inline"
   }
 }
