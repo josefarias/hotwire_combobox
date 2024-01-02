@@ -174,6 +174,8 @@ export default class extends Controller {
   }
 
   maybeAutocompleteWith(option, { force }) {
+    if (!this.autocompletesInline && !force) return
+
     const typedValue = this.comboboxTarget.value
     const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
 
@@ -229,6 +231,10 @@ export default class extends Controller {
 
   get autocompletesList() {
     return this.autocompleteValue === "both" || this.autocompleteValue === "list"
+  }
+
+  get autocompletesInline() {
+    return this.autocompleteValue === "both" || this.autocompleteValue === "inline"
   }
 }
 

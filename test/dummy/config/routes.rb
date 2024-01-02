@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get "formbuilder_combobox", to: "comboboxes#formbuilder"
   get "new_options_combobox", to: "comboboxes#new_options"
   get "inline_autocomplete_combobox", to: "comboboxes#inline_autocomplete"
+  get "list_autocomplete_combobox", to: "comboboxes#list_autocomplete"
 
   post "new_options_form", to: "new_options_forms#create"
 

@@ -38,7 +38,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox
 
     assert_selector "input[aria-expanded=true]"
-    find("body").click
+    find("#separate-element").click
     assert_selector "input[aria-expanded=false]"
     assert_no_selector "li"
   end
@@ -124,7 +124,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox
 
     find("input[role=combobox]").send_keys("lor")
-    find("body").click
+    find("#separate-element").click
     assert_selector "input[aria-expanded=false]"
     assert_field "state-field-hw-combobox", with: "Florida"
     assert_field "state-field", type: "hidden", with: "FL"
@@ -314,6 +314,36 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_field "state-field", type: "hidden", with: "MI"
     find("input[role=combobox]").send_keys("n")
     assert_field "state-field", type: "hidden", with: "MN"
+  end
+
+  test "list-only autocomplete" do
+    visit list_autocomplete_combobox_path
+
+    open_combobox
+
+    find("input[role=combobox]").send_keys("mi")
+    assert_field "state-field", type: "hidden", with: "MI"
+    assert_field "state-field-hw-combobox", with: "mi"
+
+    find("input[role=combobox]").send_keys(:down, :down)
+    assert_field "state-field", type: "hidden", with: "MS"
+    assert_field "state-field-hw-combobox", with: "Mississippi"
+
+    assert_selector "li[role=option]", text: "Michigan"
+    assert_selector "li[role=option]", text: "Minnesota"
+    assert_selector "li[role=option]", text: "Mississippi"
+    assert_selector "li[role=option]", text: "Missouri"
+
+    find("input[role=combobox]").then do |input|
+      "Mississippi".chars.each { input.send_keys(:backspace) }
+    end
+
+    find("input[role=combobox]").send_keys("mi")
+
+    find("#separate-element").click
+
+    assert_field "state-field", type: "hidden", with: "MI"
+    assert_field "state-field-hw-combobox", with: "Michigan"
   end
 
   private
