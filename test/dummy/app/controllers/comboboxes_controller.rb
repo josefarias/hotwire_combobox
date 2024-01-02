@@ -22,6 +22,9 @@ class ComboboxesController < ApplicationController
   def new_options
   end
 
+  def inline_autocomplete
+  end
+
   private
     delegate :combobox_options, to: "ApplicationController.helpers", private: true
 

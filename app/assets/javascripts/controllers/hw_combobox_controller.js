@@ -6,14 +6,14 @@ export default class extends Controller {
   static values = {
     expanded: Boolean,
     nameWhenNew: String,
+    autocomplete: String,
     originalName: String,
     filterableAttribute: String,
     autocompletableAttribute: String }
 
   connect() {
-    if (this.hiddenFieldTarget.value) {
-      this.selectOptionByValue(this.hiddenFieldTarget.value)
-    }
+    if (this.hiddenFieldTarget.value) this.selectOptionByValue(this.hiddenFieldTarget.value)
+    if (!this.autocompletesList) this.listboxTarget.style.display = "none"
   }
 
   open() {
@@ -49,7 +49,9 @@ export default class extends Controller {
   }
 
   navigate(event) {
-    this.keyHandlers[event.key]?.call(this, event)
+    if (this.autocompletesList) {
+      this.keyHandlers[event.key]?.call(this, event)
+    }
   }
 
   closeOnClickOutside({ target }) {
@@ -223,6 +225,10 @@ export default class extends Controller {
 
   get allowNew() {
     return !!this.nameWhenNewValue
+  }
+
+  get autocompletesList() {
+    return this.autocompleteValue === "both" || this.autocompleteValue === "list"
   }
 }
 

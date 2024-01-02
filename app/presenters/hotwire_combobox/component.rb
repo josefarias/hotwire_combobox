@@ -9,10 +9,10 @@ class HotwireCombobox::Component
     end
   end
 
-  def initialize(view, name, value = nil, id: nil, form: nil, name_when_new: nil, open: false, options: [], data: {}, input: {}, **rest)
+  def initialize(view, name, value = nil, autocomplete: :both, id: nil, form: nil, name_when_new: nil, open: false, options: [], data: {}, input: {}, **rest)
     @combobox_attrs = input.reverse_merge(rest).with_indifferent_access # input: {} allows for specifying e.g. data attributes on the input field
     @options = self.class.options_from view, options
-    @view, @id, @name, @value, @form, @name_when_new, @open, @data = view, id, name, value, form, name_when_new, open, data
+    @view, @autocomplete, @id, @name, @value, @form, @name_when_new, @open, @data = view, autocomplete, id, name, value, form, name_when_new, open, data
   end
 
   def fieldset_attrs
@@ -57,7 +57,8 @@ class HotwireCombobox::Component
   end
 
   private
-    attr_reader :view, :id, :name, :value, :form, :name_when_new, :open, :options, :data, :combobox_attrs
+    attr_reader :view, :autocomplete, :id, :name, :value, :form,
+      :name_when_new, :open, :options, :data, :combobox_attrs
 
     def fieldset_data
       data.reverse_merge \
@@ -65,6 +66,7 @@ class HotwireCombobox::Component
         hw_combobox_expanded_value: open,
         hw_combobox_name_when_new_value: name_when_new,
         hw_combobox_original_name_value: hidden_field_name,
+        hw_combobox_autocomplete_value: autocomplete,
         hw_combobox_filterable_attribute_value: "data-filterable-as",
         hw_combobox_autocompletable_attribute_value: "data-autocompletable-as"
     end

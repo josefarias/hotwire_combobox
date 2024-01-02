@@ -296,6 +296,26 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_nil new_user.home_state
   end
 
+  test "inline-only autocomplete" do
+    visit inline_autocomplete_combobox_path
+
+    open_combobox
+
+    find("input[role=combobox]").send_keys("mi")
+    assert_field "state-field", type: "hidden", with: "MI"
+    find("input[role=combobox]").send_keys(:down, :down)
+    assert_field "state-field", type: "hidden", with: "MI"
+
+    find("input[role=combobox]").then do |input|
+      "Michigan".chars.each { input.send_keys(:backspace) }
+    end
+
+    find("input[role=combobox]").send_keys("mi")
+    assert_field "state-field", type: "hidden", with: "MI"
+    find("input[role=combobox]").send_keys("n")
+    assert_field "state-field", type: "hidden", with: "MN"
+  end
+
   private
     def open_combobox
       find("input[role=combobox]").click
