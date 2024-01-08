@@ -9,10 +9,22 @@ class HotwireCombobox::Component
     end
   end
 
-  def initialize(view, name, value = nil, autocomplete: :both, id: nil, form: nil, name_when_new: nil, open: false, options: [], data: {}, input: {}, **rest)
-    @combobox_attrs = input.reverse_merge(rest).with_indifferent_access # input: {} allows for specifying e.g. data attributes on the input field
+  def initialize(
+      view, name, value = nil,
+      autocomplete: :both,
+      id: nil,
+      form: nil,
+      name_when_new: nil,
+      open: false,
+      small_width: "640px",
+      options: [], data: {}, input: {}, **rest)
+    @combobox_attrs = input.reverse_merge(rest).with_indifferent_access # `input: {}` allows for specifying e.g. data attributes on the input field
     @options = self.class.options_from view, options
-    @view, @autocomplete, @id, @name, @value, @form, @name_when_new, @open, @data = view, autocomplete, id, name, value, form, name_when_new, open, data
+
+    @view, @autocomplete, @id, @name, @value, @form,
+    @name_when_new, @open, @data, @small_width =
+      view, autocomplete, id, name, value, form,
+      name_when_new, open, data, small_width
   end
 
   def fieldset_attrs
@@ -56,9 +68,42 @@ class HotwireCombobox::Component
     options.map { |option| HotwireCombobox::Listbox::Option.new option }
   end
 
+  def dialog_attrs
+    {
+      role: :dialog,
+      data: dialog_data
+    }
+  end
+
+  def dialog_input_attrs
+    {
+      id: dialog_input_id,
+      role: :combobox,
+      autofocus: "",
+      type: input_type,
+      data: dialog_input_data,
+      aria: dialog_input_aria
+    }
+  end
+
+  def dialog_listbox_attrs
+    {
+      id: dialog_listbox_id,
+      role: :listbox,
+      data: dialog_listbox_data
+    }
+  end
+
+  def dialog_focus_trap_attrs
+    {
+      tabindex: "-1",
+      data: dialog_focus_trap_data
+    }
+  end
+
   private
     attr_reader :view, :autocomplete, :id, :name, :value, :form,
-      :name_when_new, :open, :options, :data, :combobox_attrs
+      :name_when_new, :open, :options, :data, :combobox_attrs, :small_width
 
     def fieldset_data
       data.reverse_merge \
@@ -67,6 +112,7 @@ class HotwireCombobox::Component
         hw_combobox_name_when_new_value: name_when_new,
         hw_combobox_original_name_value: hidden_field_name,
         hw_combobox_autocomplete_value: autocomplete,
+        hw_combobox_small_viewport_max_width_value: small_width,
         hw_combobox_filterable_attribute_value: "data-filterable-as",
         hw_combobox_autocompletable_attribute_value: "data-autocompletable-as"
     end
@@ -113,7 +159,7 @@ class HotwireCombobox::Component
         controls: listbox_id,
         owns: listbox_id,
         haspopup: "listbox",
-        autocomplete: "both"
+        autocomplete: autocomplete
     end
 
 
@@ -123,5 +169,47 @@ class HotwireCombobox::Component
 
     def listbox_data
       { hw_combobox_target: "listbox" }
+    end
+
+
+    def dialog_data
+      {
+        action: "keydown->hw-combobox#navigate",
+        hw_combobox_target: "dialog"
+      }
+    end
+
+    def dialog_input_id
+      "#{hidden_field_id}-hw-dialog-combobox"
+    end
+
+    def dialog_input_data
+      {
+        action: "
+          input->hw-combobox#filter
+          keydown->hw-combobox#navigate
+          click@window->hw-combobox#closeOnClickOutside".squish,
+        hw_combobox_target: "dialogCombobox"
+      }
+    end
+
+    def dialog_input_aria
+      {
+        controls: dialog_listbox_id,
+        owns: dialog_listbox_id,
+        autocomplete: autocomplete
+      }
+    end
+
+    def dialog_listbox_id
+      "#{hidden_field_id}-hw-dialog-listbox"
+    end
+
+    def dialog_listbox_data
+      { hw_combobox_target: "dialogListbox" }
+    end
+
+    def dialog_focus_trap_data
+      { hw_combobox_target: "dialogFocusTrap" }
     end
 end

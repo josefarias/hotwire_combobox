@@ -2,18 +2,26 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static classes = [ "selected", "invalid" ]
-  static targets = [ "combobox", "listbox", "hiddenField" ]
+  static targets = [
+    "combobox", "listbox", "hiddenField",
+    "dialog", "dialogListbox", "dialogCombobox", "dialogFocusTrap" ]
   static values = {
     expanded: Boolean,
     nameWhenNew: String,
     autocomplete: String,
     originalName: String,
     filterableAttribute: String,
-    autocompletableAttribute: String }
+    autocompletableAttribute: String,
+    smallViewportMaxWidth: String }
+
+  initialize() {
+    this.#actingListbox = this.listboxTarget
+    this.#actingCombobox = this.comboboxTarget
+  }
 
   connect() {
     if (this.hiddenFieldTarget.value) this.#selectOptionByValue(this.hiddenFieldTarget.value)
-    if (!this.#autocompletesList) this.listboxTarget.style.display = "none"
+    if (!this.#autocompletesList) this.#visuallyHideListbox()
   }
 
   open() {
@@ -33,7 +41,7 @@ export default class extends Controller {
 
   filter(event) {
     const isDeleting = event.inputType === "deleteContentBackward"
-    const query = this.comboboxTarget.value.trim()
+    const query = this.#actingCombobox.value.trim()
 
     this.open()
 
@@ -55,7 +63,7 @@ export default class extends Controller {
   }
 
   closeOnClickOutside({ target }) {
-    if (this.element.contains(target)) return
+    if (this.element.contains(target) && !this.#isDialogDismisser(target)) return
 
     this.close()
   }
@@ -96,23 +104,74 @@ export default class extends Controller {
     Enter: (event) => {
       this.close()
       cancel(event)
+    },
+    Escape: (event) => {
+      this.close()
+      cancel(event)
     }
   }
 
   #commitSelection() {
-    if (!this.#isValidNewOption(this.comboboxTarget.value, { ignoreAutocomplete: true })) {
+    if (!this.#isValidNewOption(this.#actingCombobox.value, { ignoreAutocomplete: true })) {
       this.#select(this.#selectedOptionElement, { force: true })
     }
   }
 
   #expand() {
-    this.listboxTarget.hidden = false
-    this.comboboxTarget.setAttribute("aria-expanded", true)
+    if (this.#autocompletesList && this.#smallViewport) {
+      this.#openInDialog()
+    } else {
+      this.#openInline()
+    }
+
+    this.#actingCombobox.setAttribute("aria-expanded", true)
   }
 
   #collapse() {
+    this.#actingCombobox.setAttribute("aria-expanded", false) // needs to happen before resetting acting combobox
+
+    if (this.dialogTarget.open) {
+      this.#closeInDialog()
+    } else {
+      this.#closeInline()
+    }
+  }
+
+  #openInDialog() {
+    this.#moveArtifactsToDialog()
+    this.#preventFocusingComboboxAfterClosingDialog()
+    this.dialogTarget.showModal()
+  }
+
+  #openInline() {
+    this.listboxTarget.hidden = false
+  }
+
+  #closeInDialog() {
+    this.#moveArtifactsInline()
+    this.dialogTarget.close()
+  }
+
+  #closeInline() {
     this.listboxTarget.hidden = true
-    this.comboboxTarget.setAttribute("aria-expanded", false)
+  }
+
+  #moveArtifactsToDialog() {
+    this.dialogComboboxTarget.value = this.actingCombobox.value
+
+    this.#actingCombobox = this.dialogComboboxTarget
+    this.#actingListbox = this.dialogListboxTarget
+
+    this.dialogListboxTarget.append(...this.listboxTarget.children)
+  }
+
+  #moveArtifactsInline() {
+    this.comboboxTarget.value = this.actingCombobox.value
+
+    this.#actingCombobox = this.comboboxTarget
+    this.#actingListbox = this.listboxTarget
+
+    this.listboxTarget.append(...this.dialogListboxTarget.children)
   }
 
   #select(option, { force = false } = {}) {
@@ -121,6 +180,8 @@ export default class extends Controller {
     if (option) {
       if (this.hasSelectedClass) option.classList.add(this.selectedClass)
       if (this.hasInvalidClass) this.comboboxTarget.classList.remove(this.invalidClass)
+      this.comboboxTarget.removeAttribute("aria-invalid")
+      this.comboboxTarget.removeAttribute("aria-errormessage")
 
       this.#maybeAutocompleteWith(option, { force })
       this.#executeSelect(option, { selected: true })
@@ -174,24 +235,57 @@ export default class extends Controller {
   #maybeAutocompleteWith(option, { force }) {
     if (!this.#autocompletesInline && !force) return
 
-    const typedValue = this.comboboxTarget.value
+    const typedValue = this.#actingCombobox.value
     const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
 
     if (force) {
-      this.comboboxTarget.value = autocompletedValue
-      this.comboboxTarget.setSelectionRange(autocompletedValue.length, autocompletedValue.length)
+      this.#actingCombobox.value = autocompletedValue
+      this.#actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length)
     } else if (startsWith(autocompletedValue, typedValue)) {
-      this.comboboxTarget.value = autocompletedValue
-      this.comboboxTarget.setSelectionRange(typedValue.length, autocompletedValue.length)
+      this.#actingCombobox.value = autocompletedValue
+      this.#actingCombobox.setSelectionRange(typedValue.length, autocompletedValue.length)
     }
   }
 
   #isValidNewOption(query, { ignoreAutocomplete = false } = {}) {
-    const typedValue = this.comboboxTarget.value
+    const typedValue = this.#actingCombobox.value
     const autocompletedValue = this.#visibleOptionElements[0]?.getAttribute(this.autocompletableAttributeValue)
     const insufficentAutocomplete = !autocompletedValue || !startsWith(autocompletedValue, typedValue)
 
     return query.length > 0 && this.#allowNew && (ignoreAutocomplete || insufficentAutocomplete)
+  }
+
+  // After closing a dialog, focus returns to the last focused element.
+  // +preventFocusingComboboxAfterClosingDialog+ focuses a placeholder element before opening
+  // the dialog, so that the combobox is not focused again after closing, which would reopen.
+  #preventFocusingComboboxAfterClosingDialog() {
+    this.dialogFocusTrapTarget.focus()
+  }
+
+  // +visuallyHideListbox+ makes it so the listbox is hidden to the user,
+  // but still searchable by JS.
+  #visuallyHideListbox() {
+    this.listboxTarget.style.display = "none"
+  }
+
+  #isDialogDismisser(target) {
+    return target.closest("dialog") && target.role != "combobox"
+  }
+
+  get #actingListbox() {
+    return this.actingListbox
+  }
+
+  set #actingListbox(listbox) {
+    this.actingListbox = listbox
+  }
+
+  get #actingCombobox() {
+    return this.actingCombobox
+  }
+
+  set #actingCombobox(combobox) {
+    this.actingCombobox = combobox
   }
 
   get #allOptions() {
@@ -199,7 +293,7 @@ export default class extends Controller {
   }
 
   get #allOptionElements() {
-    return this.listboxTarget.querySelectorAll(`[${this.filterableAttributeValue}]`)
+    return this.#actingListbox.querySelectorAll(`[${this.filterableAttributeValue}]`)
   }
 
   get #visibleOptionElements() {
@@ -207,7 +301,7 @@ export default class extends Controller {
   }
 
   get #selectedOptionElement() {
-    return this.listboxTarget.querySelector("[role=option][aria-selected=true]")
+    return this.#actingListbox.querySelector("[role=option][aria-selected=true]")
   }
 
   get #selectedOptionIndex() {
@@ -233,6 +327,10 @@ export default class extends Controller {
 
   get #autocompletesInline() {
     return this.autocompleteValue === "both" || this.autocompleteValue === "inline"
+  }
+
+  get #smallViewport() {
+    return window.matchMedia(`(max-width: ${this.smallViewportMaxWidthValue})`).matches
   }
 }
 
