@@ -11,7 +11,8 @@ const concerns = [
   Combobox.Navigation,
   Combobox.Options,
   Combobox.Selection,
-  Combobox.Toggle
+  Combobox.Toggle,
+  Combobox.Validity
 ]
 
 export default class HwComboboxController extends Concerns(...concerns) {

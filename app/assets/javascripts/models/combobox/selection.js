@@ -18,19 +18,11 @@ Combobox.Selection = Base => class extends Base {
 
     if (option) {
       if (this.hasSelectedClass) option.classList.add(this.selectedClass)
-      if (this.hasInvalidClass) this.comboboxTarget.classList.remove(this.invalidClass)
-      this.comboboxTarget.removeAttribute("aria-invalid")
-      this.comboboxTarget.removeAttribute("aria-errormessage")
-
+      this._markValid()
       this._maybeAutocompleteWith(option, { force })
       this._executeSelect(option, { selected: true })
     } else {
-      if (this._valueIsInvalid) {
-        if (this.hasInvalidClass) this.comboboxTarget.classList.add(this.invalidClass)
-
-        this.comboboxTarget.setAttribute("aria-invalid", true)
-        this.comboboxTarget.setAttribute("aria-errormessage", `Please select a valid option for ${this.comboboxTarget.name}`)
-      }
+      this._markInvalid()
     }
   }
 
@@ -64,10 +56,5 @@ Combobox.Selection = Base => class extends Base {
 
   _selectOptionByValue(value) {
     this._allOptions.find(option => option.dataset.value === value)?.click()
-  }
-
-  get _valueIsInvalid() {
-    const isRequiredAndEmpty = this.comboboxTarget.required && !this.hiddenFieldTarget.value
-    return isRequiredAndEmpty
   }
 }
