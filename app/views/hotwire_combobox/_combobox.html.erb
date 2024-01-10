@@ -6,6 +6,7 @@
         **hidden_field_attrs %>
 
   <%= tag.input **component.input_attrs %>
+  <%= tag.span **component.handle_attrs %>
 
   <%= tag.ul **component.listbox_attrs do |ul| %>
     <% component.listbox_options.each do |option| %>

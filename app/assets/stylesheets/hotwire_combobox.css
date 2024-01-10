@@ -6,7 +6,8 @@
   --hw-border-width--slim: 1px;
   --hw-border-width--thick: 2px;
 
-  --hw-chevron-offset-right: 2rem;
+  --hw-handle-offset-right: 0.375rem;
+  --hw-handle-width: 1.5em;
 
   --hw-combobox-width: 8rem;
 
@@ -35,13 +36,30 @@
   border: var(--hw-border-width--slim) solid var(--hw-border-color);
   border-radius: var(--hw-border-radius);
   line-height: var(--hw-line-height);
-  padding: var(--hw-padding--slim) var(--hw-chevron-offset-right) var(--hw-padding--slim) var(--hw-padding--thick);
+  padding: var(--hw-padding--slim) var(--hw-padding--thick);
+  position: relative;
   width: var(--hw-combobox-width);
+}
 
+.hw-combobox__handle {
+  height: 100%;
+  position: absolute;
+  right: var(--hw-handle-offset-right);
+  top: 0;
+  width: var(--hw-handle-width);
+}
+
+.hw-combobox__handle::before {
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
-  background-position: right .5rem center;
+  background-position: center;
   background-repeat: no-repeat;
-  background-size: 1.5em 1.5em;
+  background-size: var(--hw-handle-width);
+  bottom: 0;
+  content: '';
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .hw-combobox__input:focus-visible {

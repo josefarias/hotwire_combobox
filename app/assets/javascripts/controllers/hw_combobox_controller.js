@@ -27,6 +27,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
     "dialogCombobox",
     "dialogFocusTrap",
     "dialogListbox",
+    "handle",
     "hiddenField",
     "listbox"
   ]

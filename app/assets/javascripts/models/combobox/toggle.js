@@ -11,6 +11,14 @@ Combobox.Toggle = Base => class extends Base {
     this.expandedValue = false
   }
 
+  toggle() {
+    if(this.expandedValue) {
+      this.close()
+    } else {
+      this._actingCombobox.focus()
+    }
+  }
+
   closeOnClickOutside({ target }) {
     if (this.element.contains(target) && !this._isDialogDismisser(target)) return
 

@@ -56,6 +56,13 @@ class HotwireCombobox::Component
     }.merge combobox_attrs.except(*nested_attrs)
   end
 
+  def handle_attrs
+    {
+      class: "hw-combobox__handle",
+      data: handle_data
+    }
+  end
+
   def listbox_attrs
     {
       id: listbox_id,
@@ -163,6 +170,14 @@ class HotwireCombobox::Component
         owns: listbox_id,
         haspopup: "listbox",
         autocomplete: autocomplete
+    end
+
+
+    def handle_data
+      {
+        action: "click->hw-combobox#toggle",
+        hw_combobox_target: "handle"
+      }
     end
 
 
