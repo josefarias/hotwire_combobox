@@ -6,6 +6,10 @@ module HotwireCombobox
       delegate :bypass_convenience_methods?, to: :HotwireCombobox
     end
 
+    def hw_combobox_style_tag(*args, **kwargs)
+      stylesheet_link_tag HotwireCombobox.stylesheet_path, *args, **kwargs
+    end
+
     def hw_combobox_tag(*args, **kwargs, &block)
       render "hotwire_combobox/combobox", component: HotwireCombobox::Component.new(self, *args, **kwargs, &block)
     end

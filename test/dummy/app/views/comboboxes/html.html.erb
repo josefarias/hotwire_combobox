@@ -1,11 +1,41 @@
 <style>
-  .hw-combobox [role="listbox"] { padding: 0; }
-  .hw-combobox [role="option"] { list-style: none; }
-  .selected { background-color: #f0f0f0; }
+  :root {
+    --hw-option-bg-color: #edf1fa;
+    --hw-active-bg-color: #aefa98;
+  }
+
+  .state {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 100%;
+    margin-right: 0.5rem;
+    position: relative;
+  }
+
+  .state::before {
+    content: '';
+    position: absolute;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(<%= asset_path('us.png') %>);
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 100%;
+  }
+
+  .state--alabama::before { background-image: url(<%= asset_path('alabama.png') %>); }
+  .state--florida::before { background-image: url(<%= asset_path('florida.png') %>); }
+  .state--michigan::before { background-image: url(<%= asset_path('michigan.png') %>); }
+  .state--minnesota::before { background-image: url(<%= asset_path('minnesota.png') %>); }
+  .state--mississippi::before { background-image: url(<%= asset_path('mississippi.png') %>); }
+  .state--missouri::before { background-image: url(<%= asset_path('missouri.png') %>); }
+
+  .hw-combobox__option--selected {
+    background-color: #f4ff59;
+  }
 </style>
 
-<%= combobox_tag "state", id: "state-field",
-      options: html_combobox_options(@states),
-      data: { "hw-combobox-selected-class": "selected" } %>
-
-<div id="separate-element" style="width: 100px; height: 100px; background-color: red;"></div>
+<%= combobox_tag "state", id: "state-field", options: html_combobox_options(@states) %>

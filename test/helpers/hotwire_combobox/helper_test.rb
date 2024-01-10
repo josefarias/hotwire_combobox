@@ -108,4 +108,9 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
   test "combobox is defined on the formbuilder" do
     assert ActionView::Helpers::FormBuilder.instance_methods.include?(:combobox)
   end
+
+  test "hw_combobox_style_tag" do
+    assert_attrs hw_combobox_style_tag, tag_name: :link,
+      rel: "stylesheet", href: "/stylesheets/hotwire_combobox.css"
+  end
 end

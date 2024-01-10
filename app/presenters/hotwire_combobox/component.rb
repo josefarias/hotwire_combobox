@@ -49,6 +49,7 @@ class HotwireCombobox::Component
     {
       id: input_id,
       role: :combobox,
+      class: "hw-combobox__input",
       type: input_type,
       data: input_data,
       aria: input_aria
@@ -59,6 +60,7 @@ class HotwireCombobox::Component
     {
       id: listbox_id,
       role: :listbox,
+      class: "hw-combobox__listbox",
       hidden: "",
       data: listbox_data
     }
@@ -114,7 +116,8 @@ class HotwireCombobox::Component
         hw_combobox_autocomplete_value: autocomplete,
         hw_combobox_small_viewport_max_width_value: small_width,
         hw_combobox_filterable_attribute_value: "data-filterable-as",
-        hw_combobox_autocompletable_attribute_value: "data-autocompletable-as"
+        hw_combobox_autocompletable_attribute_value: "data-autocompletable-as",
+        hw_combobox_selected_class: "hw-combobox__option--selected"
     end
 
 

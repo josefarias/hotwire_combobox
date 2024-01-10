@@ -18,7 +18,7 @@ class HotwireCombobox::Listbox::Option
       {
         id: id,
         role: :option,
-        style: "cursor: pointer;",
+        class: "hw-combobox__option",
         data: data
       }
     end

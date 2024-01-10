@@ -15,5 +15,9 @@ module HotwireCombobox
     def bypass_convenience_methods?
       bypass_convenience_methods
     end
+
+    def stylesheet_path
+      "hotwire_combobox"
+    end
   end
 end

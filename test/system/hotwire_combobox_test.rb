@@ -38,7 +38,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox
 
     assert_selector "input[aria-expanded=true]"
-    click_separate_element
+    click_on_edge
     assert_selector "input[aria-expanded=false]"
     assert_no_selector "li"
   end
@@ -81,12 +81,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     find("#state-field-hw-combobox").send_keys("Flor")
     assert_field "state-field-hw-combobox", with: "Florida"
     assert_field "state-field", type: "hidden", with: "FL"
-    assert_selector "li[role=option].selected", text: "Florida"
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Florida"
 
     find("#state-field-hw-combobox").send_keys(:backspace)
     assert_field "state-field-hw-combobox", with: "Flor"
     assert_field "state-field", type: "hidden", with: nil
-    assert_no_selector "li[role=option].selected"
+    assert_no_selector "li[role=option].hw-combobox__option--selected"
   end
 
   test "autocomplete only works when strings match from the very beginning, but the first option is still selected" do
@@ -97,7 +97,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     find("#state-field-hw-combobox").send_keys("lor")
     assert_field "state-field-hw-combobox", with: "lor"
     assert_field "state-field", type: "hidden", with: "FL"
-    assert_selector "li[role=option].selected", text: "Florida"
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Florida"
   end
 
   test "pressing enter locks in the current selection, but editing the text field resets it" do
@@ -109,13 +109,13 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector "input[aria-expanded=false]"
     assert_field "state-field-hw-combobox", with: "Florida"
     assert_field "state-field", type: "hidden", with: "FL"
-    assert_no_selector "li[role=option].selected", text: "Florida" # because the list is closed
+    assert_no_selector "li[role=option].hw-combobox__option--selected", text: "Florida" # because the list is closed
 
     find("#state-field-hw-combobox").send_keys(:backspace)
     assert_selector "input[aria-expanded=true]"
     assert_field "state-field-hw-combobox", with: "Florid"
     assert_field "state-field", type: "hidden", with: nil
-    assert_no_selector "li[role=option].selected"
+    assert_no_selector "li[role=option].hw-combobox__option--selected"
   end
 
   test "clicking away locks in the current selection" do
@@ -124,7 +124,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox
 
     find("#state-field-hw-combobox").send_keys("lor")
-    click_separate_element
+    click_on_edge
     assert_selector "input[aria-expanded=false]"
     assert_field "state-field-hw-combobox", with: "Florida"
     assert_field "state-field", type: "hidden", with: "FL"
@@ -148,33 +148,33 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox
 
     find("#state-field-hw-combobox").send_keys(:down)
-    assert_selector "li[role=option].selected", text: "Alabama"
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Alabama"
 
     find("#state-field-hw-combobox").send_keys(:down)
-    assert_selector "li[role=option].selected", text: "Florida"
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Florida"
 
     find("#state-field-hw-combobox").send_keys(:down)
-    assert_selector "li[role=option].selected", text: "Michigan"
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Michigan"
 
     find("#state-field-hw-combobox").send_keys(:up)
-    assert_selector "li[role=option].selected", text: "Florida"
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Florida"
 
     find("#state-field-hw-combobox").send_keys(:up)
-    assert_selector "li[role=option].selected", text: "Alabama"
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Alabama"
 
     # wrap around
     find("#state-field-hw-combobox").send_keys(:up)
-    assert_selector "li[role=option].selected", text: "Missouri"
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Missouri"
 
     find("#state-field-hw-combobox").send_keys(:down)
-    assert_selector "li[role=option].selected", text: "Alabama"
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Alabama"
 
     # home and end keys
     find("#state-field-hw-combobox").send_keys(:end)
-    assert_selector "li[role=option].selected", text: "Missouri"
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Missouri"
 
     find("#state-field-hw-combobox").send_keys(:home)
-    assert_selector "li[role=option].selected", text: "Alabama"
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Alabama"
   end
 
   test "select option by clicking on it" do
@@ -200,7 +200,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     open_combobox
 
-    assert_selector "li[role=option].selected", text: "Michigan"
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Michigan"
   end
 
   test "combobox is invalid if required and empty" do
@@ -340,7 +340,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     find("#state-field-hw-combobox").send_keys("mi")
 
-    click_separate_element
+    click_on_edge
 
     assert_field "state-field", type: "hidden", with: "MI"
     assert_field "state-field-hw-combobox", with: "Michigan"
@@ -357,7 +357,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       within "dialog" do
         find("#state-field-hw-dialog-combobox").send_keys("Flor")
         assert_field "state-field-hw-dialog-combobox", with: "Florida"
-        assert_selector "li[role=option].selected", text: "Florida"
+        assert_selector "li[role=option].hw-combobox__option--selected", text: "Florida"
       end
 
       click_on_edge
@@ -369,10 +369,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   private
     def open_combobox
       find("#state-field-hw-combobox").click
-    end
-
-    def click_separate_element
-      find("#separate-element").click
     end
 
     def on_small_screen
