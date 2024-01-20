@@ -9,6 +9,7 @@ module HotwireCombobox
     def hw_combobox_style_tag(*args, **kwargs)
       stylesheet_link_tag HotwireCombobox.stylesheet_path, *args, **kwargs
     end
+    alias_method :combobox_style_tag, :hw_combobox_style_tag unless bypass_convenience_methods?
 
     def hw_combobox_tag(*args, **kwargs, &block)
       render "hotwire_combobox/combobox", component: HotwireCombobox::Component.new(self, *args, **kwargs, &block)
