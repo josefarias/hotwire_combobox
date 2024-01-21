@@ -6,6 +6,7 @@
   --hw-border-width--slim: 1px;
   --hw-border-width--thick: 2px;
 
+  --hw-handle-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
   --hw-handle-offset-right: 0.375rem;
   --hw-handle-width: 1.5em;
 
@@ -15,6 +16,7 @@
 
   --hw-line-height: 1.5rem;
 
+  --hw-listbox-height: calc(var(--hw-line-height) * 10);
   --hw-listbox-offset-top: var(--hw-line-height);
   --hw-listbox-z-index: 10;
 
@@ -50,7 +52,7 @@
 }
 
 .hw-combobox__handle::before {
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  background-image: var(--hw-handle-image);
   background-position: center;
   background-repeat: no-repeat;
   background-size: var(--hw-handle-width);
@@ -68,11 +70,15 @@
 }
 
 .hw-combobox__listbox {
-  border-radius: calc(var(--hw-border-radius) + var(--hw-border-width--slim));
+  border-color: var(--hw-border-color);
+  border-radius: var(--hw-border-radius);
+  border-style: solid;
+  border-width: var(--hw-border-width--slim);
   left: 0;
   line-height: var(--hw-line-height);
   list-style: none;
-  overflow: clip;
+  max-height: var(--hw-listbox-height);
+  overflow: auto;
   padding: 0;
   position: absolute;
   top: var(--hw-listbox-offset-top);
@@ -82,23 +88,9 @@
 
 .hw-combobox__option {
   background-color: var(--hw-option-bg-color);
-  border-color: var(--hw-border-color);
-  border-style: solid;
-  border-width: 0 var(--hw-border-width--slim);
   padding: var(--hw-padding--slim) var(--hw-padding--thick);
+  user-select: none;
   white-space: nowrap;
-}
-
-.hw-combobox__option:first-child {
-  border-top-left-radius: var(--hw-border-radius);
-  border-top-right-radius: var(--hw-border-radius);
-  border-width: var(--hw-border-width--slim) var(--hw-border-width--slim) 0 var(--hw-border-width--slim);
-}
-
-.hw-combobox__option:last-child {
-  border-bottom-left-radius: var(--hw-border-radius);
-  border-bottom-right-radius: var(--hw-border-radius);
-  border-width: 0 var(--hw-border-width--slim) var(--hw-border-width--slim) var(--hw-border-width--slim);
 }
 
 .hw-combobox__option:hover,
