@@ -22,4 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "importmap-rails", ">= 1.2"
   spec.add_dependency "stimulus-rails", ">= 1.2"
   spec.add_dependency "turbo-rails", ">= 1.2"
+  spec.add_dependency "requestjs-rails", ">= 0.0.11"
 end
