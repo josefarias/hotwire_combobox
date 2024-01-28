@@ -36,3 +36,17 @@ export function cancel(event) {
 export function startsWith(string, substring) {
   return string.toLowerCase().startsWith(substring.toLowerCase())
 }
+
+export function nextFrame() {
+  return new Promise(requestAnimationFrame)
+}
+
+export function debounce(fn, delay = 150) {
+  let timeoutId = null
+
+  return (...args) => {
+    const callback = () => fn.apply(this, args)
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(callback, delay)
+  }
+}

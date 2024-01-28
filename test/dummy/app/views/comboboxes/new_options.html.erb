@@ -2,6 +2,10 @@
   [aria-selected=true] { color: cyan; }
 </style>
 
+<% if flash[:notice] %>
+  <p><%= flash[:notice] %></p>
+<% end %>
+
 <%= form_with model: User.new, url: new_options_form_path, method: :post do |form| %>
   <%= form.label "Favorite State", for: "allow-new-hw-combobox" %>
   <%= form.combobox :favorite_state_id, id: "allow-new", options: State.all, name_when_new: "user[favorite_state_attributes][name]" %>

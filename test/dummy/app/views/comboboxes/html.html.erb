@@ -38,4 +38,12 @@
   }
 </style>
 
-<%= combobox_tag "state", id: "state-field", options: html_combobox_options(@states) %>
+<%
+  @states = hw_combobox_options State.all,
+    id: :abbreviation,
+    value: :abbreviation,
+    display: :name,
+    render_in: { partial: "states/state" }
+%>
+
+<%= combobox_tag "state", id: "state-field", options: @states %>

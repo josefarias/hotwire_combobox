@@ -1,6 +1,6 @@
 class HotwireCombobox::Listbox::Option
   def initialize(option)
-    @option = option
+    @option = option.is_a?(Hash) ? Data.new(**option) : option
   end
 
   def render_in(view_context)
@@ -8,6 +8,8 @@ class HotwireCombobox::Listbox::Option
   end
 
   private
+    Data = Struct.new :id, :value, :display, :content, :filterable_as, :autocompletable_as, keyword_init: true
+
     attr_reader :option
 
     def content

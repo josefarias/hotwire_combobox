@@ -1,0 +1,7 @@
+<%# locals: (for_id:, options:) -%>
+
+<%= turbo_stream.public_send(hw_combobox_page_stream_action, hw_listbox_options_id(for_id)) do %>
+  <% options.each do |option| %>
+    <%= render option %>
+  <% end %>
+<% end %>

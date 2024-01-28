@@ -1,6 +1,7 @@
 import Combobox from "models/combobox/base"
 
 import "models/combobox/actors"
+import "models/combobox/async_loading"
 import "models/combobox/autocomplete"
 import "models/combobox/dialog"
 import "models/combobox/filtering"

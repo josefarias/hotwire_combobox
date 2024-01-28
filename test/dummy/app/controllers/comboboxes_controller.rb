@@ -28,8 +28,14 @@ class ComboboxesController < ApplicationController
   def list_autocomplete
   end
 
+  def async
+  end
+
+  def async_html
+  end
+
   private
-    delegate :combobox_options, to: "ApplicationController.helpers", private: true
+    delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 
     def set_states
       @states = combobox_options State.all, id: :abbreviation, value: :abbreviation, display: :name

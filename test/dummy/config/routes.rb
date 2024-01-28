@@ -8,6 +8,11 @@ Rails.application.routes.draw do
   get "new_options_combobox", to: "comboboxes#new_options"
   get "inline_autocomplete_combobox", to: "comboboxes#inline_autocomplete"
   get "list_autocomplete_combobox", to: "comboboxes#list_autocomplete"
+  get "async_combobox", to: "comboboxes#async"
+  get "async_html_combobox", to: "comboboxes#async_html"
+
+  get "movies", to: "movies#index"
+  get "movies_html", to: "movies#index_html"
 
   post "new_options_form", to: "new_options_forms#create"
 

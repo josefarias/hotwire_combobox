@@ -1,13 +1,5 @@
 class HotwireCombobox::Component
-  class << self
-    def options_from(view, options)
-      if HotwireCombobox::Option === options.first
-        options
-      else
-        view.hw_combobox_options options, display: :to_combobox_display
-      end
-    end
-  end
+  attr_reader :async_src, :options
 
   def initialize(
       view, name, value = nil,
@@ -17,14 +9,14 @@ class HotwireCombobox::Component
       name_when_new: nil,
       open: false,
       small_width: "640px",
+      async_src: nil,
       options: [], data: {}, input: {}, **rest)
-    @combobox_attrs = input.reverse_merge(rest).with_indifferent_access # `input: {}` allows for specifying e.g. data attributes on the input field
-    @options = self.class.options_from view, options
+    @combobox_attrs = input.reverse_merge(rest).with_indifferent_access
 
-    @view, @autocomplete, @id, @name, @value, @form,
-    @name_when_new, @open, @data, @small_width =
-      view, autocomplete, id, name, value, form,
-      name_when_new, open, data, small_width
+    @view, @autocomplete, @id, @name, @value, @form, @async_src,
+    @name_when_new, @open, @data, @small_width, @options =
+      view, autocomplete, id, name, value, form, async_src,
+      name_when_new, open, data, small_width, options
   end
 
   def fieldset_attrs
@@ -34,6 +26,7 @@ class HotwireCombobox::Component
     }
   end
 
+
   def hidden_field_attrs
     {
       id: hidden_field_id,
@@ -42,6 +35,7 @@ class HotwireCombobox::Component
       value: hidden_field_value
     }
   end
+
 
   def input_attrs
     nested_attrs = %i[ data aria ]
@@ -56,12 +50,14 @@ class HotwireCombobox::Component
     }.merge combobox_attrs.except(*nested_attrs)
   end
 
+
   def handle_attrs
     {
       class: "hw-combobox__handle",
       data: handle_data
     }
   end
+
 
   def listbox_attrs
     {
@@ -73,9 +69,11 @@ class HotwireCombobox::Component
     }
   end
 
-  def listbox_options
-    options.map { |option| HotwireCombobox::Listbox::Option.new option }
+
+  def listbox_options_attrs
+    { id: listbox_options_id }
   end
+
 
   def dialog_attrs
     {
@@ -83,6 +81,7 @@ class HotwireCombobox::Component
       data: dialog_data
     }
   end
+
 
   def dialog_input_attrs
     {
@@ -95,6 +94,7 @@ class HotwireCombobox::Component
     }
   end
 
+
   def dialog_listbox_attrs
     {
       id: dialog_listbox_id,
@@ -103,6 +103,7 @@ class HotwireCombobox::Component
     }
   end
 
+
   def dialog_focus_trap_attrs
     {
       tabindex: "-1",
@@ -110,9 +111,18 @@ class HotwireCombobox::Component
     }
   end
 
+
+  def paginated?
+    async_src.present?
+  end
+
+  def pagination_attrs
+    { src: async_src }
+  end
+
   private
     attr_reader :view, :autocomplete, :id, :name, :value, :form,
-      :name_when_new, :open, :options, :data, :combobox_attrs, :small_width
+      :name_when_new, :open, :data, :combobox_attrs, :small_width
 
     def fieldset_data
       data.reverse_merge \
@@ -122,6 +132,7 @@ class HotwireCombobox::Component
         hw_combobox_original_name_value: hidden_field_name,
         hw_combobox_autocomplete_value: autocomplete,
         hw_combobox_small_viewport_max_width_value: small_width,
+        hw_combobox_async_src_value: async_src,
         hw_combobox_filterable_attribute_value: "data-filterable-as",
         hw_combobox_autocompletable_attribute_value: "data-autocompletable-as",
         hw_combobox_selected_class: "hw-combobox__option--selected"
@@ -187,6 +198,11 @@ class HotwireCombobox::Component
 
     def listbox_data
       { hw_combobox_target: "listbox" }
+    end
+
+
+    def listbox_options_id
+      "#{listbox_id}__options"
     end
 
 

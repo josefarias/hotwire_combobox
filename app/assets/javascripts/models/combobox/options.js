@@ -3,7 +3,7 @@ import { visible, startsWith } from "helpers"
 
 Combobox.Options = Base => class extends Base {
   _resetOptions() {
-    this._allOptionElements.forEach(option => this._deselect(option))
+    this._deselect()
     this.hiddenFieldTarget.name = this.originalNameValue
   }
 
@@ -13,6 +13,10 @@ Combobox.Options = Base => class extends Base {
     const insufficentAutocomplete = !autocompletedValue || !startsWith(autocompletedValue, typedValue)
 
     return query.length > 0 && this._allowNew && (ignoreAutocomplete || insufficentAutocomplete)
+  }
+
+  _toggleEmptyClass() {
+    this._actingListbox.classList.toggle("hw-combobox__listbox--empty", !this._visibleOptionElements[0])
   }
 
   get _allowNew() {

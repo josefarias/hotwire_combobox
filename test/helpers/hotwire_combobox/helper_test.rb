@@ -60,25 +60,23 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
       "aria-haspopup": "listbox", "aria-autocomplete": "both"
   end
 
-  test "hw_combobox_options instantiates an array of `HotwireCombobox::Option`s" do
+  test "hw_combobox_options instantiates an array of `HotwireCombobox::Listbox::Option`s" do
     options = hw_combobox_options [
       { value: :foo, display: :bar },
       { value: :foobar, display: :barfoo }
     ]
 
-    assert options.all? { |option| HotwireCombobox::Option === option }
+    assert options.all? { |option| HotwireCombobox::Listbox::Option === option }
   end
 
   test "passing an ActiveRecord::Relation to combobox_options" do
     options = combobox_options State.all, display: :name
 
-    compliant = options.map.with_index do |option, i|
-      HotwireCombobox::Option === option &&
-        option.value == State.all[i].id &&
-        option.display == State.all[i].name
-    end.all?
-
-    assert compliant
+    options.map.with_index do |option, i|
+      assert_instance_of HotwireCombobox::Listbox::Option, option
+      assert_equal State.all[i].id, option.send(:value)
+      assert_equal State.all[i].name, option.send(:content)
+    end
   end
 
   test "combobox_options is an alias for hw_combobox_options" do
@@ -112,5 +110,10 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
   test "hw_combobox_style_tag" do
     assert_attrs hw_combobox_style_tag, tag_name: :link,
       rel: "stylesheet", href: "/stylesheets/hotwire_combobox.css"
+  end
+
+  test "hw_listbox_options_id returns the same as component#listbox_options_id" do
+    assert_instance_of String, hw_listbox_options_id(:bar)
+    assert_equal hw_listbox_options_id(:bar), HotwireCombobox::Component.new(self, :foo, id: :bar).listbox_options_attrs[:id]
   end
 end

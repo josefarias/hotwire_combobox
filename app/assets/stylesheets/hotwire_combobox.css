@@ -38,9 +38,10 @@
   border: var(--hw-border-width--slim) solid var(--hw-border-color);
   border-radius: var(--hw-border-radius);
   line-height: var(--hw-line-height);
-  padding: var(--hw-padding--slim) var(--hw-padding--thick);
+  padding: var(--hw-padding--slim) var(--hw-handle-width) var(--hw-padding--slim) var(--hw-padding--thick);
   position: relative;
   width: var(--hw-combobox-width);
+  text-overflow: ellipsis;
 }
 
 .hw-combobox__handle {
@@ -86,11 +87,17 @@
   z-index: var(--hw-listbox-z-index);
 }
 
+.hw-combobox__listbox--empty {
+  border: transparent;
+}
+
 .hw-combobox__option {
   background-color: var(--hw-option-bg-color);
   padding: var(--hw-padding--slim) var(--hw-padding--thick);
   user-select: none;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .hw-combobox__option:hover,

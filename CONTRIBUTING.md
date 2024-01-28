@@ -22,7 +22,7 @@ $ bundle exec rake app:test:system
 $ bin/rails s
 ```
 
-Make sure you restart the server after making changes to JS.
+Make sure you restart the server after making changes to the engine (including JS).
 
 ## Populating the dummy app with fixtures
 

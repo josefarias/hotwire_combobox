@@ -5,6 +5,7 @@ import { Controller } from "@hotwired/stimulus"
 const concerns = [
   Controller,
   Combobox.Actors,
+  Combobox.AsyncLoading,
   Combobox.Autocomplete,
   Combobox.Dialog,
   Combobox.Filtering,
@@ -29,10 +30,12 @@ export default class HwComboboxController extends Concerns(...concerns) {
     "dialogListbox",
     "handle",
     "hiddenField",
-    "listbox"
+    "listbox",
+    "paginationFrame"
   ]
 
   static values = {
+    asyncSrc: String,
     autocompletableAttribute: String,
     autocomplete: String,
     expanded: Boolean,
@@ -44,6 +47,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
 
   initialize() {
     this._initializeActors()
+    this._initializeFiltering()
   }
 
   connect() {
@@ -57,5 +61,9 @@ export default class HwComboboxController extends Concerns(...concerns) {
     } else {
       this._collapse()
     }
+  }
+
+  paginationFrameTargetConnected() {
+    this._toggleEmptyClass()
   }
 }

@@ -9,8 +9,14 @@
   <%= tag.span **component.handle_attrs %>
 
   <%= tag.ul **component.listbox_attrs do |ul| %>
-    <% component.listbox_options.each do |option| %>
-      <%= render option %>
+    <%= tag.div **component.listbox_options_attrs do %>
+      <% component.options.each do |option| %>
+        <%= render option %>
+      <% end %>
+    <% end %>
+
+    <% if component.paginated? %>
+      <%= render "hotwire_combobox/pagination", **component.pagination_attrs %>
     <% end %>
   <% end %>
 

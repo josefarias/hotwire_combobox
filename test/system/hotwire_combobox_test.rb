@@ -244,6 +244,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       end
 
       find("input[type=submit]").click
+
+      assert_text "User created"
     end
 
     new_user = User.last
@@ -274,6 +276,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
         find("input[type=submit]").click
       end
+
+      assert_text "User created"
     end
 
     new_user = User.last
@@ -290,6 +294,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       end
 
       find("input[type=submit]").click
+
+      assert_text "User created"
     end
 
     new_user = User.last
@@ -366,9 +372,58 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     end
   end
 
+  test "hw-combobox__listbox--empty class is added as needed" do
+    visit plain_combobox_path
+
+    open_combobox
+
+    assert_no_selector "ul[role=listbox].hw-combobox__listbox--empty"
+
+    find("#state-field-hw-combobox").then do |input|
+      input.send_keys("asdf")
+      assert_selector "ul[role=listbox].hw-combobox__listbox--empty"
+
+      "asdf".chars.each { input.send_keys(:backspace) }
+
+      input.send_keys("Flo")
+      assert_no_selector "ul[role=listbox].hw-combobox__listbox--empty"
+    end
+  end
+
+  [
+    { path: :async_combobox_path, visible_options: 10 },
+    { path: :async_html_combobox_path, visible_options: 5 }
+  ].each do |test_case|
+    test "async combobox #{test_case[:path]}" do
+      visit send(test_case[:path])
+
+      open_combobox "movie"
+
+      find("#movie-field-hw-combobox").then do |input|
+        assert_text "12 Angry Men"
+
+        input.send_keys("wh")
+
+        assert_field "movie-field-hw-combobox", with: "Whiplash"
+        assert_selector "li[role=option]", count: 2
+
+        input.send_keys(:backspace) # clear autocompleted portion
+        "wh".chars.each { input.send_keys(:backspace) }
+
+        assert_text "12 Angry Men"
+      end
+
+      find("#movie-field-hw-listbox").then do |listbox|
+        assert_selector "li[role=option]", count: test_case[:visible_options]
+        listbox.scroll_to :bottom
+        assert_selector "li[role=option]", count: test_case[:visible_options] + 5
+      end
+    end
+  end
+
   private
-    def open_combobox
-      find("#state-field-hw-combobox").click
+    def open_combobox(name = "state")
+      find("##{name}-field-hw-combobox").click
     end
 
     def on_small_screen

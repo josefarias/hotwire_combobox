@@ -18,6 +18,7 @@ Combobox.Selection = Base => class extends Base {
 
     if (option) {
       if (this.hasSelectedClass) option.classList.add(this.selectedClass)
+
       this._markValid()
       this._maybeAutocompleteWith(option, { force })
       this._executeSelect(option, { selected: true })
@@ -27,20 +28,21 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _executeSelect(option, { selected }) {
+    option?.setAttribute("aria-selected", selected)
+    option?.scrollIntoView({ block: "nearest" })
+
     if (selected) {
-      option.setAttribute("aria-selected", true)
-      this.hiddenFieldTarget.value = option.dataset.value
+      this.hiddenFieldTarget.value = option?.dataset.value
     } else {
-      option.setAttribute("aria-selected", false)
       this.hiddenFieldTarget.value = null
     }
   }
 
-  _deselect(option) {
-    if (option) {
-      if (this.hasSelectedClass) option.classList.remove(this.selectedClass)
-      this._executeSelect(option, { selected: false })
-    }
+  _deselect() {
+    const option = this._selectedOptionElement
+
+    if (this.hasSelectedClass) option?.classList.remove(this.selectedClass)
+    this._executeSelect(option, { selected: false })
   }
 
   _selectNew(query) {

@@ -1,4 +1,5 @@
 import Combobox from "models/combobox/base"
+import { nextFrame } from "helpers"
 
 Combobox.Toggle = Base => class extends Base {
   open() {
@@ -43,11 +44,13 @@ Combobox.Toggle = Base => class extends Base {
     return target.closest("dialog") && target.role != "combobox"
   }
 
-  _expand() {
+  async _expand() {
     if (this._autocompletesList && this._smallViewport) {
       this._openInDialog()
     } else {
       this._openInline()
+      await nextFrame()
+      this._toggleEmptyClass()
     }
 
     this._actingCombobox.setAttribute("aria-expanded", true)
