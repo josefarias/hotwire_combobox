@@ -23,8 +23,8 @@ Combobox.Autocomplete = Base => class extends Base {
     }
   }
 
-  // +visuallyHideListbox+ makes it so the listbox is hidden to the user when
-  // not autocompleting lists, but still searchable by JS.
+  // +visuallyHideListbox+ hides the listbox from the user,
+  // but makes it still searchable by JS.
   _visuallyHideListbox() {
     this.listboxTarget.style.display = "none"
   }

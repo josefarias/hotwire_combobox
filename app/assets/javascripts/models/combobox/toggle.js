@@ -7,16 +7,17 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   close() {
-    if (!this._isOpen) return
-    this._commitSelection()
-    this.expandedValue = false
+    if (this._isOpen) {
+      this._ensureSelection()
+      this.expandedValue = false
+    }
   }
 
   toggle() {
-    if(this.expandedValue) {
+    if (this.expandedValue) {
       this.close()
     } else {
-      this._actingCombobox.focus()
+      this._openByFocusing()
     }
   }
 
@@ -34,10 +35,14 @@ Combobox.Toggle = Base => class extends Base {
     this.close()
   }
 
-  _commitSelection() {
+  _ensureSelection() {
     if (!this._isValidNewOption(this._actingCombobox.value, { ignoreAutocomplete: true })) {
       this._select(this._selectedOptionElement, { force: true })
     }
+  }
+
+  _openByFocusing() {
+    this._actingCombobox.focus()
   }
 
   _isDialogDismisser(target) {
@@ -53,7 +58,7 @@ Combobox.Toggle = Base => class extends Base {
       this._toggleEmptyClass()
     }
 
-    this._actingCombobox.setAttribute("aria-expanded", true)
+    this._actingCombobox.setAttribute("aria-expanded", true) // needs to happen after setting acting combobox
   }
 
   _collapse() {

@@ -10,5 +10,5 @@
   }
 </style>
 
-<%= combobox_tag "movie", id: "movie-field", options: Movie.all.alphabetically,
+<%= combobox_tag "movie", id: "movie-field", options: Movie.all,
       render_in: { partial: "movies/movie", formats: [:turbo_stream] } %>

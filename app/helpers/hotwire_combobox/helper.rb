@@ -15,10 +15,9 @@ module HotwireCombobox
     end
 
     hw def hw_combobox_tag(*args, async_src: nil, options: [], render_in: {}, **kwargs)
-      component = HotwireCombobox::Component.new self, *args,
-        options: hw_combobox_options(options, render_in: render_in),
-        async_src: hw_uri_with_params(async_src, format: :turbo_stream),
-        **kwargs
+      options = hw_combobox_options options, render_in: render_in
+      src = hw_uri_with_params async_src, format: :turbo_stream
+      component = HotwireCombobox::Component.new self, *args, options: options, async_src: src, **kwargs
 
       render "hotwire_combobox/combobox", component: component
     end
@@ -27,27 +26,21 @@ module HotwireCombobox
       if options.first.is_a? HotwireCombobox::Listbox::Option
         options
       else
-        if render_in.present?
-          methods[:content] = ->(object) { render **render_in.merge(object: object) }
+        content = if render_in.present?
+          ->(object) { render(**render_in.merge(object: object)) }
+        else
+          methods[:content]
         end
 
-        hw_parse_combobox_options options, **methods.merge(display: display)
+        hw_parse_combobox_options options, **methods.merge(display: display, content: content)
       end
     end
 
     hw def hw_paginated_combobox_options(options, for_id:, src:, next_page:, render_in: {}, **methods)
-      safe_join [
-        render(
-          "hotwire_combobox/paginated_options",
-          for_id: for_id,
-          options: hw_combobox_options(options, render_in: render_in, **methods),
-          format: :turbo_stream),
-        render(
-          "hotwire_combobox/next_page",
-          src: src,
-          next_page: next_page,
-          format: :turbo_stream)
-      ]
+      this_page = render("hotwire_combobox/paginated_options", for_id: for_id, options: hw_combobox_options(options, render_in: render_in, **methods), format: :turbo_stream)
+      next_page = render("hotwire_combobox/next_page", src: src, next_page: next_page, format: :turbo_stream)
+
+      safe_join [ this_page, next_page ]
     end
 
     hw def hw_listbox_options_id(id)

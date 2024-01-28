@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   get "movies", to: "movies#index"
   get "movies_html", to: "movies#index_html"
 
+  get "greeting", to: "greetings#new"
+
   post "new_options_form", to: "new_options_forms#create"
 
   root to: "comboboxes#plain"

@@ -1,28 +1,6 @@
 <%= tag.fieldset **component.fieldset_attrs do %>
-  <% hidden_field_attrs = component.hidden_field_attrs %>
-  <%= hidden_field_tag \
-        hidden_field_attrs.delete(:name),
-        hidden_field_attrs.delete(:value),
-        **hidden_field_attrs %>
-
-  <%= tag.input **component.input_attrs %>
-  <%= tag.span **component.handle_attrs %>
-
-  <%= tag.ul **component.listbox_attrs do |ul| %>
-    <%= tag.div **component.listbox_options_attrs do %>
-      <% component.options.each do |option| %>
-        <%= render option %>
-      <% end %>
-    <% end %>
-
-    <% if component.paginated? %>
-      <%= render "hotwire_combobox/pagination", **component.pagination_attrs %>
-    <% end %>
-  <% end %>
-
-  <%= tag.div **component.dialog_focus_trap_attrs %>
-  <%= tag.dialog **component.dialog_attrs do %>
-    <%= tag.input **component.dialog_input_attrs %>
-    <%= tag.ul **component.dialog_listbox_attrs %>
-  <% end %>
+  <%= render "hotwire_combobox/combobox/hidden_field", component: component %>
+  <%= render "hotwire_combobox/combobox/input", component: component %>
+  <%= render "hotwire_combobox/combobox/paginated_listbox", component: component %>
+  <%= render "hotwire_combobox/combobox/dialog", component: component %>
 <% end %>

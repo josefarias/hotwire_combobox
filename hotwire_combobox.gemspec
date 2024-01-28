@@ -3,8 +3,8 @@ require_relative "lib/hotwire_combobox/version"
 Gem::Specification.new do |spec|
   spec.name        = "hotwire_combobox"
   spec.version     = HotwireCombobox::VERSION
-  spec.authors     = ["Jose Farias"]
-  spec.email       = ["jose@farias.mx"]
+  spec.authors     = [ "Jose Farias" ]
+  spec.email       = [ "jose@farias.mx" ]
   spec.homepage    = "https://github.com/josefarias/hotwire_combobox"
   spec.summary     = "A combobox implementation for Ruby on Rails apps running on Hotwire"
   spec.description = "A combobox implementation for Ruby on Rails apps running on Hotwire."

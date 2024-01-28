@@ -25,7 +25,7 @@ Combobox.Filtering = Base => class extends Base {
 
     await get(this.asyncSrcValue, { responseKind: "turbo-stream", query: { q } })
 
-    this._afterTurboStreamRender(() => this._executeFilter(q, event))
+    this._afterTurboStreamRender(() => this._commitFilter(q, event))
   }
 
   _filterSync(event) {
@@ -35,10 +35,10 @@ Combobox.Filtering = Base => class extends Base {
 
     this._allOptionElements.forEach(applyFilter(query, { matching: this.filterableAttributeValue }))
 
-    this._executeFilter(query, event)
+    this._commitFilter(query, event)
   }
 
-  _executeFilter(query, event) {
+  _commitFilter(query, event) {
     const isDeleting = event.inputType === "deleteContentBackward"
 
     this._toggleEmptyClass()

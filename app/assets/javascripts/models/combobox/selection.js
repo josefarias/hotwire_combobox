@@ -21,13 +21,13 @@ Combobox.Selection = Base => class extends Base {
 
       this._markValid()
       this._maybeAutocompleteWith(option, { force })
-      this._executeSelect(option, { selected: true })
+      this._commitSelection(option, { selected: true })
     } else {
       this._markInvalid()
     }
   }
 
-  _executeSelect(option, { selected }) {
+  _commitSelection(option, { selected }) {
     option?.setAttribute("aria-selected", selected)
     option?.scrollIntoView({ block: "nearest" })
 
@@ -42,7 +42,7 @@ Combobox.Selection = Base => class extends Base {
     const option = this._selectedOptionElement
 
     if (this.hasSelectedClass) option?.classList.remove(this.selectedClass)
-    this._executeSelect(option, { selected: false })
+    this._commitSelection(option, { selected: false })
   }
 
   _selectNew(query) {

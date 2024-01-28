@@ -1,6 +1,11 @@
 require "system_test_helper"
 
 class HotwireComboboxTest < ApplicationSystemTestCase
+  test "stimulus controllers from host app are loaded" do
+    visit greeting_path
+    assert_text "Hello there!"
+  end
+
   test "combobox is rendered" do
     visit plain_combobox_path
 
