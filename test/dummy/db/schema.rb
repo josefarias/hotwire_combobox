@@ -10,13 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_20_020208) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_28_015908) do
+  create_table "movies", force: :cascade do |t|
+    t.string "title", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "states", force: :cascade do |t|
     t.string "abbreviation"
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["abbreviation"], name: "index_states_on_abbreviation", unique: true
   end
 
   create_table "users", force: :cascade do |t|
