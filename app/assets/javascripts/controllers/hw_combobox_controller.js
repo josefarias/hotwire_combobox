@@ -51,8 +51,8 @@ export default class HwComboboxController extends Concerns(...concerns) {
   }
 
   connect() {
-    this._initializeSelection()
-    this._initializeListAutocomplete()
+    this._connectSelection()
+    this._connectListAutocomplete()
   }
 
   expandedValueChanged() {

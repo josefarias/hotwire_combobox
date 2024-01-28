@@ -2,7 +2,7 @@ import Combobox from "models/combobox/base"
 import { startsWith } from "helpers"
 
 Combobox.Autocomplete = Base => class extends Base {
-  _initializeListAutocomplete() {
+  _connectListAutocomplete() {
     if (!this._autocompletesList) {
       this._visuallyHideListbox()
     }

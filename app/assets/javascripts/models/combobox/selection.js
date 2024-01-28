@@ -7,7 +7,7 @@ Combobox.Selection = Base => class extends Base {
     this.close()
   }
 
-  _initializeSelection() {
+  _connectSelection() {
     if (this.hiddenFieldTarget.value) {
       this._selectOptionByValue(this.hiddenFieldTarget.value)
     }
