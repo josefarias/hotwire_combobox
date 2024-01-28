@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get "list_autocomplete_combobox", to: "comboboxes#list_autocomplete"
   get "async_combobox", to: "comboboxes#async"
   get "async_html_combobox", to: "comboboxes#async_html"
+  get "render_in_combobox", to: "comboboxes#render_in"
 
   get "movies", to: "movies#index"
   get "movies_html", to: "movies#index_html"

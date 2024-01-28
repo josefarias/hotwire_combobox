@@ -14,9 +14,9 @@ module HotwireCombobox
       stylesheet_link_tag HotwireCombobox.stylesheet_path, *args, **kwargs
     end
 
-    hw def hw_combobox_tag(*args, async_src: nil, options: [], **kwargs)
+    hw def hw_combobox_tag(*args, async_src: nil, options: [], render_in: {}, **kwargs)
       component = HotwireCombobox::Component.new self, *args,
-        options: hw_combobox_options(options),
+        options: hw_combobox_options(options, render_in: render_in),
         async_src: hw_uri_with_params(async_src, format: :turbo_stream),
         **kwargs
 

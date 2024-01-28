@@ -34,6 +34,9 @@ class ComboboxesController < ApplicationController
   def async_html
   end
 
+  def render_in
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 

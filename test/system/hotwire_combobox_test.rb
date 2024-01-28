@@ -421,6 +421,15 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     end
   end
 
+  test "passing render_in to combobox_tag" do
+    visit render_in_combobox_path
+
+    open_combobox "movie"
+
+    find("#movie-field-hw-combobox").send_keys("sn")
+    assert_field "movie-field-hw-combobox", with: "Snow White and the Seven Dwarfs"
+  end
+
   private
     def open_combobox(name = "state")
       find("##{name}-field-hw-combobox").click
