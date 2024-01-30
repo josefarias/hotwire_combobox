@@ -15,10 +15,6 @@ Combobox.Options = Base => class extends Base {
     return query.length > 0 && this._allowNew && (ignoreAutocomplete || insufficentAutocomplete)
   }
 
-  _toggleEmptyClass() {
-    this._actingListbox.classList.toggle("hw-combobox__listbox--empty", !this._visibleOptionElements[0])
-  }
-
   get _allowNew() {
     return !!this.nameWhenNewValue
   }

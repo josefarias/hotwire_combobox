@@ -71,7 +71,7 @@
 }
 
 .hw-combobox__listbox {
-  border-color: var(--hw-border-color);
+  border-color: transparent;
   border-radius: var(--hw-border-radius);
   border-style: solid;
   border-width: var(--hw-border-width--slim);
@@ -85,10 +85,10 @@
   top: var(--hw-listbox-offset-top);
   width: 100%;
   z-index: var(--hw-listbox-z-index);
-}
 
-.hw-combobox__listbox--empty {
-  border: transparent;
+  &:has([role="option"]:not([hidden])) {
+    border-color: var(--hw-border-color);
+  }
 }
 
 .hw-combobox__option {
