@@ -1,5 +1,5 @@
 class HotwireCombobox::Component
-  attr_reader :async_src, :options
+  attr_reader :async_src, :options, :dialog_label
 
   def initialize(
       view, name, value = nil,
@@ -10,13 +10,14 @@ class HotwireCombobox::Component
       open: false,
       small_width: "640px",
       async_src: nil,
+      dialog_label: nil,
       options: [], data: {}, input: {}, **rest)
     @combobox_attrs = input.reverse_merge(rest).with_indifferent_access
 
     @view, @autocomplete, @id, @name, @value, @form, @async_src,
-    @name_when_new, @open, @data, @small_width, @options =
+    @name_when_new, @open, @data, @small_width, @options, @dialog_label =
       view, autocomplete, id, name, value, form, async_src,
-      name_when_new, open, data, small_width, options
+      name_when_new, open, data, small_width, options, dialog_label
   end
 
   def fieldset_attrs
@@ -77,16 +78,24 @@ class HotwireCombobox::Component
 
   def dialog_attrs
     {
+      class: "hw-combobox__dialog",
       role: :dialog,
       data: dialog_data
     }
   end
 
+  def dialog_label_attrs
+    {
+      class: "hw-combobox__dialog__label",
+      for: dialog_input_id
+    }
+  end
 
   def dialog_input_attrs
     {
       id: dialog_input_id,
       role: :combobox,
+      class: "hw-combobox__dialog__input",
       autofocus: "",
       type: input_type,
       data: dialog_input_data,
@@ -94,15 +103,14 @@ class HotwireCombobox::Component
     }
   end
 
-
   def dialog_listbox_attrs
     {
       id: dialog_listbox_id,
+      class: "hw-combobox__dialog__listbox",
       role: :listbox,
       data: dialog_listbox_data
     }
   end
-
 
   def dialog_focus_trap_attrs
     {

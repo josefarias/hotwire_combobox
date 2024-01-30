@@ -1,4 +1,5 @@
 import Combobox from "models/combobox/base"
+import { disableBodyScroll, enableBodyScroll } from "vendor/bodyScrollLock"
 
 Combobox.Toggle = Base => class extends Base {
   open() {
@@ -71,6 +72,7 @@ Combobox.Toggle = Base => class extends Base {
   _openInDialog() {
     this._moveArtifactsToDialog()
     this._preventFocusingComboboxAfterClosingDialog()
+    this._preventBodyScroll()
     this.dialogTarget.showModal()
   }
 
@@ -81,10 +83,19 @@ Combobox.Toggle = Base => class extends Base {
   _closeInDialog() {
     this._moveArtifactsInline()
     this.dialogTarget.close()
+    this._restoreBodyScroll()
   }
 
   _closeInline() {
     this.listboxTarget.hidden = true
+  }
+
+  _preventBodyScroll() {
+    disableBodyScroll(this.dialogListboxTarget)
+  }
+
+  _restoreBodyScroll() {
+    enableBodyScroll(this.dialogListboxTarget)
   }
 
   get _isOpen() {

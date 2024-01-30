@@ -52,6 +52,11 @@ export default class HwComboboxController extends Concerns(...concerns) {
   connect() {
     this._connectSelection()
     this._connectListAutocomplete()
+    this._connectDialog()
+  }
+
+  disconnect() {
+    this._disconnectDialog()
   }
 
   expandedValueChanged() {

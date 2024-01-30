@@ -21,6 +21,7 @@ class HotwireCombobox::Listbox::Option
         id: id,
         role: :option,
         class: "hw-combobox__option",
+        tabindex: 0,
         data: data
       }
     end

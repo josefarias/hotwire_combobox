@@ -1,6 +1,18 @@
 import Combobox from "models/combobox/base"
 
 Combobox.Dialog = Base => class extends Base {
+  _connectDialog() {
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", this._resizeDialog)
+    }
+  }
+
+  _disconnectDialog() {
+    if (window.visualViewport) {
+      window.visualViewport.removeEventListener("resize", this._resizeDialog)
+    }
+  }
+
   _moveArtifactsToDialog() {
     this.dialogComboboxTarget.value = this.actingCombobox.value
 
@@ -17,6 +29,12 @@ Combobox.Dialog = Base => class extends Base {
     this._actingListbox = this.listboxTarget
 
     this.listboxTarget.append(...this.dialogListboxTarget.children)
+  }
+
+  _resizeDialog = () => {
+    const fullHeight = window.innerHeight
+    const viewportHeight = window.visualViewport.height
+    this.dialogTarget.style.setProperty("--hw-dialog-bottom-padding", `${fullHeight - viewportHeight}px`)
   }
 
   // After closing a dialog, focus returns to the last focused element.
