@@ -54,7 +54,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox
 
     assert_selector "input[aria-expanded=true]"
-    find("body").send_keys(:tab)
+    find("button").click
     assert_selector "input[aria-expanded=false]"
     assert_no_selector "li"
   end
