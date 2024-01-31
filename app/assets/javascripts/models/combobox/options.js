@@ -10,9 +10,9 @@ Combobox.Options = Base => class extends Base {
   _isValidNewOption(query, { ignoreAutocomplete = false } = {}) {
     const typedValue = this._actingCombobox.value
     const autocompletedValue = this._visibleOptionElements[0]?.getAttribute(this.autocompletableAttributeValue)
-    const insufficentAutocomplete = !autocompletedValue || !startsWith(autocompletedValue, typedValue)
+    const insufficientAutocomplete = !autocompletedValue || !startsWith(autocompletedValue, typedValue)
 
-    return query.length > 0 && this._allowNew && (ignoreAutocomplete || insufficentAutocomplete)
+    return query.length > 0 && this._allowNew && (ignoreAutocomplete || insufficientAutocomplete)
   }
 
   get _allowNew() {

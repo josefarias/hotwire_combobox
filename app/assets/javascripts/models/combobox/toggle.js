@@ -49,7 +49,7 @@ Combobox.Toggle = Base => class extends Base {
     return target.closest("dialog") && target.role != "combobox"
   }
 
-  async _expand() {
+  _expand() {
     if (this._autocompletesList && this._smallViewport) {
       this._openInDialog()
     } else {

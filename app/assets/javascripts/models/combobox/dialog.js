@@ -14,7 +14,7 @@ Combobox.Dialog = Base => class extends Base {
   }
 
   _moveArtifactsToDialog() {
-    this.dialogComboboxTarget.value = this.actingCombobox.value
+    this.dialogComboboxTarget.value = this._actingCombobox.value
 
     this._actingCombobox = this.dialogComboboxTarget
     this._actingListbox = this.dialogListboxTarget
@@ -23,7 +23,7 @@ Combobox.Dialog = Base => class extends Base {
   }
 
   _moveArtifactsInline() {
-    this.comboboxTarget.value = this.actingCombobox.value
+    this.comboboxTarget.value = this._actingCombobox.value
 
     this._actingCombobox = this.comboboxTarget
     this._actingListbox = this.listboxTarget
@@ -32,9 +32,11 @@ Combobox.Dialog = Base => class extends Base {
   }
 
   _resizeDialog = () => {
-    const fullHeight = window.innerHeight
-    const viewportHeight = window.visualViewport.height
-    this.dialogTarget.style.setProperty("--hw-dialog-bottom-padding", `${fullHeight - viewportHeight}px`)
+    if (window.visualViewport) {
+      const fullHeight = window.innerHeight
+      const viewportHeight = window.visualViewport.height
+      this.dialogTarget.style.setProperty("--hw-dialog-bottom-padding", `${fullHeight - viewportHeight}px`)
+    }
   }
 
   // After closing a dialog, focus returns to the last focused element.
