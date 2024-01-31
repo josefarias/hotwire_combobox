@@ -127,8 +127,6 @@
 
 .hw-combobox__dialog {
   border: 0;
-  border-top-left-radius: var(--hw-border-radius);
-  border-top-right-radius: var(--hw-border-radius);
   font-size: var(--hw-dialog-font-size);
   height: auto;
   margin: 0;
