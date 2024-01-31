@@ -1,0 +1,93 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/hotwire_combobox/version"
+require "bundler/gem_tasks"
+require "pathname"
+
+class Release
+  def initialize(version, dry: false)
+    @version = version
+    @dry = dry
+  end
+
+  def perform
+    write_version
+    update_copyright
+    bundle
+    commit
+    build_and_push_gem
+
+    puts "== Done! =="
+  end
+
+  private
+    attr_reader :version, :dry
+
+    def dry?
+      dry
+    end
+
+    def write_version
+      puts "== Writing version to files =="
+
+      if Gem::Version.new(version) <= Gem::Version.new(HotwireCombobox::VERSION)
+        abort "❌ New version (#{version}) must be greater than #{HotwireCombobox::VERSION}"
+      end
+
+      write_version_to_rb
+      write_version_to_gemfile_lock
+    end
+
+    def write_version_to_rb
+      Pathname.new("./lib/hotwire_combobox/version.rb").write <<~RUBY
+        module HotwireCombobox
+          VERSION = "#{version}"
+        end
+      RUBY
+    end
+
+    def write_version_to_gemfile_lock
+      pathname = Pathname.new "./Gemfile.lock"
+      data = pathname.read
+      data.sub!(/hotwire_combobox \(\d+\.\d+\.\d+\)/, "hotwire_combobox (#{version})")
+      pathname.write data
+    end
+
+    def update_copyright
+      puts "== Updating license year =="
+
+      pathname = Pathname.new "MIT-LICENSE"
+      data = pathname.read
+      data.sub! /Copyright \d{4}/, "Copyright #{Time.now.year}"
+      pathname.write data
+    end
+
+    def bundle
+      puts "== Bundling Gemfile =="
+
+      abort "❌ Failed to bundle" unless system "bundle"
+    end
+
+    def commit
+      if dry?
+        puts "== Tracking changes =="
+      else
+        puts "== Committing changes =="
+      end
+
+      abort("❌ Failed to commit") unless \
+        system("git add lib/hotwire_combobox/version.rb Gemfile.lock MIT-LICENSE") &&
+        (dry? ? true : system("git commit -m 'Bump version for #{version}'")) &&
+        (dry? ? true : system("git push"))
+    end
+
+    def build_and_push_gem
+      unless dry?
+        puts "== Building and pushing gem =="
+
+        abort "❌ Failed to release gem" unless system "bundle exec rake release"
+      end
+    end
+end
+
+Release.new(ARGV[0], dry: ARGV.include?("--dry")).perform

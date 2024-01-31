@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+FIXTURES_PATH="../fixtures" RAILS_ENV=development test/dummy/bin/rails db:fixtures:load --trace
