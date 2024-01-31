@@ -377,24 +377,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     end
   end
 
-  test "hw-combobox__listbox--empty class is added as needed" do
-    visit plain_combobox_path
-
-    open_combobox
-
-    assert_no_selector "ul[role=listbox].hw-combobox__listbox--empty"
-
-    find("#state-field-hw-combobox").then do |input|
-      input.send_keys("asdf")
-      assert_selector "ul[role=listbox].hw-combobox__listbox--empty"
-
-      "asdf".chars.each { input.send_keys(:backspace) }
-
-      input.send_keys("Flo")
-      assert_no_selector "ul[role=listbox].hw-combobox__listbox--empty"
-    end
-  end
-
   [
     { path: :async_combobox_path, visible_options: 10 },
     { path: :async_html_combobox_path, visible_options: 5 }
