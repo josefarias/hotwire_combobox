@@ -3,26 +3,28 @@ module HotwireCombobox
     class << self
       delegate :bypass_convenience_methods?, to: :HotwireCombobox
 
-      def hw(method_name)
+      def hw_alias(method_name)
         unless bypass_convenience_methods?
           alias_method method_name.to_s.sub(/^hw_/, ""), method_name
         end
       end
     end
 
-    hw def hw_combobox_style_tag(*args, **kwargs)
+    def hw_combobox_style_tag(*args, **kwargs)
       stylesheet_link_tag HotwireCombobox.stylesheet_path, *args, **kwargs
     end
+    hw_alias :hw_combobox_style_tag
 
-    hw def hw_combobox_tag(*args, async_src: nil, options: [], render_in: {}, **kwargs)
+    def hw_combobox_tag(*args, async_src: nil, options: [], render_in: {}, **kwargs)
       options = hw_combobox_options options, render_in: render_in
       src = hw_uri_with_params async_src, format: :turbo_stream
       component = HotwireCombobox::Component.new self, *args, options: options, async_src: src, **kwargs
 
       render "hotwire_combobox/combobox", component: component
     end
+    hw_alias :hw_combobox_tag
 
-    hw def hw_combobox_options(options, render_in: {}, display: :to_combobox_display, **methods)
+    def hw_combobox_options(options, render_in: {}, display: :to_combobox_display, **methods)
       if options.first.is_a? HotwireCombobox::Listbox::Option
         options
       else
@@ -35,17 +37,20 @@ module HotwireCombobox
         hw_parse_combobox_options options, **methods.merge(display: display, content: content)
       end
     end
+    hw_alias :hw_combobox_options
 
-    hw def hw_paginated_combobox_options(options, for_id:, src:, next_page:, render_in: {}, **methods)
+    def hw_paginated_combobox_options(options, for_id:, src:, next_page:, render_in: {}, **methods)
       this_page = render("hotwire_combobox/paginated_options", for_id: for_id, options: hw_combobox_options(options, render_in: render_in, **methods), format: :turbo_stream)
       next_page = render("hotwire_combobox/next_page", src: src, next_page: next_page, format: :turbo_stream)
 
       safe_join [ this_page, next_page ]
     end
+    hw_alias :hw_paginated_combobox_options
 
-    hw def hw_listbox_options_id(id)
+    def hw_listbox_options_id(id)
       "#{id}-hw-listbox__options"
     end
+    hw_alias :hw_listbox_options_id
 
     private
       def hw_uri_with_params(url_or_path, **params)

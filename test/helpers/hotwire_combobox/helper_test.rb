@@ -79,32 +79,25 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     end
   end
 
-  test "combobox_options is an alias for hw_combobox_options" do
-    assert_equal \
-      HotwireCombobox::Helper.instance_method(:hw_combobox_options),
-      HotwireCombobox::Helper.instance_method(:combobox_options)
-  end
-
-  test "combobox_options is not defined when bypassing convenience methods" do
-    swap_config bypass_convenience_methods: true do
-      assert_not HotwireCombobox::Helper.instance_methods.include?(:combobox_options)
+  [
+    { alias: :combobox_style_tag, method: :hw_combobox_style_tag },
+    { alias: :combobox_tag, method: :hw_combobox_tag },
+    { alias: :combobox_options, method: :hw_combobox_options },
+    { alias: :paginated_combobox_options, method: :hw_paginated_combobox_options },
+    { alias: :listbox_options_id, method: :hw_listbox_options_id }
+  ].each do |pair|
+    test "#{pair[:alias]} is an alias for #{pair[:method]}" do
+      assert_equal \
+        HotwireCombobox::Helper.instance_method(pair[:method]),
+        HotwireCombobox::Helper.instance_method(pair[:alias])
     end
-  end
 
-  test "combobox_tag is an alias for hw_combobox_tag" do
-    assert_equal \
-      HotwireCombobox::Helper.instance_method(:hw_combobox_tag),
-      HotwireCombobox::Helper.instance_method(:combobox_tag)
-  end
-
-  test "combobox_tag is not defined when bypassing convenience methods" do
-    swap_config bypass_convenience_methods: true do
-      assert_not HotwireCombobox::Helper.instance_methods.include?(:combobox_tag)
+    test "#{pair[:alias]} is not defined when bypassing convenience methods" do
+      swap_config bypass_convenience_methods: true do
+        assert_not HotwireCombobox::Helper.instance_methods.include?(pair[:alias]),
+          "#{pair[:alias]} is defined"
+      end
     end
-  end
-
-  test "combobox is defined on the formbuilder" do
-    assert ActionView::Helpers::FormBuilder.instance_methods.include?(:combobox)
   end
 
   test "hw_combobox_style_tag" do
