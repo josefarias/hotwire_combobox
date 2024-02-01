@@ -16,6 +16,7 @@ class Release
     bundle
     commit
     build_and_push_gem
+    cleanup
 
     puts "== Done! =="
   end
@@ -87,6 +88,11 @@ class Release
 
         abort "❌ Failed to release gem" unless system "bundle exec rake release"
       end
+    end
+
+    def cleanup
+      puts "== Cleaning up =="
+      system "rm -rf pkg"
     end
 end
 
