@@ -1,17 +1,21 @@
 class HotwireCombobox::Component
   attr_reader :async_src, :options, :dialog_label
 
-  def initialize(
-      view, name, value = nil,
-      autocomplete: :both,
-      id: nil,
-      form: nil,
+  def initialize \
+      view, name,
+      async_src:     nil,
+      autocomplete:  :both,
+      data:          {},
+      dialog_label:  nil,
+      form:          nil,
+      id:            nil,
+      input:         {},
       name_when_new: nil,
-      open: false,
-      small_width: "640px",
-      async_src: nil,
-      dialog_label: nil,
-      options: [], data: {}, input: {}, **rest)
+      open:          false,
+      options:       [],
+      small_width:   "640px",
+      value:         nil,
+      **rest
     @combobox_attrs = input.reverse_merge(rest).with_indifferent_access
 
     @view, @autocomplete, @id, @name, @value, @form, @async_src,
@@ -134,6 +138,7 @@ class HotwireCombobox::Component
 
     def fieldset_data
       data.reverse_merge \
+        pagination_id: hidden_field_id,
         controller: view.token_list("hw-combobox", data[:controller]),
         hw_combobox_expanded_value: open,
         hw_combobox_name_when_new_value: name_when_new,
@@ -180,7 +185,8 @@ class HotwireCombobox::Component
           keydown->hw-combobox#navigate
           click@window->hw-combobox#closeOnClickOutside
           focusin@window->hw-combobox#closeOnFocusOutside".squish,
-        hw_combobox_target: "combobox"
+        hw_combobox_target: "combobox",
+        pagination_id: hidden_field_id
     end
 
     def input_aria

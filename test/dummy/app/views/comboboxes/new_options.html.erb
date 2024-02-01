@@ -8,10 +8,10 @@
 
 <%= form_with model: User.new, url: new_options_form_path, method: :post do |form| %>
   <%= form.label "Favorite State", for: "allow-new-hw-combobox" %>
-  <%= form.combobox :favorite_state_id, id: "allow-new", options: State.all, name_when_new: "user[favorite_state_attributes][name]" %>
+  <%= form.combobox :favorite_state_id, State.all, id: "allow-new", name_when_new: "user[favorite_state_attributes][name]" %>
 
   <%= form.label "Home State", for: "disallow-new-hw-combobox" %>
-  <%= form.combobox :home_state_id, id: "disallow-new", options: State.all %>
+  <%= form.combobox :home_state_id, State.all, id: "disallow-new" %>
 
   <%= form.submit %>
 <% end %>

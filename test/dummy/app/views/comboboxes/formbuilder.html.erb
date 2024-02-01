@@ -1,4 +1,4 @@
 <%= form_with do |form| %>
-  <%= form.combobox "state", id: "state-field", options: @states %>
+  <%= form.combobox "state", @states, id: "state-field" %>
   <%= form.submit %>
 <% end %>

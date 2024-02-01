@@ -3,8 +3,8 @@ class HotwireCombobox::Listbox::Option
     @option = option.is_a?(Hash) ? Data.new(**option) : option
   end
 
-  def render_in(view_context)
-    view_context.tag.li content, **options
+  def render_in(view)
+    view.tag.li content, **options
   end
 
   private

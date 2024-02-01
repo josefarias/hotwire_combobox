@@ -20,7 +20,7 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
   end
 
   test "passing a value" do
-    tag = combobox_tag :foo, :bar
+    tag = combobox_tag :foo, value: :bar
 
     assert_attrs tag, value: "bar"
   end
@@ -34,7 +34,7 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
 
   test "passing a form builder object overrides value" do
     form = ActionView::Helpers::FormBuilder.new :foo, OpenStruct.new(bar: "foobar"), self, {}
-    tag = combobox_tag :bar, :baz, form: form
+    tag = combobox_tag :bar, value: :baz, form: form
 
     assert_attrs tag, value: "foobar" # not "baz"
   end

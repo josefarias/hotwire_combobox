@@ -46,4 +46,4 @@
     render_in: { partial: "states/state" }
 %>
 
-<%= combobox_tag "state", id: "state-field", options: @states %>
+<%= combobox_tag "state", @states, id: "state-field" %>
