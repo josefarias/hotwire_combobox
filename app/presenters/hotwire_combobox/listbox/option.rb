@@ -7,14 +7,18 @@ class HotwireCombobox::Listbox::Option
     view.tag.li content, **options
   end
 
+  def value
+    option.try(:value) || option.id
+  end
+
+  def content
+    option.try(:content) || option.try(:display)
+  end
+
   private
     Data = Struct.new :id, :value, :display, :content, :filterable_as, :autocompletable_as, keyword_init: true
 
     attr_reader :option
-
-    def content
-      option.try(:content) || option.try(:display)
-    end
 
     def options
       {
@@ -44,9 +48,5 @@ class HotwireCombobox::Listbox::Option
 
     def autocompletable_as
       option.try(:autocompletable_as) || option.try(:display)
-    end
-
-    def value
-      option.try(:value) || option.id
     end
 end

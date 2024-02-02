@@ -83,8 +83,7 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     { alias: :combobox_style_tag, method: :hw_combobox_style_tag },
     { alias: :combobox_tag, method: :hw_combobox_tag },
     { alias: :combobox_options, method: :hw_combobox_options },
-    { alias: :paginated_combobox_options, method: :hw_paginated_combobox_options },
-    { alias: :listbox_options_id, method: :hw_listbox_options_id }
+    { alias: :paginated_combobox_options, method: :hw_paginated_combobox_options }
   ].each do |pair|
     test "#{pair[:alias]} is an alias for #{pair[:method]}" do
       assert_equal \

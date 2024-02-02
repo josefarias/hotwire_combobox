@@ -21,8 +21,11 @@ Combobox.Toggle = Base => class extends Base {
     }
   }
 
-  closeOnClickOutside({ target }) {
+  closeOnClickOutside(event) {
+    const target = event.target
+
     if (this.element.contains(target) && !this._isDialogDismisser(target)) return
+    if (this._withinElementBounds(event)) return
 
     this.close()
   }
@@ -33,6 +36,17 @@ Combobox.Toggle = Base => class extends Base {
     if (target.matches("main")) return
 
     this.close()
+  }
+
+  // Some browser extensions like 1Password overlay elements on top of the combobox.
+  // Hovering over these elements emits a click event for some reason.
+  // These events don't contain any telling information, so we use `_withinElementBounds`
+  // as an alternative to check whether the click is legitimate.
+  _withinElementBounds(event) {
+    const { left, right, top, bottom } = this.element.getBoundingClientRect()
+    const { clientX, clientY } = event
+
+    return clientX >= left && clientX <= right && clientY >= top && clientY <= bottom
   }
 
   _ensureSelection() {
@@ -50,6 +64,8 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   _expand() {
+    if (this._preselectOnExpansion) this._preselectOption()
+
     if (this._autocompletesList && this._smallViewport) {
       this._openInDialog()
     } else {
@@ -100,5 +116,9 @@ Combobox.Toggle = Base => class extends Base {
 
   get _isOpen() {
     return this.expandedValue
+  }
+
+  get _preselectOnExpansion() {
+    return !this._isAsync // async comboboxes preselect based on callbacks
   }
 }

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get "inline_autocomplete_combobox", to: "comboboxes#inline_autocomplete"
   get "list_autocomplete_combobox", to: "comboboxes#list_autocomplete"
   get "async_combobox", to: "comboboxes#async"
+  get "prefilled_async_combobox", to: "comboboxes#prefilled_async"
   get "async_html_combobox", to: "comboboxes#async_html"
   get "render_in_combobox", to: "comboboxes#render_in"
 
@@ -18,6 +19,9 @@ Rails.application.routes.draw do
   get "greeting", to: "greetings#new"
 
   post "new_options_form", to: "new_options_forms#create"
+
+  resources :states, only: :index
+  resources :users, only: :update
 
   root to: "comboboxes#plain"
 end

@@ -3,25 +3,27 @@ class HotwireCombobox::Component
 
   def initialize \
       view, name,
-      async_src:     nil,
-      autocomplete:  :both,
-      data:          {},
-      dialog_label:  nil,
-      form:          nil,
-      id:            nil,
-      input:         {},
-      name_when_new: nil,
-      open:          false,
-      options:       [],
-      small_width:   "640px",
-      value:         nil,
+      association_name: nil,
+      async_src:        nil,
+      autocomplete:     :both,
+      data:             {},
+      dialog_label:     nil,
+      form:             nil,
+      id:               nil,
+      input:            {},
+      name_when_new:    nil,
+      open:             false,
+      options:          [],
+      small_width:      "640px",
+      value:            nil,
       **rest
-    @combobox_attrs = input.reverse_merge(rest).with_indifferent_access
-
     @view, @autocomplete, @id, @name, @value, @form, @async_src,
     @name_when_new, @open, @data, @small_width, @options, @dialog_label =
       view, autocomplete, id, name, value, form, async_src,
       name_when_new, open, data, small_width, options, dialog_label
+
+    @combobox_attrs = input.reverse_merge(rest).with_indifferent_access
+    @association_name = association_name || infer_association_name
   end
 
   def fieldset_attrs
@@ -129,12 +131,19 @@ class HotwireCombobox::Component
   end
 
   def pagination_attrs
-    { src: async_src }
+    { for_id: hidden_field_id, src: async_src }
   end
 
   private
     attr_reader :view, :autocomplete, :id, :name, :value, :form,
-      :name_when_new, :open, :data, :combobox_attrs, :small_width
+      :name_when_new, :open, :data, :combobox_attrs, :small_width,
+      :association_name
+
+    def infer_association_name
+      if name.to_s.include?("_id")
+        name.to_s.sub(/_id\z/, "")
+      end
+    end
 
     def fieldset_data
       data.reverse_merge \
@@ -146,9 +155,28 @@ class HotwireCombobox::Component
         hw_combobox_autocomplete_value: autocomplete,
         hw_combobox_small_viewport_max_width_value: small_width,
         hw_combobox_async_src_value: async_src,
+        hw_combobox_prefilled_display_value: prefilled_display,
         hw_combobox_filterable_attribute_value: "data-filterable-as",
         hw_combobox_autocompletable_attribute_value: "data-autocompletable-as",
         hw_combobox_selected_class: "hw-combobox__option--selected"
+    end
+
+    def prefilled_display
+      if async_src && associated_object
+        associated_object.to_combobox_display
+      elsif value
+        options.find { |option| option.value == value }&.content
+      end
+    end
+
+    def associated_object
+      @associated_object ||= if association_exists?
+        form.object.public_send association_name
+      end
+    end
+
+    def association_exists?
+      form&.object&.class&.reflect_on_association(association_name).present?
     end
 
 

@@ -1,5 +1,5 @@
-<%# locals: (next_page:, src:) -%>
+<%# locals: (for_id:, next_page:, src:) -%>
 
-<%= turbo_stream.replace :hotwire_combobox_pagination do %>
-  <%= render "hotwire_combobox/pagination", src: hw_combobox_next_page_uri(src, next_page) %>
+<%= turbo_stream.replace hw_pagination_frame_id(for_id) do %>
+  <%= render "hotwire_combobox/pagination", for_id: for_id, src: hw_combobox_next_page_uri(src, next_page) %>
 <% end %>

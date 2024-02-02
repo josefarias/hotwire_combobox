@@ -8,8 +8,8 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _connectSelection() {
-    if (this.hiddenFieldTarget.value) {
-      this._selectOptionByValue(this.hiddenFieldTarget.value)
+    if (this.hasPrefilledDisplayValue) {
+      this._actingCombobox.value = this.prefilledDisplayValue
     }
   }
 
@@ -17,8 +17,6 @@ Combobox.Selection = Base => class extends Base {
     this._resetOptions()
 
     if (option) {
-      if (this.hasSelectedClass) option.classList.add(this.selectedClass)
-
       this._markValid()
       this._maybeAutocompleteWith(option, { force })
       this._commitSelection(option, { selected: true })
@@ -28,21 +26,27 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _commitSelection(option, { selected }) {
-    option?.setAttribute("aria-selected", selected)
-    option?.scrollIntoView({ block: "nearest" })
+    this._markSelected(option, { selected })
 
     if (selected) {
-      this.hiddenFieldTarget.value = option?.dataset.value
+      this.hiddenFieldTarget.value = option.dataset.value
+      option.scrollIntoView({ block: "nearest" })
     } else {
       this.hiddenFieldTarget.value = null
     }
   }
 
+  _markSelected(option, { selected }) {
+    if (this.hasSelectedClass) {
+      option.classList.toggle(this.selectedClass, selected)
+    }
+
+    option.setAttribute("aria-selected", selected)
+  }
+
   _deselect() {
     const option = this._selectedOptionElement
-
-    if (this.hasSelectedClass) option?.classList.remove(this.selectedClass)
-    this._commitSelection(option, { selected: false })
+    if (option) this._commitSelection(option, { selected: false })
   }
 
   _selectNew(query) {
@@ -56,7 +60,17 @@ Combobox.Selection = Base => class extends Base {
     this._select(option, { force: true })
   }
 
-  _selectOptionByValue(value) {
-    this._allOptions.find(option => option.dataset.value === value)?.click()
+  _preselectOption() {
+    if (this._hasValueButNoSelection && this._allOptions.length < 100) {
+      const option = this._allOptions.find(option => {
+        return option.dataset.value === this.hiddenFieldTarget.value
+      })
+
+      if (option) this._markSelected(option, { selected: true })
+    }
+  }
+
+  get _hasValueButNoSelection() {
+    return this.hiddenFieldTarget.value && !this._selectedOptionElement
   }
 }

@@ -40,16 +40,20 @@ module HotwireCombobox
 
     def hw_paginated_combobox_options(options, for_id:, src: request.path, next_page: nil, render_in: {}, **methods)
       this_page = render("hotwire_combobox/paginated_options", for_id: for_id, options: hw_combobox_options(options, render_in: render_in, **methods), format: :turbo_stream)
-      next_page = render("hotwire_combobox/next_page", src: src, next_page: next_page, format: :turbo_stream)
+      next_page = render("hotwire_combobox/next_page", for_id: for_id, src: src, next_page: next_page, format: :turbo_stream)
 
       safe_join [ this_page, next_page ]
     end
     hw_alias :hw_paginated_combobox_options
 
-    def hw_listbox_options_id(id)
-      "#{id}-hw-listbox__options"
-    end
-    hw_alias :hw_listbox_options_id
+    protected # library use only
+      def hw_listbox_options_id(id)
+        "#{id}-hw-listbox__options"
+      end
+
+      def hw_pagination_frame_id(id)
+        "#{id}__hw_combobox_pagination"
+      end
 
     private
       def hw_extract_options_and_src(options_or_src, render_in)

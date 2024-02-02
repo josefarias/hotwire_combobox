@@ -208,6 +208,18 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector "li[role=option].hw-combobox__option--selected", text: "Michigan"
   end
 
+  test "async combobox with prefilled value" do
+    visit prefilled_async_combobox_path
+
+    assert_selector "input[aria-expanded=false]"
+    assert_field "user_home_state_id-hw-combobox", with: "Florida"
+    assert_field "user_home_state_id", type: "hidden", with: states(:fl).id
+
+    open_combobox "user_home_state_id"
+
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Florida"
+  end
+
   test "combobox is invalid if required and empty" do
     visit required_combobox_path
 
@@ -384,7 +396,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     test "async combobox #{test_case[:path]}" do
       visit send(test_case[:path])
 
-      open_combobox "movie"
+      open_combobox "movie-field"
 
       find("#movie-field-hw-combobox").then do |input|
         assert_text "12 Angry Men"
@@ -411,15 +423,15 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   test "passing render_in to combobox_tag" do
     visit render_in_combobox_path
 
-    open_combobox "movie"
+    open_combobox "movie-field"
 
     find("#movie-field-hw-combobox").send_keys("sn")
     assert_field "movie-field-hw-combobox", with: "Snow White and the Seven Dwarfs"
   end
 
   private
-    def open_combobox(name = "state")
-      find("##{name}-field-hw-combobox").click
+    def open_combobox(name = "state-field")
+      find("##{name}-hw-combobox").click
     end
 
     def on_small_screen

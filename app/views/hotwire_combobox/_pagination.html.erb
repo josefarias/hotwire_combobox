@@ -1,3 +1,4 @@
-<%# locals: (src:) -%>
+<%# locals: (for_id:, src:) -%>
 
-<%= turbo_frame_tag :hotwire_combobox_pagination, src: src, loading: :lazy %>
+<%= turbo_frame_tag hw_pagination_frame_id(for_id), src: src, loading: :lazy,
+      data: { hw_combobox_target: "paginationFrame" } %>

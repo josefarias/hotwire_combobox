@@ -1,0 +1,7 @@
+<%= paginated_combobox_options State.all,
+      render_in: { partial: "states/state", formats: [:html] },
+      for_id: "user_favorite_state_id" %>
+
+<%= paginated_combobox_options State.all,
+      render_in: { partial: "states/state", formats: [:html] },
+      for_id: "user_home_state_id" %>

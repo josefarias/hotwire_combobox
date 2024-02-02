@@ -1,0 +1,44 @@
+<style>
+  .state {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 100%;
+    margin-right: 0.5rem;
+    position: relative;
+  }
+
+  .state::before {
+    content: '';
+    position: absolute;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(<%= asset_path('us.png') %>);
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 100%;
+  }
+
+  .state--alabama::before { background-image: url(<%= asset_path('alabama.png') %>); }
+  .state--florida::before { background-image: url(<%= asset_path('florida.png') %>); }
+  .state--michigan::before { background-image: url(<%= asset_path('michigan.png') %>); }
+  .state--minnesota::before { background-image: url(<%= asset_path('minnesota.png') %>); }
+  .state--mississippi::before { background-image: url(<%= asset_path('mississippi.png') %>); }
+  .state--missouri::before { background-image: url(<%= asset_path('missouri.png') %>); }
+</style>
+
+<% if flash[:notice] %>
+  <p><%= flash[:notice] %></p>
+<% end %>
+
+<%= form_with model: @user do |form| %>
+  <%= form.label "Favorite State", for: "user_favorite_state_id" %>
+  <%= form.combobox :favorite_state_id, states_path, name_when_new: "user[favorite_state_attributes][name]" %>
+
+  <%= form.label "Home State", for: "user_home_state_id" %>
+  <%= form.combobox :home_state_id, states_path %>
+
+  <%= form.submit %>
+<% end %>

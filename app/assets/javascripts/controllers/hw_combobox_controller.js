@@ -30,7 +30,8 @@ export default class HwComboboxController extends Concerns(...concerns) {
     "dialogListbox",
     "handle",
     "hiddenField",
-    "listbox"
+    "listbox",
+    "paginationFrame"
   ]
 
   static values = {
@@ -41,6 +42,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
     filterableAttribute: String,
     nameWhenNew: String,
     originalName: String,
+    prefilledDisplay: String,
     smallViewportMaxWidth: String
   }
 
@@ -65,5 +67,9 @@ export default class HwComboboxController extends Concerns(...concerns) {
     } else {
       this._collapse()
     }
+  }
+
+  paginationFrameTargetConnected() {
+    this._preselectOption()
   }
 }
