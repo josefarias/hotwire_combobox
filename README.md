@@ -8,7 +8,7 @@
 
 
 > [!IMPORTANT]
-> This gem is in beta. We need your help to finalize a major release. Please do use this gem and report any issues you find.
+> We need your help to finalize this gem's first major release. Please use it in your apps and report any issues.
 
 ## Installation
 
