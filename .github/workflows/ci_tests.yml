@@ -1,0 +1,65 @@
+name: CI Tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SQLite3 version
+        run: sqlite3 --version
+
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2
+          bundler: default
+          bundler-cache: true
+          rubygems: latest
+
+      - name: Setup database
+        run: |
+          bundle exec rake db:create
+          bundle exec rake db:schema:load
+
+      - name: Load fixtures
+        run: bundle exec rake db:fixtures:load
+
+      - name: Cache Chromedriver
+        uses: actions/cache@v2
+        with:
+          path: ~/chromedriver
+          key: chromedriver-${{ hashFiles('**/.github/workflows/ci_tests.yml') }}
+          restore-keys: |
+            chromedriver-
+
+      - name: Setup Chrome and Chromedriver
+        run: |
+          mkdir -p ~/chromedriver
+          CACHED_VERSION=$(cat ~/chromedriver/version.txt || echo "")
+          LATEST_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
+          if [ "$LATEST_VERSION" != "$CACHED_VERSION" ]; then
+            echo "Downloading Chromedriver $LATEST_VERSION..."
+            wget -N http://chromedriver.storage.googleapis.com/$LATEST_VERSION/chromedriver_linux64.zip -P ~/chromedriver/
+            unzip -o ~/chromedriver/chromedriver_linux64.zip -d ~/chromedriver/
+            echo $LATEST_VERSION > ~/chromedriver/version.txt
+          else
+            echo "Using cached Chromedriver version: $CACHED_VERSION"
+          fi
+          sudo cp ~/chromedriver/chromedriver /usr/local/bin/chromedriver
+          sudo chmod 0755 /usr/local/bin/chromedriver
+
+      - name: Run tests
+        run: bundle exec rake app:test
+
+      - name: Run system tests
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: sqlite3:db/test.sqlite3
+          HEADLESS_CHROME: true
+        run: bundle exec rake app:test:system
