@@ -10,44 +10,37 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 3.3.0
-        bundler-cache: true
-
-    - name: Install system dependencies
-      run: |
-        sudo apt-get update -yqq
-        sudo apt-get install -yqq libsqlite3-dev
-
-    - name: Setup database
-      run: |
-        bundle exec rake db:create
-        bundle exec rake db:schema:load
-
-    - name: Load fixtures
-      run: bundle exec rake db:fixtures:load
-
-    - name: Setup Chrome and Chromedriver
-      run: |
-        sudo apt-get update
-        sudo apt-get install -yqq google-chrome-stable
-        CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`
-        wget -N http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip -P ~/
-        unzip ~/chromedriver_linux64.zip -d ~/
-        sudo mv -f ~/chromedriver /usr/local/bin/chromedriver
-        sudo chown root:root /usr/local/bin/chromedriver
-        sudo chmod 0755 /usr/local/bin/chromedriver
-
-    - name: Run tests
-      run: bundle exec rake app:test
-
-    - name: Run system tests
-      env:
-        RAILS_ENV: test
-        DATABASE_URL: sqlite3:db/test.sqlite3
-        HEADLESS_CHROME: true
-      run: bundle exec rake app:test:system
+      - name: SQLite3 version
+        run: sqlite3 --version
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.0
+          bundler: default
+          bundler-cache: true
+          rubygems: latest
+      - name: Setup database
+        run: |
+          bundle exec rake db:create
+          bundle exec rake db:schema:load
+      - name: Load fixtures
+        run: bundle exec rake db:fixtures:load
+      - name: Setup Chrome and Chromedriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -yqq google-chrome-stable
+          CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`
+          wget -N http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip -P ~/
+          unzip ~/chromedriver_linux64.zip -d ~/
+          sudo mv -f ~/chromedriver /usr/local/bin/chromedriver
+          sudo chown root:root /usr/local/bin/chromedriver
+          sudo chmod 0755 /usr/local/bin/chromedriver
+      - name: Run tests
+        run: bundle exec rake app:test
+      - name: Run system tests
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: sqlite3:db/test.sqlite3
+          HEADLESS_CHROME: true
+        run: bundle exec rake app:test:system
