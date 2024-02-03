@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hotwire_combobox (0.1.14)
+    hotwire_combobox (0.1.15)
       importmap-rails (>= 1.2)
       rails (>= 7.0.7.2)
       requestjs-rails (>= 0.0.11)
