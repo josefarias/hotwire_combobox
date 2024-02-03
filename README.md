@@ -4,7 +4,8 @@
 
 # Autocomplete for Rails apps using Hotwire
 
-[![CI Tests](https://github.com/josefarias/hotwire_combobox/actions/workflows/ci_tests.yml/badge.svg)](https://github.com/josefarias/hotwire_combobox/actions/workflows/ci_tests.yml)
+[![CI Tests](https://github.com/josefarias/hotwire_combobox/actions/workflows/ci_tests.yml/badge.svg)](https://github.com/josefarias/hotwire_combobox/actions/workflows/ci_tests.yml) [![Gem Version](https://badge.fury.io/rb/hotwire_combobox.svg)](https://badge.fury.io/rb/hotwire_combobox)
+
 
 > [!IMPORTANT]
 > This gem is in beta. We need your help to finalize a major release. Please do use this gem and report any issues you find.
