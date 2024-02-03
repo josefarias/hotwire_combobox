@@ -16,13 +16,12 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.3.0
+        bundler-cache: true
 
-    - name: Install dependencies
+    - name: Install system dependencies
       run: |
         sudo apt-get update -yqq
         sudo apt-get install -yqq libsqlite3-dev
-        gem install bundler
-        bundle install --jobs 4 --retry 3
 
     - name: Setup database
       run: |
