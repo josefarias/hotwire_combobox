@@ -1,4 +1,6 @@
-<img src="docs/assets/images/logo.png" height=50>
+<p style="text-align: center;">
+  <img src="docs/assets/images/logo.png" height=150>
+</p>
 
 # Autocomplete for Rails apps using Hotwire
 
