@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - jose/ci
 
 jobs:
   build:
@@ -12,7 +11,9 @@ jobs:
     steps:
       - name: SQLite3 version
         run: sqlite3 --version
+
       - uses: actions/checkout@v3
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -20,12 +21,15 @@ jobs:
           bundler: default
           bundler-cache: true
           rubygems: latest
+
       - name: Setup database
         run: |
           bundle exec rake db:create
           bundle exec rake db:schema:load
+
       - name: Load fixtures
         run: bundle exec rake db:fixtures:load
+
       - name: Cache Chromedriver
         uses: actions/cache@v2
         with:
@@ -33,6 +37,7 @@ jobs:
           key: chromedriver-${{ hashFiles('**/.github/workflows/ci_tests.yml') }}
           restore-keys: |
             chromedriver-
+
       - name: Setup Chrome and Chromedriver
         run: |
           mkdir -p ~/chromedriver
@@ -48,8 +53,10 @@ jobs:
           fi
           sudo cp ~/chromedriver/chromedriver /usr/local/bin/chromedriver
           sudo chmod 0755 /usr/local/bin/chromedriver
+
       - name: Run tests
         run: bundle exec rake app:test
+
       - name: Run system tests
         env:
           RAILS_ENV: test
