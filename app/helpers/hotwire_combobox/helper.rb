@@ -39,8 +39,8 @@ module HotwireCombobox
     hw_alias :hw_combobox_options
 
     def hw_paginated_combobox_options(options, for_id:, src: request.path, next_page: nil, render_in: {}, **methods)
-      this_page = render("hotwire_combobox/paginated_options", for_id: for_id, options: hw_combobox_options(options, render_in: render_in, **methods), format: :turbo_stream)
-      next_page = render("hotwire_combobox/next_page", for_id: for_id, src: src, next_page: next_page, format: :turbo_stream)
+      this_page = render("hotwire_combobox/paginated_options", for_id: for_id, options: hw_combobox_options(options, render_in: render_in, **methods))
+      next_page = render("hotwire_combobox/next_page", for_id: for_id, src: src, next_page: next_page)
 
       safe_join [ this_page, next_page ]
     end

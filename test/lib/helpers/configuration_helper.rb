@@ -25,6 +25,6 @@ module ConfigurationHelper
   private
     def reload_config_dependents
       HotwireCombobox.send(:remove_const, :Helper)
-      load "hotwire_combobox/helper.rb"
+      load HotwireCombobox::Engine.root.join("app/helpers/hotwire_combobox/helper.rb")
     end
 end
