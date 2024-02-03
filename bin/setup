@@ -16,5 +16,11 @@ FileUtils.chdir APP_ROOT do
   puts "\n== Homebrew =="
   system! "brew bundle --no-lock --no-upgrade"
 
+  puts "\n== Resetting database =="
+  system! "bin/rails db:drop db:create db:schema:load --trace"
+
+  puts "\n== Loading fixtures =="
+  system! "bin/load_fixtures"
+
   puts "\n== Done! 🎉 =="
 end
