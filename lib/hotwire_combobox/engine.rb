@@ -26,10 +26,7 @@ module HotwireCombobox
 
     initializer "hotwire_combobox.assets.precompile" do |app|
       if Rails.application.config.respond_to?(:assets)
-        Dir.glob(Engine.root.join("app/assets/**/*.{js,css}")).each do |path|
-          logical_path = Pathname.new(path).relative_path_from(Pathname.new(Engine.root.join("app/assets"))).to_s
-          app.config.assets.precompile << logical_path
-        end
+        app.config.assets.precompile << "hw_combobox_manifest.js"
       end
     end
   end
