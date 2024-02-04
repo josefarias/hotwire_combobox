@@ -14,13 +14,13 @@ class HotwireCombobox::Component
       name_when_new:    nil,
       open:             false,
       options:          [],
-      small_width:      "640px",
+      mobile_at:      "640px",
       value:            nil,
       **rest
     @view, @autocomplete, @id, @name, @value, @form, @async_src,
-    @name_when_new, @open, @data, @small_width, @options, @dialog_label =
+    @name_when_new, @open, @data, @mobile_at, @options, @dialog_label =
       view, autocomplete, id, name, value, form, async_src,
-      name_when_new, open, data, small_width, options, dialog_label
+      name_when_new, open, data, mobile_at, options, dialog_label
 
     @combobox_attrs = input.reverse_merge(rest).with_indifferent_access
     @association_name = association_name || infer_association_name
@@ -136,7 +136,7 @@ class HotwireCombobox::Component
 
   private
     attr_reader :view, :autocomplete, :id, :name, :value, :form,
-      :name_when_new, :open, :data, :combobox_attrs, :small_width,
+      :name_when_new, :open, :data, :combobox_attrs, :mobile_at,
       :association_name
 
     def infer_association_name
@@ -153,7 +153,7 @@ class HotwireCombobox::Component
         hw_combobox_name_when_new_value: name_when_new,
         hw_combobox_original_name_value: hidden_field_name,
         hw_combobox_autocomplete_value: autocomplete,
-        hw_combobox_small_viewport_max_width_value: small_width,
+        hw_combobox_small_viewport_max_width_value: mobile_at,
         hw_combobox_async_src_value: async_src,
         hw_combobox_prefilled_display_value: prefilled_display,
         hw_combobox_filterable_attribute_value: "data-filterable-as",
