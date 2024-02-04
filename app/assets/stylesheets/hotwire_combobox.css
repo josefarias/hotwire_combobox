@@ -30,7 +30,7 @@
   --hw-line-height: 1.5rem;
 
   --hw-listbox-height: calc(var(--hw-line-height) * 10);
-  --hw-listbox-offset-top: var(--hw-line-height);
+  --hw-listbox-offset-top: calc(var(--hw-line-height) * 1.625);
   --hw-listbox-z-index: 10;
 
   --hw-option-bg-color: #FFFFFF;
