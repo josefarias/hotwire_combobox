@@ -19,12 +19,17 @@ module HotwireCombobox
     end
 
     initializer "hotwire_combobox.importmap", before: "importmap" do |app|
-      app.config.importmap.paths << Engine.root.join("config/importmap.rb")
+      if Rails.application.respond_to?(:importmap)
+        app.config.importmap.paths << Engine.root.join("config/importmap.rb")
+      end
     end
 
     initializer "hotwire_combobox.assets.precompile" do |app|
-      Dir.glob(File.join(Engine.root, "app/assets/**/*.{js,css}")).each do |path|
-        app.config.assets.precompile << path
+      if Rails.application.config.respond_to?(:assets)
+        Dir.glob(Engine.root.join("app/assets/**/*.{js,css}")).each do |path|
+          logical_path = Pathname.new(path).relative_path_from(Pathname.new(Engine.root.join("app/assets"))).to_s
+          app.config.assets.precompile << logical_path
+        end
       end
     end
   end
