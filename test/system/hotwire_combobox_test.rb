@@ -208,6 +208,18 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector "li[role=option].hw-combobox__option--selected", text: "Michigan"
   end
 
+  test "combobox in form with prefilled value" do
+    visit prefilled_form_combobox_path
+
+    assert_selector "input[aria-expanded=false]"
+    assert_field "user_favorite_state_id-hw-combobox", with: "Michigan"
+    assert_field "user_favorite_state_id", type: "hidden", with: states(:mi).id
+
+    open_combobox "user_favorite_state_id"
+
+    assert_selector "li[role=option].hw-combobox__option--selected", text: "Michigan"
+  end
+
   test "async combobox with prefilled value" do
     visit prefilled_async_combobox_path
 

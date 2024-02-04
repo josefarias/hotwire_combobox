@@ -164,8 +164,8 @@ class HotwireCombobox::Component
     def prefilled_display
       if async_src && associated_object
         associated_object.to_combobox_display
-      elsif value
-        options.find { |option| option.value == value }&.content
+      elsif hidden_field_value
+        options.find { |option| option.value == hidden_field_value }&.content
       end
     end
 

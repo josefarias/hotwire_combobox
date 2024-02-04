@@ -35,6 +35,10 @@ class ComboboxesController < ApplicationController
     @user = User.first || raise("No user found, load fixtures first.")
   end
 
+  def prefilled_form
+    @user = User.first || raise("No user found, load fixtures first.")
+  end
+
   def async_html
   end
 

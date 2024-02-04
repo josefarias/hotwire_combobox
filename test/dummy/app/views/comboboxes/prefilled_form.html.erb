@@ -1,0 +1,6 @@
+<%= form_with model: @user do |form| %>
+  <%= form.label "Favorite State", for: "user_favorite_state_id" %>
+  <%= form.combobox :favorite_state_id, State.all %>
+
+  <%= form.submit %>
+<% end %>
