@@ -1,10 +1,8 @@
 PATH
   remote: .
   specs:
-    hotwire_combobox (0.1.20)
-      importmap-rails (>= 1.2)
+    hotwire_combobox (0.1.21)
       rails (>= 7.0.7.2)
-      requestjs-rails (>= 0.0.11)
       stimulus-rails (>= 1.2)
       turbo-rails (>= 1.2)
 
@@ -207,8 +205,6 @@ GEM
     regexp_parser (2.9.0)
     reline (0.4.2)
       io-console (~> 0.5)
-    requestjs-rails (0.0.11)
-      railties (>= 6.1.0)
     rexml (3.2.6)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
