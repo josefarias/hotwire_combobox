@@ -147,7 +147,7 @@ class HotwireCombobox::Component
 
     def fieldset_data
       data.reverse_merge \
-        pagination_id: hidden_field_id,
+        async_id: hidden_field_id,
         controller: view.token_list("hw-combobox", data[:controller]),
         hw_combobox_expanded_value: open,
         hw_combobox_name_when_new_value: name_when_new,
@@ -214,7 +214,7 @@ class HotwireCombobox::Component
           click@window->hw-combobox#closeOnClickOutside
           focusin@window->hw-combobox#closeOnFocusOutside".squish,
         hw_combobox_target: "combobox",
-        pagination_id: hidden_field_id
+        async_id: hidden_field_id
     end
 
     def input_aria
