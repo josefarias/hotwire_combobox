@@ -21,5 +21,9 @@ module HotwireCombobox
     initializer "hotwire_combobox.importmap", before: "importmap" do |app|
       app.config.importmap.paths << Engine.root.join("config/importmap.rb")
     end
+
+    initializer "hotwire_combobox.assets.precompile" do |app|
+      app.config.assets.precompile += %w( hotwire_combobox.css )
+    end
   end
 end
