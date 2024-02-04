@@ -255,7 +255,6 @@ DEPENDENCIES
   minitest-focus
   propshaft
   puma
-  requestjs-rails
   selenium-webdriver
   sqlite3
   stimulus-rails

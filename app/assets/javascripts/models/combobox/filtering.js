@@ -1,7 +1,7 @@
 
 import Combobox from "models/combobox/base"
 import { applyFilter, nextFrame, debounce } from "helpers"
-import { get } from "@rails/request.js"
+import { get } from "vendor/requestjs"
 
 Combobox.Filtering = Base => class extends Base {
   filter(event) {
