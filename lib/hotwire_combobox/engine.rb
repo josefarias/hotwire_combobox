@@ -23,7 +23,7 @@ module HotwireCombobox
     end
 
     initializer "hotwire_combobox.assets.precompile" do |app|
-      app.config.assets.precompile += %w( hotwire_combobox.css )
+      app.config.assets.precompile += %w( hotwire_combobox.css controllers/hw_combobox_controller.js )
     end
   end
 end
