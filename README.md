@@ -8,7 +8,7 @@
 
 
 > [!IMPORTANT]
-> We need your help to finalize this gem's first major release. Please use it in your apps and report any issues.
+> HotwireCombobox is at an early stage of development. It's nearing a beta release, but the API might change and bugs are expected. Please continue to use the library and report any issues in the GitHub repo.
 
 ## Installation
 
