@@ -23,7 +23,9 @@ module HotwireCombobox
     end
 
     initializer "hotwire_combobox.assets.precompile" do |app|
-      app.config.assets.precompile += %w( hotwire_combobox.css controllers/hw_combobox_controller.js )
+      Dir.glob(File.join(Engine.root, "app/assets/**/*.{js,css}")).each do |path|
+        app.config.assets.precompile << path
+      end
     end
   end
 end
