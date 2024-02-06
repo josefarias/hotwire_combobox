@@ -99,6 +99,7 @@
   left: 0;
   line-height: var(--hw-line-height);
   list-style: none;
+  margin: 0;
   max-height: var(--hw-listbox-height);
   overflow: auto;
   padding: 0;
