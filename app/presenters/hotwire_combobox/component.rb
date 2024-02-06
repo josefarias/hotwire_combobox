@@ -82,6 +82,12 @@ class HotwireCombobox::Component
   end
 
 
+  def dialog_wrapper_attrs
+    {
+      class: "hw-combobox__dialog__wrapper"
+    }
+  end
+
   def dialog_attrs
     {
       class: "hw-combobox__dialog",

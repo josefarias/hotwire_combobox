@@ -24,6 +24,7 @@ Combobox.Toggle = Base => class extends Base {
   closeOnClickOutside(event) {
     const target = event.target
 
+    if (!this._isOpen) return
     if (this.element.contains(target) && !this._isDialogDismisser(target)) return
     if (this._withinElementBounds(event)) return
 
@@ -100,6 +101,7 @@ Combobox.Toggle = Base => class extends Base {
     this._moveArtifactsInline()
     this.dialogTarget.close()
     this._restoreBodyScroll()
+    this._actingCombobox.scrollIntoView({ block: "center" })
   }
 
   _closeInline() {

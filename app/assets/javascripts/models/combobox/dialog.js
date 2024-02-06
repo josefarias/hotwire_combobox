@@ -33,9 +33,10 @@ Combobox.Dialog = Base => class extends Base {
 
   _resizeDialog = () => {
     if (window.visualViewport) {
-      const fullHeight = window.innerHeight
-      const viewportHeight = window.visualViewport.height
-      this.dialogTarget.style.setProperty("--hw-dialog-bottom-padding", `${fullHeight - viewportHeight}px`)
+      this.dialogTarget.style.setProperty(
+        "--hw-visual-viewport-height",
+        `${window.visualViewport.height}px`
+      )
     }
   }
 

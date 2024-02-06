@@ -6,7 +6,6 @@
   --hw-border-width--slim: 1px;
   --hw-border-width--thick: 2px;
 
-  --hw-dialog-bottom-padding: 0;
   --hw-dialog-font-size: 1.25rem;
   --hw-dialog-input-height: 2.5rem;
   --hw-dialog-label-alignment: center;
@@ -37,6 +36,8 @@
 
   --hw-padding--slim: 0.375rem;
   --hw-padding--thick: 0.75rem;
+
+  --hw-visual-viewport-height: 100vh;
 }
 
 .hw-combobox {
@@ -125,16 +126,31 @@
   background-color: var(--hw-active-bg-color);
 }
 
+.hw-combobox__dialog__wrapper {
+  display: none;
+  height: 100vh;
+  inset-inline-start: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  width: 100%;
+
+  &:has([open]) {
+    display: flex;
+  }
+}
+
 .hw-combobox__dialog {
   border: 0;
   font-size: var(--hw-dialog-font-size);
   height: auto;
   margin: 0;
-  max-height: none;
+  max-height: calc(var(--hw-visual-viewport-height) - var(--hw-dialog-top-offset));
   max-width: none;
   overflow: hidden;
-  padding: var(--hw-dialog-padding) var(--hw-dialog-padding) var(--hw-dialog-bottom-padding) var(--hw-dialog-padding);
-  position: fixed;
+  padding: var(--hw-dialog-padding);
+  pointer-events: auto;
+  position: absolute;
   top: var(--hw-dialog-top-offset);
   width: auto;
 
@@ -146,7 +162,7 @@
   }
 
   &::backdrop {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 50%, white 50%);
   }
 }
 
