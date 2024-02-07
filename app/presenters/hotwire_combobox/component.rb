@@ -22,13 +22,15 @@ class HotwireCombobox::Component
       view, autocomplete, id, name, value, form, async_src,
       name_when_new, open, data, mobile_at, options, dialog_label
 
+    @custom_classes = rest.select { |key, _| key.to_s.end_with?('_class') }.with_indifferent_access
+    rest.reject! { |key, _| key.to_s.end_with?('_class') }
     @combobox_attrs = input.reverse_merge(rest).with_indifferent_access
     @association_name = association_name || infer_association_name
   end
 
   def fieldset_attrs
     {
-      class: "hw-combobox",
+      class: css_classes("fieldset"),
       data: fieldset_data
     }
   end
@@ -50,7 +52,7 @@ class HotwireCombobox::Component
     {
       id: input_id,
       role: :combobox,
-      class: "hw-combobox__input",
+      class: css_classes("input"),
       type: input_type,
       data: input_data,
       aria: input_aria
@@ -60,7 +62,7 @@ class HotwireCombobox::Component
 
   def handle_attrs
     {
-      class: "hw-combobox__handle",
+      class: css_classes("handle"),
       data: handle_data
     }
   end
@@ -70,7 +72,7 @@ class HotwireCombobox::Component
     {
       id: listbox_id,
       role: :listbox,
-      class: "hw-combobox__listbox",
+      class: css_classes("listbox"),
       hidden: "",
       data: listbox_data
     }
@@ -84,13 +86,13 @@ class HotwireCombobox::Component
 
   def dialog_wrapper_attrs
     {
-      class: "hw-combobox__dialog__wrapper"
+      class: css_classes("dialog__wrapper")
     }
   end
 
   def dialog_attrs
     {
-      class: "hw-combobox__dialog",
+      class: css_classes("dialog"),
       role: :dialog,
       data: dialog_data
     }
@@ -98,7 +100,7 @@ class HotwireCombobox::Component
 
   def dialog_label_attrs
     {
-      class: "hw-combobox__dialog__label",
+      class: css_classes("dialog__label"),
       for: dialog_input_id
     }
   end
@@ -107,7 +109,7 @@ class HotwireCombobox::Component
     {
       id: dialog_input_id,
       role: :combobox,
-      class: "hw-combobox__dialog__input",
+      class: css_classes("dialog__input"),
       autofocus: "",
       type: input_type,
       data: dialog_input_data,
@@ -118,7 +120,7 @@ class HotwireCombobox::Component
   def dialog_listbox_attrs
     {
       id: dialog_listbox_id,
-      class: "hw-combobox__dialog__listbox",
+      class: css_classes("dialog__listbox"),
       role: :listbox,
       data: dialog_listbox_data
     }
@@ -298,5 +300,23 @@ class HotwireCombobox::Component
 
     def dialog_focus_trap_data
       { hw_combobox_target: "dialogFocusTrap" }
+    end
+
+
+    def css_classes(element)
+      [
+        css_base_class(element),
+        css_custom_class(element)
+      ].compact.join(" ")
+    end
+
+    def css_base_class(element)
+      return "hw-combobox" if element == "fieldset"
+
+      "hw-combobox__#{element}"
+    end
+
+    def css_custom_class(element)
+      @custom_classes["#{element.gsub('-', '_').gsub('__', '_')}_class"]
     end
 end

@@ -61,6 +61,28 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
       "aria-haspopup": "listbox", "aria-autocomplete": "both"
   end
 
+  test "passing custom classes (per element) adds them to the built-in classes" do
+    options = hw_combobox_options [
+      { value: :baz, display: :Baz },
+      { value: :quux, display: :Quux }
+    ]
+    tag = combobox_tag :foo, options, value: :baz,
+                       fieldset_class: 'CustomFieldSet', input_class: 'CustomInput', handle_class: 'CustomHandle',
+                       listbox_class: 'CustomListBox',
+                       dialog_class: 'CustomDialog', dialog_wrapper_class: 'CustomDialogWrapper',
+                       dialog_input_class: 'CustomDialogInput', dialog_label_class: 'CustomDialogLabel'
+
+    refute_includes tag, 'input_class="CustomInput"'
+    assert_includes tag, 'class="hw-combobox CustomFieldSet"'
+    assert_includes tag, 'class="hw-combobox__input CustomInput"'
+    assert_includes tag, 'class="hw-combobox__handle CustomHandle"'
+    assert_includes tag, 'class="hw-combobox__listbox CustomListBox"'
+    assert_includes tag, 'class="hw-combobox__dialog CustomDialog"'
+    assert_includes tag, 'class="hw-combobox__dialog__wrapper CustomDialogWrapper"'
+    assert_includes tag, 'class="hw-combobox__dialog__input CustomDialogInput"'
+    assert_includes tag, 'class="hw-combobox__dialog__label CustomDialogLabel"'
+  end
+
   test "hw_combobox_options instantiates an array of `HotwireCombobox::Listbox::Option`s" do
     options = hw_combobox_options [
       { value: :foo, display: :bar },
