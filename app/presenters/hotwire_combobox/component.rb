@@ -137,7 +137,7 @@ class HotwireCombobox::Component
   end
 
   def pagination_attrs
-    { for_id: hidden_field_id, src: async_src }
+    { for_id: canonical_id, src: async_src }
   end
 
   private
@@ -153,7 +153,7 @@ class HotwireCombobox::Component
 
     def fieldset_data
       data.reverse_merge \
-        async_id: hidden_field_id,
+        async_id: canonical_id,
         controller: view.token_list("hw-combobox", data[:controller]),
         hw_combobox_expanded_value: open,
         hw_combobox_name_when_new_value: name_when_new,
@@ -186,8 +186,13 @@ class HotwireCombobox::Component
     end
 
 
-    def hidden_field_id
+    def canonical_id
       id || form&.field_id(name)
+    end
+
+
+    def hidden_field_id
+      "#{canonical_id}-hw-hidden-field"
     end
 
     def hidden_field_name
@@ -204,7 +209,7 @@ class HotwireCombobox::Component
 
 
     def input_id
-      "#{hidden_field_id}-hw-combobox"
+      canonical_id
     end
 
     def input_type
@@ -220,7 +225,7 @@ class HotwireCombobox::Component
           click@window->hw-combobox#closeOnClickOutside
           focusin@window->hw-combobox#closeOnFocusOutside".squish,
         hw_combobox_target: "combobox",
-        async_id: hidden_field_id
+        async_id: canonical_id
     end
 
     def input_aria
@@ -241,7 +246,7 @@ class HotwireCombobox::Component
 
 
     def listbox_id
-      "#{hidden_field_id}-hw-listbox"
+      "#{canonical_id}-hw-listbox"
     end
 
     def listbox_data
@@ -262,7 +267,7 @@ class HotwireCombobox::Component
     end
 
     def dialog_input_id
-      "#{hidden_field_id}-hw-dialog-combobox"
+      "#{canonical_id}-hw-dialog-combobox"
     end
 
     def dialog_input_data
@@ -284,7 +289,7 @@ class HotwireCombobox::Component
     end
 
     def dialog_listbox_id
-      "#{hidden_field_id}-hw-dialog-listbox"
+      "#{canonical_id}-hw-dialog-listbox"
     end
 
     def dialog_listbox_data

@@ -29,7 +29,8 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     form = ActionView::Helpers::FormBuilder.new :foo, nil, self, {}
     tag = combobox_tag :bar, form: form
 
-    assert_attrs tag, name: "foo[bar]", id: "foo_bar" # name is not "bar"
+    assert_attrs tag, type: "hidden", name: "foo[bar]" # name is not "bar"
+    assert_attrs tag, id: "foo_bar", role: "combobox" # id is determined by the form builder
   end
 
   test "passing a form builder object overrides value" do
