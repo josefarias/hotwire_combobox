@@ -1,3 +1,5 @@
+require "hotwire_combobox/helper"
+
 module ConfigurationHelper
   def swap_config(new_configs)
     old_values = {}
@@ -25,6 +27,6 @@ module ConfigurationHelper
   private
     def reload_config_dependents
       HotwireCombobox.send(:remove_const, :Helper)
-      load HotwireCombobox::Engine.root.join("app/helpers/hotwire_combobox/helper.rb")
+      load HotwireCombobox::Engine.root.join("lib/hotwire_combobox/helper.rb")
     end
 end
