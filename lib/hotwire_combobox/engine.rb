@@ -4,7 +4,8 @@ module HotwireCombobox
 
     initializer "hotwire_combobox.view_helpers" do
       ActiveSupport.on_load :action_view do
-        include HotwireCombobox::Helper
+        require "hotwire_combobox/helper"
+        ActionView::Base.include HotwireCombobox::Helper
 
         unless HotwireCombobox.bypass_convenience_methods?
           module FormBuilderExtensions
