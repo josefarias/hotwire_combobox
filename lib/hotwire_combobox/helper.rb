@@ -55,6 +55,16 @@ module HotwireCombobox
         "#{id}__hw_combobox_pagination"
       end
 
+      def hw_combobox_next_page_uri(uri, next_page)
+        if next_page
+          hw_uri_with_params uri, page: next_page, q: params[:q], format: :turbo_stream
+        end
+      end
+
+      def hw_combobox_page_stream_action
+        params[:page] ? :append : :update
+      end
+
     private
       def hw_extract_options_and_src(options_or_src, render_in)
         if options_or_src.is_a? String
@@ -95,16 +105,6 @@ module HotwireCombobox
         else
           object.public_send method_or_proc
         end
-      end
-
-      def hw_combobox_next_page_uri(uri, next_page)
-        if next_page
-          hw_uri_with_params uri, page: next_page, q: params[:q], format: :turbo_stream
-        end
-      end
-
-      def hw_combobox_page_stream_action
-        params[:page] ? :append : :update
       end
   end
 end

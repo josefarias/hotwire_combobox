@@ -11,10 +11,10 @@ class HotwireCombobox::Component
       form:             nil,
       id:               nil,
       input:            {},
+      mobile_at:        "640px",
       name_when_new:    nil,
       open:             false,
       options:          [],
-      mobile_at:      "640px",
       value:            nil,
       **rest
     @view, @autocomplete, @id, @name, @value, @form, @async_src,
