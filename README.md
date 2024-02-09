@@ -18,6 +18,8 @@ Add this line to your application's Gemfile and run `bundle install`:
 gem "hotwire_combobox"
 ```
 
+Only apps that use importmaps are currently supported. Suport for other JS solutions is in progress.
+
 ## Docs
 
 <p align="center">
