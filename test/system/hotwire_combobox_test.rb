@@ -258,6 +258,26 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector "input[role=combobox]"
   end
 
+  test "new options select via click on option twice" do
+    visit new_options_combobox_path
+
+    field_selector = "allow-new"
+    open_combobox(field_selector)
+
+    assert_field field_selector, with: nil
+    assert_field "#{field_selector}-hw-hidden-field", type: "hidden", with: nil
+
+    find("li[role=option]", text: "Florida").click
+    assert_selector "input[aria-expanded=false]"
+    assert_field field_selector, with: "Florida"
+
+    open_combobox(field_selector)
+
+    find("li[role=option]", text: "Alabama").click
+    assert_selector "input[aria-expanded=false]"
+    assert_field field_selector, with: "Alabama"
+  end
+
   test "new options can be allowed" do
     assert_difference -> { State.count }, +1 do
       visit new_options_path
