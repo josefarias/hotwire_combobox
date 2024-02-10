@@ -16,7 +16,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit plain_combobox_path
 
     assert_selector "input[aria-expanded=false]"
-    assert_no_selector "li"
+    assert_no_selector "li[role=option]"
   end
 
   test "combobox can be opened" do
@@ -45,7 +45,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector "input[aria-expanded=true]"
     click_on_edge
     assert_selector "input[aria-expanded=false]"
-    assert_no_selector "li"
+    assert_no_selector "li[role=option]"
   end
 
   test "closing combobox by focusing outside" do
@@ -56,7 +56,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector "input[aria-expanded=true]"
     find("body").send_keys(:tab)
     assert_selector "input[aria-expanded=false]"
-    assert_no_selector "li"
+    assert_no_selector "li[role=option]"
   end
 
   test "options can contain html" do

@@ -14,10 +14,27 @@
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
       body { font-family: 'Inter', sans-serif; }
+
+      .container {
+        display: flex;
+        align-items: flex-start;
+      }
+      .container aside {
+        <%= "display: none;" unless controller_name == 'comboboxes' %>
+        background-color: #efefef;
+        margin-right: 2rem;
+      }
     </style>
   </head>
 
   <body>
-    <%= yield %>
+    <section class="container">
+      <aside>
+        <%= render 'comboboxes/nav' if controller_name == 'comboboxes' %>
+      </aside>
+      <main>
+        <%= yield %>
+      </main>
+    </section>
   </body>
 </html>

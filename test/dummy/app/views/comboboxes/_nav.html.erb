@@ -1,0 +1,52 @@
+<%
+  examples = %w[
+    plain
+    open
+    html
+    prefilled
+    required
+    formbuilder
+    new_options
+    inline_autocomplete
+    list_autocomplete
+    async
+    prefilled_async
+    prefilled_form
+    async_html
+    render_in
+  ]
+-%>
+<style>
+  .comboboxes-nav header {
+    margin: 1rem 1rem 0;
+  }
+  .comboboxes-nav ul {
+    list-style-type: none;
+    margin: 0.5rem 2rem 1rem;
+    padding: 0;
+  }
+  .comboboxes-nav li {
+    margin-bottom: 0.5rem;
+  }
+  .comboboxes-nav li.current {
+    font-weight: bold;
+  }
+  .comboboxes-nav a, .comboboxes-nav a:visited {
+    text-decoration: none;
+  }
+  .comboboxes-nav a:hover, .comboboxes-nav a:active {
+    text-decoration: underline;
+  }
+</style>
+<nav class="comboboxes-nav">
+  <header>
+    Variations:
+  </header>
+  <ul>
+    <% examples.each do |example| %>
+      <%= content_tag :li, class: action_name == example ? "current" : "" do %>
+        <%= link_to example, "/#{example}_combobox" %>
+      <% end %>
+    <% end %>
+  </ul>
+</nav>
