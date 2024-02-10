@@ -204,7 +204,11 @@ class HotwireCombobox::Component
     end
 
     def hidden_field_value
-      form&.object&.public_send(name) || value
+      if form&.object&.respond_to?(name)
+        form.object.public_send(name)
+      else
+        value
+      end
     end
 
 
