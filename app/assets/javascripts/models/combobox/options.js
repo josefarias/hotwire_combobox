@@ -8,11 +8,19 @@ Combobox.Options = Base => class extends Base {
   }
 
   _isValidNewOption(query, { ignoreAutocomplete = false } = {}) {
+    if (!this._allowNew || this._hasSameValueInOptions) {
+      return false
+    }
+
     const typedValue = this._actingCombobox.value
     const autocompletedValue = this._visibleOptionElements[0]?.getAttribute(this.autocompletableAttributeValue)
     const insufficientAutocomplete = !autocompletedValue || !startsWith(autocompletedValue, typedValue)
 
-    return query.length > 0 && this._allowNew && (ignoreAutocomplete || insufficientAutocomplete)
+    return query.length > 0 && (ignoreAutocomplete || insufficientAutocomplete)
+  }
+
+  get _hasSameValueInOptions() {
+    return this._visibleOptionElements.some((el) => el.innerText === this._actingCombobox.value)
   }
 
   get _allowNew() {
