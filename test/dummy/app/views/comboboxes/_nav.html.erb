@@ -1,21 +1,3 @@
-<%
-  examples = %w[
-    plain
-    open
-    html_options
-    prefilled
-    required
-    formbuilder
-    new_options
-    inline_autocomplete
-    list_autocomplete
-    async
-    prefilled_async
-    prefilled_form
-    async_html
-    render_in
-  ]
--%>
 <style>
   .comboboxes-nav header {
     margin: 1rem 1rem 0;
@@ -43,9 +25,9 @@
     Variations:
   </header>
   <ul>
-    <% examples.each do |example| %>
-      <%= content_tag :li, class: action_name == example ? "current" : "" do %>
-        <%= link_to example, "/#{example}" %>
+    <% variations.each do |variation| %>
+      <%= content_tag :li, class: action_name == variation ? "current" : "" do %>
+        <%= link_to variation, "/#{variation}" %>
       <% end %>
     <% end %>
   </ul>

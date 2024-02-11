@@ -51,4 +51,9 @@ class ComboboxesController < ApplicationController
     def set_states
       @states = combobox_options State.all, id: :abbreviation, value: :abbreviation, display: :name
     end
+
+    def variations
+      action_methods.sort
+    end
+    helper_method :variations
 end
