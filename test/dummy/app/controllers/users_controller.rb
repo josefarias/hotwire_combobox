@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 
   def update
     if @user.update user_params
-      redirect_to prefilled_async_combobox_path, notice: "User updated"
+      redirect_to prefilled_async_path, notice: "User updated"
     else
       head :unprocessable_entity
     end

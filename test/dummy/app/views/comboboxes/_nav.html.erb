@@ -2,7 +2,7 @@
   examples = %w[
     plain
     open
-    html
+    html_options
     prefilled
     required
     formbuilder
@@ -45,7 +45,7 @@
   <ul>
     <% examples.each do |example| %>
       <%= content_tag :li, class: action_name == example ? "current" : "" do %>
-        <%= link_to example, "/#{example}_combobox" %>
+        <%= link_to example, "/#{example}" %>
       <% end %>
     <% end %>
   </ul>

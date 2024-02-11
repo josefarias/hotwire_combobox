@@ -7,7 +7,7 @@ class ComboboxesController < ApplicationController
   def open
   end
 
-  def html
+  def html_options
   end
 
   def prefilled

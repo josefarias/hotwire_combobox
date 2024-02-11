@@ -7,20 +7,20 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "combobox is rendered" do
-    visit plain_combobox_path
+    visit plain_path
 
     assert_selector "input[role=combobox]"
   end
 
   test "combobox is closed by default" do
-    visit plain_combobox_path
+    visit plain_path
 
     assert_selector "input[aria-expanded=false]"
     assert_no_selector "li[role=option]"
   end
 
   test "combobox can be opened" do
-    visit plain_combobox_path
+    visit plain_path
 
     open_combobox
 
@@ -30,7 +30,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "combobox can be opened by default if configured that way" do
-    visit open_combobox_path
+    visit open_path
 
     assert_selector "input[aria-expanded=true]"
     assert_selector "ul[role=listbox]", id: "state-field-hw-listbox"
@@ -38,7 +38,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "closing combobox by clicking outside" do
-    visit plain_combobox_path
+    visit plain_path
 
     open_combobox
 
@@ -49,7 +49,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "closing combobox by focusing outside" do
-    visit plain_combobox_path
+    visit plain_path
 
     open_combobox
 
@@ -60,7 +60,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "options can contain html" do
-    visit html_combobox_path
+    visit html_options_path
 
     open_combobox
 
@@ -69,7 +69,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "options are filterable" do
-    visit plain_combobox_path
+    visit plain_path
 
     open_combobox
 
@@ -79,7 +79,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "autocompletion" do
-    visit html_combobox_path
+    visit html_options_path
 
     open_combobox
 
@@ -95,7 +95,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "autocomplete only works when strings match from the very beginning, but the first option is still selected" do
-    visit html_combobox_path
+    visit html_options_path
 
     open_combobox
 
@@ -106,7 +106,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "pressing enter locks in the current selection, but editing the text field resets it" do
-    visit html_combobox_path
+    visit html_options_path
 
     open_combobox
 
@@ -124,7 +124,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "clicking away locks in the current selection" do
-    visit html_combobox_path
+    visit html_options_path
 
     open_combobox
 
@@ -136,7 +136,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "focusing away locks in the current selection" do
-    visit plain_combobox_path
+    visit plain_path
 
     open_combobox
 
@@ -148,7 +148,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "navigating with the arrow keys" do
-    visit html_combobox_path
+    visit html_options_path
 
     open_combobox
 
@@ -183,7 +183,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "select option by clicking on it" do
-    visit html_combobox_path
+    visit html_options_path
 
     open_combobox
 
@@ -197,7 +197,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "combobox with prefilled value" do
-    visit prefilled_combobox_path
+    visit prefilled_path
 
     assert_selector "input[aria-expanded=false]"
     assert_field "state-field", with: "Michigan"
@@ -209,7 +209,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "combobox in form with prefilled value" do
-    visit prefilled_form_combobox_path
+    visit prefilled_form_path
 
     assert_selector "input[aria-expanded=false]"
     assert_field "user_favorite_state_id", with: "Michigan"
@@ -221,7 +221,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "async combobox with prefilled value" do
-    visit prefilled_async_combobox_path
+    visit prefilled_async_path
 
     assert_selector "input[aria-expanded=false]"
     assert_field "user_home_state_id", with: "Florida"
@@ -233,7 +233,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "combobox is invalid if required and empty" do
-    visit required_combobox_path
+    visit required_path
 
     open_combobox
 
@@ -243,7 +243,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "combobox is not invalid if empty but not required" do
-    visit plain_combobox_path
+    visit plain_path
 
     open_combobox
 
@@ -253,14 +253,14 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "combobox is rendered when using the formbuilder" do
-    visit formbuilder_combobox_path
+    visit formbuilder_path
 
     assert_selector "input[role=combobox]"
   end
 
   test "new options can be allowed" do
     assert_difference -> { State.count }, +1 do
-      visit new_options_combobox_path
+      visit new_options_path
 
       find("#allow-new").then do |combobox|
         combobox.click
@@ -284,7 +284,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
   test "new options can be allowed when competing with an autocomplete suggestion" do
     assert_difference -> { State.count }, +1 do
-      visit new_options_combobox_path
+      visit new_options_path
 
       find("#allow-new").then do |combobox|
         combobox.click
@@ -315,7 +315,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
   test "new options are sent blank when they're not allowed" do
     assert_no_difference -> { State.count } do
-      visit new_options_combobox_path
+      visit new_options_path
 
       find("#disallow-new").then do |combobox|
         combobox.click
@@ -332,7 +332,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "inline-only autocomplete" do
-    visit inline_autocomplete_combobox_path
+    visit inline_autocomplete_path
 
     open_combobox
 
@@ -352,7 +352,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "list-only autocomplete" do
-    visit list_autocomplete_combobox_path
+    visit list_autocomplete_path
 
     open_combobox
 
@@ -383,7 +383,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
   test "dialog" do
     on_small_screen do
-      visit html_combobox_path
+      visit html_options_path
 
       assert_no_selector "dialog[open]"
       open_combobox
@@ -402,8 +402,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   [
-    { path: :async_combobox_path, visible_options: 10 },
-    { path: :async_html_combobox_path, visible_options: 5 }
+    { path: :async_path, visible_options: 10 },
+    { path: :async_html_path, visible_options: 5 }
   ].each do |test_case|
     test "async combobox #{test_case[:path]}" do
       visit send(test_case[:path])
@@ -433,7 +433,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "passing render_in to combobox_tag" do
-    visit render_in_combobox_path
+    visit render_in_path
 
     open_combobox "movie-field"
 
