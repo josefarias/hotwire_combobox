@@ -20,17 +20,19 @@
         align-items: flex-start;
       }
       .container aside {
-        <%= "display: none;" unless controller_name == 'comboboxes' %>
         background-color: #efefef;
         margin-right: 2rem;
+      }
+      .container aside.empty {
+        display: none;
       }
     </style>
   </head>
 
   <body>
     <section class="container">
-      <aside>
-        <%= render 'comboboxes/nav' if controller_name == 'comboboxes' %>
+      <aside class="<%= 'empty' unless aside_nav? %>">
+        <%= render "#{controller_name}/nav" if aside_nav? %>
       </aside>
       <main>
         <%= yield %>
