@@ -14,10 +14,29 @@
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
       body { font-family: 'Inter', sans-serif; }
+
+      .container {
+        display: flex;
+        align-items: flex-start;
+      }
+      .container aside {
+        background-color: #efefef;
+        margin-right: 2rem;
+      }
+      .container aside.empty {
+        display: none;
+      }
     </style>
   </head>
 
   <body>
-    <%= yield %>
+    <section class="container">
+      <aside class="<%= 'empty' unless aside_nav? %>">
+        <%= render "#{controller_name}/nav" if aside_nav? %>
+      </aside>
+      <main>
+        <%= yield %>
+      </main>
+    </section>
   </body>
 </html>

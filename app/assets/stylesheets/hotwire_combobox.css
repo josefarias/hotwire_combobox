@@ -47,7 +47,6 @@
   margin: 0;
   padding: 0;
   position: relative;
-  isolation: isolate;
 
   &, * {
     box-sizing: border-box;

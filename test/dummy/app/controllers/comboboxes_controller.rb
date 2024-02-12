@@ -7,7 +7,7 @@ class ComboboxesController < ApplicationController
   def open
   end
 
-  def html
+  def html_options
   end
 
   def prefilled
@@ -51,4 +51,13 @@ class ComboboxesController < ApplicationController
     def set_states
       @states = combobox_options State.all, id: :abbreviation, value: :abbreviation, display: :name
     end
+
+    def aside_nav?
+      true
+    end
+
+    def variations
+      action_methods.sort
+    end
+    helper_method :variations
 end
