@@ -8,10 +8,8 @@ class HotwireCombobox::ComponentTest < ApplicationViewTestCase
   test "hidden_field_attrs returns value from form object if available" do
     existent_field_on_model = "Peter"
     field_name = :name
-    component = HotwireCombobox::Component.new(
-      @view, field_name,
-      form: mock_form(form_object: OpenStruct.new("#{field_name}": existent_field_on_model)),
-    )
+    component = HotwireCombobox::Component.new @view, field_name,
+      form: mock_form(form_object: OpenStruct.new("#{field_name}": existent_field_on_model))
 
     assert_equal component.hidden_field_attrs, { id: "#{field_name}_id-hw-hidden-field",
                                                  name: :name,
