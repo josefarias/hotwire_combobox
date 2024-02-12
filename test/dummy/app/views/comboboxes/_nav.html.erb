@@ -1,0 +1,34 @@
+<style>
+  .comboboxes-nav header {
+    margin: 1rem 1rem 0;
+  }
+  .comboboxes-nav ul {
+    list-style-type: none;
+    margin: 0.5rem 2rem 1rem;
+    padding: 0;
+  }
+  .comboboxes-nav li {
+    margin-bottom: 0.5rem;
+  }
+  .comboboxes-nav li.current {
+    font-weight: bold;
+  }
+  .comboboxes-nav a, .comboboxes-nav a:visited {
+    text-decoration: none;
+  }
+  .comboboxes-nav a:hover, .comboboxes-nav a:active {
+    text-decoration: underline;
+  }
+</style>
+<nav class="comboboxes-nav">
+  <header>
+    Variations:
+  </header>
+  <ul>
+    <% variations.each do |variation| %>
+      <%= content_tag :li, class: action_name == variation ? "current" : "" do %>
+        <%= link_to variation, "/#{variation}" %>
+      <% end %>
+    <% end %>
+  </ul>
+</nav>
