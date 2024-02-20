@@ -1,5 +1,5 @@
-import Combobox from "models/combobox"
-import { Concerns } from "helpers"
+import Combobox from "hw_combobox/models/combobox"
+import { Concerns } from "hw_combobox/helpers"
 import { Controller } from "@hotwired/stimulus"
 
 const concerns = [

@@ -1,5 +1,5 @@
-import Combobox from "models/combobox/base"
-import { visible, startsWith } from "helpers"
+import Combobox from "hw_combobox/models/combobox/base"
+import { visible, startsWith } from "hw_combobox/helpers"
 
 Combobox.Options = Base => class extends Base {
   _resetOptions() {

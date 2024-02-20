@@ -1,4 +1,4 @@
-import Combobox from "models/combobox/base"
+import Combobox from "hw_combobox/models/combobox/base"
 
 Combobox.Dialog = Base => class extends Base {
   _connectDialog() {

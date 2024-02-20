@@ -1,5 +1,5 @@
-import Combobox from "models/combobox/base"
-import { disableBodyScroll, enableBodyScroll } from "vendor/bodyScrollLock"
+import Combobox from "hw_combobox/models/combobox/base"
+import { disableBodyScroll, enableBodyScroll } from "hw_combobox/vendor/bodyScrollLock"
 
 Combobox.Toggle = Base => class extends Base {
   open() {
