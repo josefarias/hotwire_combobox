@@ -21,7 +21,7 @@ module HotwireCombobox
 
     initializer "hotwire_combobox.importmap", before: "importmap" do |app|
       if Rails.application.respond_to?(:importmap)
-        app.config.importmap.paths << Engine.root.join("config/importmap.rb")
+        app.config.importmap.paths << Engine.root.join("config/hw_importmap.rb")
       end
     end
 

@@ -1,5 +1,5 @@
-import Combobox from "models/combobox/base"
-import { startsWith } from "helpers"
+import Combobox from "hw_combobox/models/combobox/base"
+import { startsWith } from "hw_combobox/helpers"
 
 Combobox.Autocomplete = Base => class extends Base {
   _connectListAutocomplete() {

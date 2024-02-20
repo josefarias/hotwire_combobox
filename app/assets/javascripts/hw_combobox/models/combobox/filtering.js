@@ -1,7 +1,7 @@
 
-import Combobox from "models/combobox/base"
-import { applyFilter, nextFrame, debounce } from "helpers"
-import { get } from "vendor/requestjs"
+import Combobox from "hw_combobox/models/combobox/base"
+import { applyFilter, nextFrame, debounce } from "hw_combobox/helpers"
+import { get } from "hw_combobox/vendor/requestjs"
 
 Combobox.Filtering = Base => class extends Base {
   filter(event) {

@@ -1,5 +1,5 @@
-import Combobox from "models/combobox/base"
-import { cancel } from "helpers"
+import Combobox from "hw_combobox/models/combobox/base"
+import { cancel } from "hw_combobox/helpers"
 
 Combobox.Navigation = Base => class extends Base {
   navigate(event) {

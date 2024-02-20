@@ -1,5 +1,5 @@
-import Combobox from "models/combobox/base"
-import { wrapAroundAccess } from "helpers"
+import Combobox from "hw_combobox/models/combobox/base"
+import { wrapAroundAccess } from "hw_combobox/helpers"
 
 Combobox.Selection = Base => class extends Base {
   selectOption(event) {
