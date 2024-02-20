@@ -234,4 +234,5 @@
 <% sanitized_title = title.downcase.gsub(/[^a-z0-9\s]/, '').gsub(/\s+/, '_') %>
 <%= sanitized_title %>:
   title: "<%= title %>"
+  rating: "<%= Movie.ratings.keys.sample %>"
 <% end %>

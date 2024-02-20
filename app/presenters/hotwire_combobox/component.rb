@@ -19,7 +19,7 @@ class HotwireCombobox::Component
       **rest
     @view, @autocomplete, @id, @name, @value, @form, @async_src,
     @name_when_new, @open, @data, @mobile_at, @options, @dialog_label =
-      view, autocomplete, id, name, value, form, async_src,
+      view, autocomplete, id, name.to_s, value, form, async_src,
       name_when_new, open, data, mobile_at, options, dialog_label
 
     @combobox_attrs = input.reverse_merge(rest).with_indifferent_access
@@ -146,8 +146,8 @@ class HotwireCombobox::Component
       :association_name
 
     def infer_association_name
-      if name.to_s.include?("_id")
-        name.to_s.sub(/_id\z/, "")
+      if name.include?("_id")
+        name.sub(/_id\z/, "")
       end
     end
 
@@ -204,7 +204,13 @@ class HotwireCombobox::Component
     end
 
     def hidden_field_value
-      form&.object&.public_send(name) || value
+      return value unless (object = form&.object)
+
+      if object.defined_enums[name]
+        object.public_send "#{name}_before_type_cast"
+      else
+        object.try name
+      end
     end
 
 

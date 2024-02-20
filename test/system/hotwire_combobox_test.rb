@@ -441,6 +441,27 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_field "movie-field", with: "Snow White and the Seven Dwarfs"
   end
 
+  test "enum combobox" do
+    Movie.update_all rating: :PG
+
+    visit enum_path
+
+    assert_field "movie_rating-hw-hidden-field", type: "hidden", with: Movie.ratings[:PG]
+    assert_field "movie_rating", with: "PG"
+
+    open_combobox "rating-enum"
+    find("li[role=option]", text: "R").click
+    assert_field "rating-enum", with: "R"
+    assert_field "rating-enum-hw-hidden-field", type: "hidden", with: Movie.ratings[:R]
+    click_on_edge
+
+    open_combobox "rating-keys"
+    find("li[role=option]", text: "PG-13").click
+    assert_field "rating-keys", with: "PG-13"
+    assert_field "rating-keys-hw-hidden-field", type: "hidden", with: "PG-13"
+    click_on_edge
+  end
+
   private
     def open_combobox(name = "state-field")
       find("##{name}").click

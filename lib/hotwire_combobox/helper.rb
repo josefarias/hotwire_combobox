@@ -88,17 +88,26 @@ module HotwireCombobox
 
       def hw_parse_combobox_options(options, **methods)
         options.map do |option|
-          attrs = option.is_a?(Hash) ? option : hw_option_attrs_for_obj(option, **methods)
-          HotwireCombobox::Listbox::Option.new **attrs
+          HotwireCombobox::Listbox::Option.new **hw_option_attrs_for(option, **methods)
         end
       end
 
-      def hw_option_attrs_for_obj(option, **methods)
-        {}.tap do |attrs|
-          attrs[:id] = hw_call_method_or_proc(option, methods[:id]) if methods[:id]
-          attrs[:value] = hw_call_method_or_proc(option, methods[:value] || :id)
-          attrs[:display] = hw_call_method_or_proc(option, methods[:display]) if methods[:display]
-          attrs[:content] = hw_call_method_or_proc(option, methods[:content]) if methods[:content]
+      def hw_option_attrs_for(option, **methods)
+        case option
+        when Hash
+          option
+        when String
+          { display: option, value: option }
+        when Array
+          { display: option.first, value: option.last }
+        else
+          {}.tap do |attrs|
+            attrs[:value] = hw_call_method_or_proc(option, methods[:value] || :id)
+
+            attrs[:id] = hw_call_method_or_proc(option, methods[:id]) if methods[:id]
+            attrs[:display] = hw_call_method_or_proc(option, methods[:display]) if methods[:display]
+            attrs[:content] = hw_call_method_or_proc(option, methods[:content]) if methods[:content]
+          end
         end
       end
 
