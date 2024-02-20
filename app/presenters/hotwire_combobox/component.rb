@@ -206,7 +206,7 @@ class HotwireCombobox::Component
     def hidden_field_value
       return value unless (object = form&.object)
 
-      if object.defined_enums[name]
+      if object.defined_enums.try :[], name
         object.public_send "#{name}_before_type_cast"
       else
         object.try name
