@@ -454,10 +454,18 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_field "rating-enum", with: "R"
     assert_field "rating-enum-hw-hidden-field", type: "hidden", with: Movie.ratings[:R]
 
+    open_combobox "rating-enum-html"
+    assert_selector "li[role=option] p", text: Movie.ratings.keys.first
+    click_on_edge
+
     open_combobox "rating-keys"
     find("li[role=option]", text: "PG-13").click
     assert_field "rating-keys", with: "PG-13"
     assert_field "rating-keys-hw-hidden-field", type: "hidden", with: "PG-13"
+
+    open_combobox "rating-keys-html"
+    assert_selector "li[role=option] p", text: Movie.ratings.keys.first
+    click_on_edge
   end
 
   private
