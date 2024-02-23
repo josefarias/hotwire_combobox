@@ -27,13 +27,8 @@ module HotwireCombobox
       if options.first.is_a? HotwireCombobox::Listbox::Option
         options
       else
-        content = if render_in.present?
-          ->(object) { render(**render_in.merge(object: object)) }
-        else
-          methods[:content]
-        end
-
-        hw_parse_combobox_options options, **methods.merge(display: display, content: content)
+        render_in_proc = ->(object) { render(**render_in.merge(object: object)) } if render_in.present?
+        hw_parse_combobox_options options, render_in: render_in_proc, **methods.merge(display: display)
       end
     end
     hw_alias :hw_combobox_options
@@ -86,19 +81,36 @@ module HotwireCombobox
         url_or_path
       end
 
-      def hw_parse_combobox_options(options, **methods)
+      def hw_parse_combobox_options(options, render_in: nil, **methods)
         options.map do |option|
-          attrs = option.is_a?(Hash) ? option : hw_option_attrs_for_obj(option, **methods)
-          HotwireCombobox::Listbox::Option.new **attrs
+          HotwireCombobox::Listbox::Option.new **hw_option_attrs_for(option, render_in: render_in, **methods)
         end
       end
 
-      def hw_option_attrs_for_obj(option, **methods)
-        {}.tap do |attrs|
-          attrs[:id] = hw_call_method_or_proc(option, methods[:id]) if methods[:id]
-          attrs[:value] = hw_call_method_or_proc(option, methods[:value] || :id)
-          attrs[:display] = hw_call_method_or_proc(option, methods[:display]) if methods[:display]
-          attrs[:content] = hw_call_method_or_proc(option, methods[:content]) if methods[:content]
+      def hw_option_attrs_for(option, render_in: nil, **methods)
+        case option
+        when Hash
+          option
+        when String
+          {}.tap do |attrs|
+            attrs[:display] = option
+            attrs[:value] = option
+            attrs[:content] = render_in.(option) if render_in
+          end
+        when Array
+          {}.tap do |attrs|
+            attrs[:display] = option.first
+            attrs[:value] = option.last
+            attrs[:content] = render_in.(option.first) if render_in
+          end
+        else
+          {}.tap do |attrs|
+            attrs[:value] = hw_call_method_or_proc(option, methods[:value] || :id)
+
+            attrs[:id] = hw_call_method_or_proc(option, methods[:id]) if methods[:id]
+            attrs[:display] = hw_call_method_or_proc(option, methods[:display]) if methods[:display]
+            attrs[:content] = hw_call_method_or_proc(option, render_in || methods[:content]) if render_in || methods[:content]
+          end
         end
       end
 

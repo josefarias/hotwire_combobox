@@ -1,0 +1,8 @@
+<%= form_with model: Movie.first do |form| %>
+  <%= form.combobox :rating, Movie.ratings %>
+<% end %>
+
+<%= combobox_tag "rating-enum", Movie.ratings, id: "rating-enum" %>
+<%= combobox_tag "rating-enum-html", Movie.ratings, id: "rating-enum-html", render_in: { partial: "movies/rating" } %>
+<%= combobox_tag "rating-keys", Movie.ratings.keys, id: "rating-keys" %>
+<%= combobox_tag "rating-keys-html", Movie.ratings.keys, id: "rating-keys-html", render_in: { partial: "movies/rating" } %>

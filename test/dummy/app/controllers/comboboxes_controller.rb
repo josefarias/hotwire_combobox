@@ -45,6 +45,9 @@ class ComboboxesController < ApplicationController
   def render_in
   end
 
+  def enum
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 
