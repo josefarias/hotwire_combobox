@@ -209,7 +209,7 @@ class HotwireCombobox::Component
       if form&.object&.defined_enums&.try :[], name
         form.object.public_send "#{name}_before_type_cast"
       else
-        form&.object.try name
+        form&.object&.try name
       end
     end
 
