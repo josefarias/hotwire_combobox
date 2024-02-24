@@ -7,12 +7,13 @@ Combobox.Options = Base => class extends Base {
     this.hiddenFieldTarget.name = this.originalNameValue
   }
 
-  _isValidNewOption(query, { ignoreAutocomplete = false } = {}) {
+  _isValidNewOption(query, { ignoreAutocompleteSufficiency = false } = {}) {
     const typedValue = this._actingCombobox.value
     const autocompletedValue = this._visibleOptionElements[0]?.getAttribute(this.autocompletableAttributeValue)
     const insufficientAutocomplete = !autocompletedValue || !startsWith(autocompletedValue, typedValue)
+    const exactAutocomplete = autocompletedValue === typedValue
 
-    return query.length > 0 && this._allowNew && (ignoreAutocomplete || insufficientAutocomplete)
+    return query.length > 0 && this._allowNew && !exactAutocomplete && (ignoreAutocompleteSufficiency || insufficientAutocomplete)
   }
 
   get _allowNew() {

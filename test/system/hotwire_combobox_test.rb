@@ -194,6 +194,13 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector "input[aria-expanded=false]"
     assert_field "state-field", with: "Florida"
     assert_field "state-field-hw-hidden-field", type: "hidden", with: "FL"
+
+    open_combobox
+    assert_selector "li[role=option]", count: 1
+    find("#state-field").then do |input|
+      "Florida".chars.each { input.send_keys(:backspace) }
+    end
+    assert_selector "li[role=option]", count: State.count
   end
 
   test "combobox with prefilled value" do
@@ -238,7 +245,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox
 
     assert_no_selector "input[aria-invalid=true]"
-    find("#state-field").send_keys("Flor", :backspace, :enter)
+    find("#state-field").send_keys("Wisconsin", :enter)
     assert_selector "input[aria-invalid=true]"
   end
 
@@ -256,26 +263,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit formbuilder_path
 
     assert_selector "input[role=combobox]"
-  end
-
-  test "new options select via click on option twice" do
-    visit new_options_combobox_path
-
-    field_selector = "allow-new"
-    open_combobox(field_selector)
-
-    assert_field field_selector, with: nil
-    assert_field "#{field_selector}-hw-hidden-field", type: "hidden", with: nil
-
-    find("li[role=option]", text: "Florida").click
-    assert_selector "input[aria-expanded=false]"
-    assert_field field_selector, with: "Florida"
-
-    open_combobox(field_selector)
-
-    find("li[role=option]", text: "Alabama").click
-    assert_selector "input[aria-expanded=false]"
-    assert_field field_selector, with: "Alabama"
   end
 
   test "new options can be allowed" do
@@ -349,6 +336,47 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     new_user = User.last
     assert_nil new_user.home_state
+  end
+
+  test "going back and forth between new and existing options" do
+    visit new_options_path
+
+    open_combobox "movie-field"
+    find("#movie-field").send_keys("The Godfather")
+    assert_text "The Godfather Part II" # wait for async filter
+    find("#movie-field").send_keys(:backspace) # clear autocompleted portion
+    find("body").send_keys(:tab) # ensure selection
+    assert_field "movie-field-hw-hidden-field", type: "hidden", with: "The Godfather"
+    assert_no_selector "li[role=option][aria-selected=true]"
+    assert_selector "input[name='new_movie']", visible: :hidden
+    assert_no_selector "input[name='movie']", visible: :hidden
+
+    open_combobox "movie-field"
+    assert_selector "li[role=option]", count: 2 # Parts II and III
+    find("li[role=option]", text: "The Godfather Part III").click
+    assert_field "movie-field-hw-hidden-field", type: "hidden", with: Movie.find_by_title("The Godfather Part III").id
+    assert_selector "input[name='movie']", visible: :hidden
+    assert_no_selector "input[name='new_movie']", visible: :hidden
+
+    open_combobox "movie-field"
+    assert_selector "li[role=option]", count: 1 # Part III
+    find("#movie-field").send_keys(:backspace)
+    assert_selector "li[role=option]", count: 2 # Parts II and III
+    find("body").send_keys(:tab) # ensure selection
+    assert_field "movie-field-hw-hidden-field", type: "hidden", with: Movie.find_by_title("The Godfather Part II").id
+    assert_selector "input[name='movie']", visible: :hidden
+    assert_no_selector "input[name='new_movie']", visible: :hidden
+
+    open_combobox "movie-field"
+    find("#movie-field").then do |input|
+      "The Godfather Part II".chars.each { input.send_keys(:arrow_right) }
+      " Part II".chars.each { input.send_keys(:backspace) }
+    end
+    find("body").send_keys(:tab) # ensure selection
+    assert_field "movie-field-hw-hidden-field", type: "hidden", with: "The Godfather"
+    assert_no_selector "li[role=option][aria-selected=true]"
+    assert_selector "input[name='new_movie']", visible: :hidden
+    assert_no_selector "input[name='movie']", visible: :hidden
   end
 
   test "inline-only autocomplete" do

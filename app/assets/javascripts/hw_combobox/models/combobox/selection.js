@@ -4,6 +4,7 @@ import { wrapAroundAccess } from "hw_combobox/helpers"
 Combobox.Selection = Base => class extends Base {
   selectOption(event) {
     this._select(event.currentTarget)
+    this.filter(event)
     this.close()
   }
 

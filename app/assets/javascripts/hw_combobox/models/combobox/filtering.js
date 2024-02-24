@@ -41,7 +41,7 @@ Combobox.Filtering = Base => class extends Base {
   _commitFilter(query, event) {
     const isDeleting = event.inputType === "deleteContentBackward"
 
-    if (this._isValidNewOption(query, { ignoreAutocomplete: isDeleting })) {
+    if (this._isValidNewOption(query, { ignoreAutocompleteSufficiency: isDeleting })) {
       this._selectNew(query)
     } else if (isDeleting) {
       this._deselect()
