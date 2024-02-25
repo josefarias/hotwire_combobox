@@ -1,8 +1,8 @@
 import Combobox from "hw_combobox/models/combobox/base"
 
 Combobox.NewOptions = Base => class extends Base {
-  _shouldTreatAsNewOptionForFiltering(queryIsForwardLooking) {
-    if (queryIsForwardLooking) {
+  _shouldTreatAsNewOptionForFiltering(queryIsBeingRefined) {
+    if (queryIsBeingRefined) {
       return this._isNewOptionWithNoPotentialMatches
     } else {
       return this._isNewOptionWithPotentialMatches
