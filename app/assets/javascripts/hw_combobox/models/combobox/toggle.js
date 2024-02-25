@@ -54,7 +54,7 @@ Combobox.Toggle = Base => class extends Base {
     if (!this._isQueried) return
 
     if (!this._isNewOptionWithPotentialMatches(this._actingCombobox.value)) {
-      this._selectCurrentEvenIfPartialMatch()
+      this._selectPartialMatch()
     }
   }
 

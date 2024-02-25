@@ -71,7 +71,7 @@ Combobox.Selection = Base => class extends Base {
     }
   }
 
-  _selectCurrentEvenIfPartialMatch() {
+  _selectPartialMatch() {
     this._select(this._visibleOptionElements[0], { force: true })
     this.filter(nullEvent)
   }
