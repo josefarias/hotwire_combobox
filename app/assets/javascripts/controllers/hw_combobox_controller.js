@@ -10,6 +10,7 @@ const concerns = [
   Combobox.Dialog,
   Combobox.Filtering,
   Combobox.Navigation,
+  Combobox.NewOptions,
   Combobox.Options,
   Combobox.Selection,
   Combobox.Toggle,

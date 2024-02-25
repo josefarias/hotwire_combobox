@@ -1,3 +1,5 @@
+export const nullEvent = new Event("NULL")
+
 export function Concerns(Base, ...mixins) {
   return mixins.reduce((accumulator, current) => current(accumulator), Base)
 }
@@ -49,4 +51,8 @@ export function debounce(fn, delay = 150) {
     clearTimeout(timeoutId)
     timeoutId = setTimeout(callback, delay)
   }
+}
+
+export function isDeleteEvent(event) {
+  return event.inputType === "deleteContentBackward" || event.inputType === "deleteWordBackward"
 }

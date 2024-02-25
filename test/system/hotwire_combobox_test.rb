@@ -110,15 +110,15 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     open_combobox
 
-    find("#state-field").send_keys("lor", :enter)
+    find("#state-field").send_keys("is", :enter)
     assert_selector "input[aria-expanded=false]"
-    assert_field "state-field", with: "Florida"
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "FL"
-    assert_no_selector "li[role=option].hw-combobox__option--selected", text: "Florida" # because the list is closed
+    assert_field "state-field", with: "Mississippi"
+    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MS"
+    assert_no_selector "li[role=option].hw-combobox__option--selected", text: "Mississippi" # because the list is closed
 
     find("#state-field").send_keys(:backspace)
     assert_selector "input[aria-expanded=true]"
-    assert_field "state-field", with: "Florid"
+    assert_field "state-field", with: "Mississipp"
     assert_field "state-field-hw-hidden-field", type: "hidden", with: nil
     assert_no_selector "li[role=option].hw-combobox__option--selected"
   end
@@ -128,11 +128,14 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     open_combobox
 
-    find("#state-field").send_keys("lor")
-    click_on_edge
+    find("#state-field").send_keys("is")
+    find("#clickable").click
     assert_selector "input[aria-expanded=false]"
-    assert_field "state-field", with: "Florida"
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "FL"
+    assert_field "state-field", with: "Mississippi"
+    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MS"
+
+    open_combobox
+    assert_selector "li[role=option]", count: 1
   end
 
   test "focusing away locks in the current selection" do
@@ -140,11 +143,14 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     open_combobox
 
-    find("#state-field").send_keys("lor")
+    find("#state-field").send_keys("is")
     find("body").send_keys(:tab)
     assert_selector "input[aria-expanded=false]"
-    assert_field "state-field", with: "Florida"
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "FL"
+    assert_field "state-field", with: "Mississippi"
+    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MS"
+
+    open_combobox
+    assert_selector "li[role=option]", count: 1
   end
 
   test "navigating with the arrow keys" do

@@ -51,8 +51,10 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   _ensureSelection() {
-    if (!this._isValidNewOption(this._actingCombobox.value, { ignoreAutocompleteSufficiency: true })) {
-      this._select(this._visibleOptionElements[0], { force: true })
+    if (!this._isQueried) return
+
+    if (!this._isNewOptionWithPotentialMatches(this._actingCombobox.value)) {
+      this._selectCurrentEvenIfPartialMatch()
     }
   }
 
