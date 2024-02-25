@@ -23,21 +23,21 @@ Combobox.Autocomplete = Base => class extends Base {
     }
   }
 
-  _exactAutocompleteMatch() {
-    return this._immediatelyAutocompletableValue === this._actingCombobox.value
-  }
-
-  // All `_exactAutocompleteMatch` matches are `_partialAutocompleteMatch` matches
-  // but not all `_partialAutocompleteMatch` matches are `_exactAutocompleteMatch` matches.
-  _partialAutocompleteMatch() {
-    return !!this._immediatelyAutocompletableValue &&
-      startsWith(this._immediatelyAutocompletableValue, this._actingCombobox.value)
-  }
-
   // +visuallyHideListbox+ hides the listbox from the user,
   // but makes it still searchable by JS.
   _visuallyHideListbox() {
     this.listboxTarget.style.display = "none"
+  }
+
+  get _isExactAutocompleteMatch() {
+    return this._immediatelyAutocompletableValue === this._actingCombobox.value
+  }
+
+  // All `_isExactAutocompleteMatch` matches are `_isPartialAutocompleteMatch` matches
+  // but not all `_isPartialAutocompleteMatch` matches are `_isExactAutocompleteMatch` matches.
+  get _isPartialAutocompleteMatch() {
+    return !!this._immediatelyAutocompletableValue &&
+      startsWith(this._immediatelyAutocompletableValue, this._actingCombobox.value)
   }
 
   get _autocompletesList() {

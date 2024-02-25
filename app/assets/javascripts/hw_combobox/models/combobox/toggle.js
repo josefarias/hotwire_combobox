@@ -51,11 +51,7 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   _ensureSelection() {
-    if (!this._isQueried) return
-
-    if (!this._isNewOptionWithPotentialMatches(this._actingCombobox.value)) {
-      this._selectPartialMatch()
-    }
+    this._selectFuzzyMatch()
   }
 
   _openByFocusing() {

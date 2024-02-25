@@ -3,9 +3,9 @@ import Combobox from "hw_combobox/models/combobox/base"
 Combobox.NewOptions = Base => class extends Base {
   _shouldTreatAsNewOptionForFiltering(queryIsForwardLooking) {
     if (queryIsForwardLooking) {
-      return this._isNewOptionWithNoPotentialMatches()
+      return this._isNewOptionWithNoPotentialMatches
     } else {
-      return this._isNewOptionWithPotentialMatches()
+      return this._isNewOptionWithPotentialMatches
     }
   }
 
@@ -22,8 +22,8 @@ Combobox.NewOptions = Base => class extends Base {
   // So if there's a partial match, it's not a new option at this point.
   //
   // The final state is locked-in upon closing the combobox via `_isNewOptionWithPotentialMatches`.
-  _isNewOptionWithNoPotentialMatches() {
-    return this._isNewOptionWithPotentialMatches() && !this._partialAutocompleteMatch()
+  get _isNewOptionWithNoPotentialMatches() {
+    return this._isNewOptionWithPotentialMatches && !this._isPartialAutocompleteMatch
   }
 
   // If the query is finalized, we don't care that there are potential matches
@@ -31,7 +31,7 @@ Combobox.NewOptions = Base => class extends Base {
   //
   // We can't use `_isNewOptionWithNoPotentialMatches` because that would
   // rule out new options that are partial matches.
-  _isNewOptionWithPotentialMatches() {
-    return this._isQueried && this._allowNew && !this._exactAutocompleteMatch()
+  get _isNewOptionWithPotentialMatches() {
+    return this._isQueried && this._allowNew && !this._isExactAutocompleteMatch
   }
 }

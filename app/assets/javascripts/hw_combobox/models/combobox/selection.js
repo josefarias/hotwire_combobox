@@ -71,12 +71,18 @@ Combobox.Selection = Base => class extends Base {
     }
   }
 
-  _selectPartialMatch() {
-    this._select(this._visibleOptionElements[0], { force: true })
-    this.filter(nullEvent)
+  _selectFuzzyMatch() {
+    if (this._isFuzzyMatch) {
+      this._select(this._visibleOptionElements[0], { force: true })
+      this.filter(nullEvent)
+    }
   }
 
   get _hasValueButNoSelection() {
     return this.hiddenFieldTarget.value && !this._selectedOptionElement
+  }
+
+  get _isFuzzyMatch() {
+    return this._isQueried && !!this._visibleOptionElements[0] && !this._isNewOptionWithPotentialMatches
   }
 }
