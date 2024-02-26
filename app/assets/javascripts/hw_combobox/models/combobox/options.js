@@ -1,18 +1,10 @@
 import Combobox from "hw_combobox/models/combobox/base"
-import { visible, startsWith } from "hw_combobox/helpers"
+import { visible } from "hw_combobox/helpers"
 
 Combobox.Options = Base => class extends Base {
   _resetOptions() {
     this._deselect()
     this.hiddenFieldTarget.name = this.originalNameValue
-  }
-
-  _isValidNewOption(query, { ignoreAutocomplete = false } = {}) {
-    const typedValue = this._actingCombobox.value
-    const autocompletedValue = this._visibleOptionElements[0]?.getAttribute(this.autocompletableAttributeValue)
-    const insufficientAutocomplete = !autocompletedValue || !startsWith(autocompletedValue, typedValue)
-
-    return query.length > 0 && this._allowNew && (ignoreAutocomplete || insufficientAutocomplete)
   }
 
   get _allowNew() {

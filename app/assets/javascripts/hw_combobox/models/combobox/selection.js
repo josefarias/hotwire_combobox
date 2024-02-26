@@ -1,9 +1,10 @@
 import Combobox from "hw_combobox/models/combobox/base"
-import { wrapAroundAccess } from "hw_combobox/helpers"
+import { wrapAroundAccess, nullEvent } from "hw_combobox/helpers"
 
 Combobox.Selection = Base => class extends Base {
   selectOption(event) {
     this._select(event.currentTarget)
+    this.filter(event)
     this.close()
   }
 
@@ -49,9 +50,9 @@ Combobox.Selection = Base => class extends Base {
     if (option) this._commitSelection(option, { selected: false })
   }
 
-  _selectNew(query) {
+  _selectNew() {
     this._resetOptions()
-    this.hiddenFieldTarget.value = query
+    this.hiddenFieldTarget.value = this._actingCombobox.value
     this.hiddenFieldTarget.name = this.nameWhenNewValue
   }
 
@@ -70,7 +71,18 @@ Combobox.Selection = Base => class extends Base {
     }
   }
 
+  _selectFuzzyMatch() {
+    if (this._isFuzzyMatch) {
+      this._select(this._visibleOptionElements[0], { force: true })
+      this.filter(nullEvent)
+    }
+  }
+
   get _hasValueButNoSelection() {
     return this.hiddenFieldTarget.value && !this._selectedOptionElement
+  }
+
+  get _isFuzzyMatch() {
+    return this._isQueried && !!this._visibleOptionElements[0] && !this._isNewOptionWithPotentialMatches
   }
 }

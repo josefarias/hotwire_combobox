@@ -1,5 +1,5 @@
 <style>
-  [aria-selected=true] { color: cyan; }
+  [aria-selected=true] { color: blue; }
 </style>
 
 <% if flash[:notice] %>
@@ -15,3 +15,5 @@
 
   <%= form.submit %>
 <% end %>
+
+<%= combobox_tag :movie, movies_path, name_when_new: :new_movie, id: "movie-field", style: "width: 13rem;" %>

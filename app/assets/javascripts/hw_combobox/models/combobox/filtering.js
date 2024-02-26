@@ -1,6 +1,6 @@
 
 import Combobox from "hw_combobox/models/combobox/base"
-import { applyFilter, nextFrame, debounce } from "hw_combobox/helpers"
+import { applyFilter, nextFrame, debounce, isDeleteEvent } from "hw_combobox/helpers"
 import { get } from "hw_combobox/vendor/requestjs"
 
 Combobox.Filtering = Base => class extends Base {
@@ -25,7 +25,7 @@ Combobox.Filtering = Base => class extends Base {
 
     await get(this.asyncSrcValue, { responseKind: "turbo-stream", query: { q } })
 
-    this._afterTurboStreamRender(() => this._commitFilter(q, event))
+    this._afterTurboStreamRender(() => this._commitFilter(event))
   }
 
   _filterSync(event) {
@@ -35,15 +35,13 @@ Combobox.Filtering = Base => class extends Base {
 
     this._allOptionElements.forEach(applyFilter(query, { matching: this.filterableAttributeValue }))
 
-    this._commitFilter(query, event)
+    this._commitFilter(event)
   }
 
-  _commitFilter(query, event) {
-    const isDeleting = event.inputType === "deleteContentBackward"
-
-    if (this._isValidNewOption(query, { ignoreAutocomplete: isDeleting })) {
-      this._selectNew(query)
-    } else if (isDeleting) {
+  _commitFilter(event) {
+    if (this._shouldTreatAsNewOptionForFiltering(!isDeleteEvent(event))) {
+      this._selectNew()
+    } else if (isDeleteEvent(event)) {
       this._deselect()
     } else {
       this._select(this._visibleOptionElements[0])
@@ -53,5 +51,9 @@ Combobox.Filtering = Base => class extends Base {
   async _afterTurboStreamRender(callback) {
     await nextFrame()
     callback()
+  }
+
+  get _isQueried() {
+    return this._actingCombobox.value.length > 0
   }
 }

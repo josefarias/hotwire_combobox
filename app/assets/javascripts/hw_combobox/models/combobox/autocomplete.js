@@ -29,11 +29,26 @@ Combobox.Autocomplete = Base => class extends Base {
     this.listboxTarget.style.display = "none"
   }
 
+  get _isExactAutocompleteMatch() {
+    return this._immediatelyAutocompletableValue === this._actingCombobox.value
+  }
+
+  // All `_isExactAutocompleteMatch` matches are `_isPartialAutocompleteMatch` matches
+  // but not all `_isPartialAutocompleteMatch` matches are `_isExactAutocompleteMatch` matches.
+  get _isPartialAutocompleteMatch() {
+    return !!this._immediatelyAutocompletableValue &&
+      startsWith(this._immediatelyAutocompletableValue, this._actingCombobox.value)
+  }
+
   get _autocompletesList() {
     return this.autocompleteValue === "both" || this.autocompleteValue === "list"
   }
 
   get _autocompletesInline() {
     return this.autocompleteValue === "both" || this.autocompleteValue === "inline"
+  }
+
+  get _immediatelyAutocompletableValue() {
+    return this._visibleOptionElements[0]?.getAttribute(this.autocompletableAttributeValue)
   }
 }

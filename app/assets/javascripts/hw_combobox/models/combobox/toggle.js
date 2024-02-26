@@ -51,9 +51,7 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   _ensureSelection() {
-    if (!this._isValidNewOption(this._actingCombobox.value, { ignoreAutocomplete: true })) {
-      this._select(this._selectedOptionElement, { force: true })
-    }
+    this._selectFuzzyMatch()
   }
 
   _openByFocusing() {
