@@ -3,287 +3,269 @@ require "system_test_helper"
 class HotwireComboboxTest < ApplicationSystemTestCase
   test "stimulus controllers from host app are loaded" do
     visit greeting_path
+
     assert_text "Hello there!"
   end
 
   test "combobox is rendered" do
     visit plain_path
 
-    assert_selector "input[role=combobox]"
+    assert_combobox
   end
 
   test "combobox is closed by default" do
     visit plain_path
 
-    assert_selector "input[aria-expanded=false]"
-    assert_no_selector "li[role=option]"
+    assert_closed_combobox
+    assert_no_visible_options
   end
 
   test "combobox can be opened" do
     visit plain_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    assert_selector "input[aria-expanded=true]"
-    assert_selector "ul[role=listbox]", id: "state-field-hw-listbox"
-    assert_selector "li[role=option]", text: "Alabama"
+    assert_open_combobox
+    assert_listbox_with id: "state-field-hw-listbox"
+    assert_option_with text: "Alabama"
   end
 
   test "combobox can be opened by default if configured that way" do
     visit open_path
 
-    assert_selector "input[aria-expanded=true]"
-    assert_selector "ul[role=listbox]", id: "state-field-hw-listbox"
-    assert_selector "li[role=option]", text: "Alabama"
+    assert_open_combobox
+    assert_listbox_with id: "state-field-hw-listbox"
+    assert_option_with text: "Alabama"
   end
 
   test "closing combobox by clicking outside" do
     visit plain_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    assert_selector "input[aria-expanded=true]"
-    click_on_edge
-    assert_selector "input[aria-expanded=false]"
-    assert_no_selector "li[role=option]"
+    assert_open_combobox
+    click_away
+    assert_closed_combobox
+    assert_no_visible_options
   end
 
   test "closing combobox by focusing outside" do
     visit plain_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    assert_selector "input[aria-expanded=true]"
-    find("body").send_keys(:tab)
-    assert_selector "input[aria-expanded=false]"
-    assert_no_selector "li[role=option]"
+    assert_open_combobox
+    tab_away
+    assert_closed_combobox
+    assert_no_visible_options
   end
 
   test "options can contain html" do
     visit html_options_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    assert_selector "ul[role=listbox]", id: "state-field-hw-listbox"
-    assert_selector "li[role=option] p", text: "Alabama"
+    assert_listbox_with id: "state-field-hw-listbox"
+    assert_option_with html_markup: "p", text: "Alabama"
   end
 
   test "options are filterable" do
     visit plain_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    find("#state-field").send_keys("Flo")
-    assert_selector "li[role=option]", text: "Florida"
-    assert_no_selector "li[role=option]", text: "Alabama"
+    type_in_combobox "#state-field", "Flo"
+    assert_option_with text: "Florida"
+    assert_no_visible_options_with text: "Alabama"
   end
 
   test "autocompletion" do
     visit html_options_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    find("#state-field").send_keys("Flor")
-    assert_field "state-field", with: "Florida"
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "FL"
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Florida"
+    type_in_combobox "#state-field", "Flor"
+    assert_combobox_display_and_value "#state-field", "Florida", "FL"
+    assert_selected_option_with selector: ".hw-combobox__option--selected", text: "Florida"
 
-    find("#state-field").send_keys(:backspace)
-    assert_field "state-field", with: "Flor"
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: nil
-    assert_no_selector "li[role=option].hw-combobox__option--selected"
+    type_in_combobox "#state-field", :backspace
+    assert_combobox_display_and_value "#state-field", "Flor", nil
+    assert_no_visible_selected_option
   end
 
   test "autocomplete only works when strings match from the very beginning, but the first option is still selected" do
     visit html_options_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    find("#state-field").send_keys("lor")
-    assert_field "state-field", with: "lor"
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "FL"
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Florida"
+    type_in_combobox "#state-field", "lor"
+    assert_combobox_display_and_value "#state-field", "lor", "FL"
+    assert_selected_option_with selector: ".hw-combobox__option--selected", text: "Florida"
   end
 
   test "pressing enter locks in the current selection, but editing the text field resets it" do
     visit html_options_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    find("#state-field").send_keys("is", :enter)
-    assert_selector "input[aria-expanded=false]"
-    assert_field "state-field", with: "Mississippi"
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MS"
-    assert_no_selector "li[role=option].hw-combobox__option--selected", text: "Mississippi" # because the list is closed
+    type_in_combobox "#state-field", "is", :enter
+    assert_closed_combobox
+    assert_combobox_display_and_value "#state-field", "Mississippi", "MS"
+    assert_no_visible_selected_option # because the list is closed
 
-    find("#state-field").send_keys(:backspace)
-    assert_selector "input[aria-expanded=true]"
-    assert_field "state-field", with: "Mississipp"
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: nil
-    assert_no_selector "li[role=option].hw-combobox__option--selected"
+    type_in_combobox "#state-field", :backspace
+    assert_open_combobox
+    assert_combobox_display_and_value "#state-field", "Mississipp", nil
+    assert_no_visible_selected_option
   end
 
   test "clicking away locks in the current selection" do
     visit html_options_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    find("#state-field").send_keys("is")
-    find("#clickable").click
-    assert_selector "input[aria-expanded=false]"
-    assert_field "state-field", with: "Mississippi"
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MS"
+    type_in_combobox "#state-field", "is"
+    click_away
+    assert_closed_combobox
+    assert_combobox_display_and_value "#state-field", "Mississippi", "MS"
 
-    open_combobox
-    assert_selector "li[role=option]", count: 1
+    open_combobox "#state-field"
+    assert_options_with count: 1
   end
 
   test "focusing away locks in the current selection" do
     visit plain_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    find("#state-field").send_keys("is")
-    find("body").send_keys(:tab)
-    assert_selector "input[aria-expanded=false]"
-    assert_field "state-field", with: "Mississippi"
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MS"
+    type_in_combobox "#state-field", "is"
+    tab_away
+    assert_closed_combobox
+    assert_combobox_display_and_value "#state-field", "Mississippi", "MS"
 
-    open_combobox
-    assert_selector "li[role=option]", count: 1
+    open_combobox "#state-field"
+    assert_options_with count: 1
   end
 
   test "navigating with the arrow keys" do
     visit html_options_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    find("#state-field").send_keys(:down)
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Alabama"
+    type_in_combobox "#state-field", :down
+    assert_selected_option_with text: "Alabama"
 
-    find("#state-field").send_keys(:down)
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Florida"
+    type_in_combobox "#state-field", :down
+    assert_selected_option_with text: "Florida"
 
-    find("#state-field").send_keys(:down)
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Michigan"
+    type_in_combobox "#state-field", :down
+    assert_selected_option_with text: "Michigan"
 
-    find("#state-field").send_keys(:up)
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Florida"
+    type_in_combobox "#state-field", :up
+    assert_selected_option_with text: "Florida"
 
-    find("#state-field").send_keys(:up)
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Alabama"
+    type_in_combobox "#state-field", :up
+    assert_selected_option_with text: "Alabama"
 
     # wrap around
-    find("#state-field").send_keys(:up)
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Missouri"
+    type_in_combobox "#state-field", :up
+    assert_selected_option_with text: "Missouri"
 
-    find("#state-field").send_keys(:down)
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Alabama"
+    type_in_combobox "#state-field", :down
+    assert_selected_option_with text: "Alabama"
 
     # home and end keys
-    find("#state-field").send_keys(:end)
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Missouri"
+    type_in_combobox "#state-field", :end
+    assert_selected_option_with text: "Missouri"
 
-    find("#state-field").send_keys(:home)
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Alabama"
+    type_in_combobox "#state-field", :home
+    assert_selected_option_with text: "Alabama"
   end
 
   test "select option by clicking on it" do
     visit html_options_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    assert_field "state-field", with: nil
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: nil
+    assert_combobox_display_and_value "#state-field", nil, nil
 
-    find("li[role=option]", text: "Florida").click
-    assert_selector "input[aria-expanded=false]"
-    assert_field "state-field", with: "Florida"
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "FL"
+    click_on_option "Florida"
+    assert_closed_combobox
+    assert_combobox_display_and_value "#state-field", "Florida", "FL"
 
-    open_combobox
-    assert_selector "li[role=option]", count: 1
-    find("#state-field").then do |input|
-      "Florida".chars.each { input.send_keys(:backspace) }
-    end
-    assert_selector "li[role=option]", count: State.count
+    open_combobox "#state-field"
+    assert_options_with count: 1
+
+    delete_from_combobox "#state-field", "Florida", original: "Florida"
+    assert_options_with count: State.count
   end
 
   test "combobox with prefilled value" do
     visit prefilled_path
 
-    assert_selector "input[aria-expanded=false]"
-    assert_field "state-field", with: "Michigan"
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MI"
+    assert_closed_combobox
+    assert_combobox_display_and_value "#state-field", "Michigan", "MI"
 
-    open_combobox
+    open_combobox "#state-field"
 
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Michigan"
+    assert_selected_option_with text: "Michigan"
   end
 
   test "combobox in form with prefilled value" do
     visit prefilled_form_path
 
-    assert_selector "input[aria-expanded=false]"
-    assert_field "user_favorite_state_id", with: "Michigan"
-    assert_field "user_favorite_state_id-hw-hidden-field", type: "hidden", with: states(:mi).id
+    assert_closed_combobox
+    assert_combobox_display_and_value "#user_favorite_state_id", "Michigan", states(:mi).id
 
-    open_combobox "user_favorite_state_id"
-
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Michigan"
+    open_combobox "#user_favorite_state_id"
+    assert_selected_option_with text: "Michigan"
   end
 
   test "async combobox with prefilled value" do
     visit prefilled_async_path
 
-    assert_selector "input[aria-expanded=false]"
-    assert_field "user_home_state_id", with: "Florida"
-    assert_field "user_home_state_id-hw-hidden-field", type: "hidden", with: states(:fl).id
+    assert_closed_combobox
+    assert_combobox_display_and_value "#user_home_state_id", "Florida", states(:fl).id
 
-    open_combobox "user_home_state_id"
-
-    assert_selector "li[role=option].hw-combobox__option--selected", text: "Florida"
+    open_combobox "#user_home_state_id"
+    assert_selected_option_with text: "Florida"
   end
 
   test "combobox is invalid if required and empty" do
     visit required_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    assert_no_selector "input[aria-invalid=true]"
-    find("#state-field").send_keys("Wisconsin", :enter)
-    assert_selector "input[aria-invalid=true]"
+    assert_not_invalid_combobox
+    type_in_combobox "#state-field", "foobar", :enter
+    assert_invalid_combobox
   end
 
   test "combobox is not invalid if empty but not required" do
     visit plain_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    assert_no_selector "input[aria-invalid=true]"
-    find("#state-field").send_keys("Flor", :backspace, :enter)
-    assert_no_selector "input[aria-invalid=true]"
+    assert_not_invalid_combobox
+    type_in_combobox "#state-field", "Flor", :backspace, :enter
+    assert_not_invalid_combobox
   end
 
   test "combobox is rendered when using the formbuilder" do
     visit formbuilder_path
 
-    assert_selector "input[role=combobox]"
+    assert_combobox
   end
 
   test "new options can be allowed" do
     assert_difference -> { State.count }, +1 do
       visit new_options_path
 
-      find("#allow-new").then do |combobox|
-        combobox.click
-        combobox.send_keys "Alaska", :enter
-      end
+      open_combobox "#allow-new"
+      type_in_combobox "#allow-new", "Alaska", :enter
 
-      find("#disallow-new").then do |combobox|
-        combobox.click
-        combobox.send_keys "Alabama", :enter
-      end
+      open_combobox "#disallow-new"
+      type_in_combobox "#disallow-new", "Alabama", :enter
 
       find("input[type=submit]").click
 
@@ -299,26 +281,25 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_difference -> { State.count }, +1 do
       visit new_options_path
 
-      find("#allow-new").then do |combobox|
-        combobox.click
-        combobox.send_keys "Ala"
+      open_combobox "#allow-new"
+      type_in_combobox "#allow-new", "Ala"
+      assert_combobox_display_and_value "#allow-new", "Alabama", states(:al).id
+      assert_selected_option_with text: "Alabama"
+      assert_proper_combobox_name_choice \
+        original: "user[favorite_state_id]",
+        new: "user[favorite_state_attributes][name]",
+        proper: :original
 
-        assert_field "allow-new-hw-hidden-field", type: "hidden", with: states(:al).id
-        assert_selector "li[role=option][aria-selected=true]", text: "Alabama"
-        assert_selector "input[name='user[favorite_state_id]']", visible: :hidden
-        assert_no_selector "input[name='user[favorite_state_attributes][name]']", visible: :hidden
+      type_in_combobox "#allow-new", :backspace
+      assert_combobox_display_and_value "#allow-new", "Ala", "Ala" # backspace removes the autocompleted part, not the typed part
+      assert_no_visible_selected_option
+      assert_proper_combobox_name_choice \
+        original: "user[favorite_state_id]",
+        new: "user[favorite_state_attributes][name]",
+        proper: :new
 
-        combobox.send_keys :backspace
-        assert_field "allow-new-hw-hidden-field", type: "hidden", with: "Ala" # backspace removes the autocompleted part, not the typed part
-        assert_no_selector "li[role=option][aria-selected=true]"
-        assert_no_selector "input[name='user[favorite_state_id]']", visible: :hidden
-        assert_selector "input[name='user[favorite_state_attributes][name]']", visible: :hidden
-
-        combobox.send_keys :enter
-
-        find("input[type=submit]").click
-      end
-
+      type_in_combobox "#allow-new", :enter
+      find("input[type=submit]").click
       assert_text "User created"
     end
 
@@ -330,10 +311,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_no_difference -> { State.count } do
       visit new_options_path
 
-      find("#disallow-new").then do |combobox|
-        combobox.click
-        combobox.send_keys "Alaska", :enter
-      end
+      open_combobox "#disallow-new"
+      type_in_combobox "#disallow-new", "Alaska", :enter
 
       find("input[type=submit]").click
 
@@ -347,92 +326,78 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   test "going back and forth between new and existing options" do
     visit new_options_path
 
-    open_combobox "movie-field"
-    find("#movie-field").send_keys("The Godfather")
+    open_combobox "#movie-field"
+    type_in_combobox "#movie-field", "The Godfather"
     assert_text "The Godfather Part II" # wait for async filter
-    find("#movie-field").send_keys(:backspace) # clear autocompleted portion
-    find("body").send_keys(:tab) # ensure selection
-    assert_field "movie-field-hw-hidden-field", type: "hidden", with: "The Godfather"
-    assert_no_selector "li[role=option][aria-selected=true]"
-    assert_selector "input[name='new_movie']", visible: :hidden
-    assert_no_selector "input[name='movie']", visible: :hidden
+    type_in_combobox "#movie-field", :backspace # clear autocompleted portion
+    tab_away # ensure selection
+    assert_combobox_display_and_value "#movie-field", "The Godfather", "The Godfather"
+    assert_no_visible_selected_option
+    assert_proper_combobox_name_choice original: :movie, new: :new_movie, proper: :new
 
-    open_combobox "movie-field"
-    assert_selector "li[role=option]", count: 2 # Parts II and III
-    find("li[role=option]", text: "The Godfather Part III").click
-    assert_field "movie-field-hw-hidden-field", type: "hidden", with: Movie.find_by_title("The Godfather Part III").id
-    assert_selector "input[name='movie']", visible: :hidden
-    assert_no_selector "input[name='new_movie']", visible: :hidden
+    open_combobox "#movie-field"
+    assert_options_with count: 2 # Parts II and III
+    click_on_option "The Godfather Part III"
+    assert_combobox_display_and_value "#movie-field", "The Godfather Part III", movies(:the_godfather_part_iii).id
+    assert_proper_combobox_name_choice original: :movie, new: :new_movie, proper: :original
 
-    open_combobox "movie-field"
-    assert_selector "li[role=option]", count: 1 # Part III
-    find("#movie-field").send_keys(:backspace)
-    assert_selector "li[role=option]", count: 2 # Parts II and III
-    find("body").send_keys(:tab) # ensure selection
-    assert_field "movie-field-hw-hidden-field", type: "hidden", with: Movie.find_by_title("The Godfather Part II").id
-    assert_selector "input[name='movie']", visible: :hidden
-    assert_no_selector "input[name='new_movie']", visible: :hidden
+    open_combobox "#movie-field"
+    assert_options_with count: 1 # Part III
+    type_in_combobox "#movie-field", :backspace
+    assert_options_with count: 2 # Parts II and III
+    tab_away # ensure selection
+    assert_combobox_display_and_value "#movie-field", "The Godfather Part II", movies(:the_godfather_part_ii).id
+    assert_proper_combobox_name_choice original: :movie, new: :new_movie, proper: :original
 
-    open_combobox "movie-field"
-    find("#movie-field").then do |input|
-      "The Godfather Part II".chars.each { input.send_keys(:arrow_right) }
-      " Part II".chars.each { input.send_keys(:backspace) }
-    end
-    find("body").send_keys(:tab) # ensure selection
-    assert_field "movie-field-hw-hidden-field", type: "hidden", with: "The Godfather"
-    assert_no_selector "li[role=option][aria-selected=true]"
-    assert_selector "input[name='new_movie']", visible: :hidden
-    assert_no_selector "input[name='movie']", visible: :hidden
+    open_combobox "#movie-field"
+    delete_from_combobox "#movie-field", " Part II", original: "The Godfather Part II"
+    tab_away # ensure selection
+    assert_combobox_display_and_value "#movie-field", "The Godfather", "The Godfather"
+    assert_proper_combobox_name_choice original: :movie, new: :new_movie, proper: :new
   end
 
   test "inline-only autocomplete" do
     visit inline_autocomplete_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    find("#state-field").send_keys("mi")
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MI"
-    find("#state-field").send_keys(:down, :down)
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MI"
+    type_in_combobox "#state-field", "mi"
+    assert_combobox_display_and_value "#state-field", "Michigan", "MI"
+    type_in_combobox "#state-field", :down, :down
+    assert_combobox_display_and_value "#state-field", "Michigan", "MI"
 
-    find("#state-field").then do |input|
-      "Michigan".chars.each { input.send_keys(:backspace) }
-    end
+    delete_from_combobox "#state-field", "Michigan", original: "Michigan"
 
-    find("#state-field").send_keys("mi")
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MI"
-    find("#state-field").send_keys("n")
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MN"
+    type_in_combobox "#state-field", "mi"
+    assert_combobox_display_and_value "#state-field", "Michigan", "MI"
+    type_in_combobox "#state-field", "n"
+    assert_combobox_display_and_value "#state-field", "Minnesota", "MN"
   end
 
+  # todo
   test "list-only autocomplete" do
     visit list_autocomplete_path
 
-    open_combobox
+    open_combobox "#state-field"
 
-    find("#state-field").send_keys("mi")
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MI"
-    assert_field "state-field", with: "mi"
+    type_in_combobox "#state-field", "mi"
+    assert_combobox_display_and_value "#state-field", "mi", "MI"
 
-    find("#state-field").send_keys(:down, :down)
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MS"
-    assert_field "state-field", with: "Mississippi"
+    type_in_combobox "#state-field", :down, :down
+    assert_combobox_display_and_value "#state-field", "Mississippi", "MS"
 
-    assert_selector "li[role=option]", text: "Michigan"
-    assert_selector "li[role=option]", text: "Minnesota"
-    assert_selector "li[role=option]", text: "Mississippi"
-    assert_selector "li[role=option]", text: "Missouri"
+    assert_option_with text: "Michigan"
+    assert_option_with text: "Minnesota"
+    assert_option_with text: "Mississippi"
+    assert_option_with text: "Missouri"
 
-    find("#state-field").then do |input|
-      "Mississippi".chars.each { input.send_keys(:backspace) }
-    end
+    delete_from_combobox "#state-field", "Mississippi", original: "Mississippi"
 
-    find("#state-field").send_keys("mi")
+    type_in_combobox "#state-field", "mi"
 
-    click_on_edge
+    click_away
 
-    assert_field "state-field-hw-hidden-field", type: "hidden", with: "MI"
-    assert_field "state-field", with: "Michigan"
+    assert_combobox_display_and_value "#state-field", "Michigan", "MI"
   end
 
   test "dialog" do
@@ -440,17 +405,17 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       visit html_options_path
 
       assert_no_selector "dialog[open]"
-      open_combobox
+      open_combobox "#state-field"
       assert_selector "dialog[open]"
 
       within "dialog" do
-        find("#state-field-hw-dialog-combobox").send_keys("Flor")
-        assert_field "state-field-hw-dialog-combobox", with: "Florida"
-        assert_selector "li[role=option].hw-combobox__option--selected", text: "Florida"
+        type_in_combobox "#state-field-hw-dialog-combobox", "Flor"
+        assert_combobox_display "#state-field-hw-dialog-combobox", "Florida"
+        assert_selected_option_with text: "Florida"
       end
 
-      click_on_edge
-      assert_field "state-field-hw-hidden-field", type: "hidden", with: "FL"
+      assert_combobox_value "#state-field", "FL"
+      click_away
       assert_no_selector "dialog[open]"
     end
   end
@@ -462,37 +427,31 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     test "async combobox #{test_case[:path]}" do
       visit send(test_case[:path])
 
-      open_combobox "movie-field"
+      open_combobox "#movie-field"
 
-      find("#movie-field").then do |input|
-        assert_text "12 Angry Men"
+      assert_text "12 Angry Men"
+      type_in_combobox "#movie-field", "wh"
+      assert_combobox_display_and_value "#movie-field", "Whiplash", movies(:whiplash).id
+      assert_options_with count: 2
+      type_in_combobox "#movie-field", :backspace # clear autocompleted portion
+      delete_from_combobox "#movie-field", "wh", original: "wh"
+      assert_text "12 Angry Men"
 
-        input.send_keys("wh")
-
-        assert_field "movie-field", with: "Whiplash"
-        assert_selector "li[role=option]", count: 2
-
-        input.send_keys(:backspace) # clear autocompleted portion
-        "wh".chars.each { input.send_keys(:backspace) }
-
-        assert_text "12 Angry Men"
-      end
-
-      find("#movie-field-hw-listbox").then do |listbox|
-        assert_selector "li[role=option]", count: test_case[:visible_options]
-        listbox.scroll_to :bottom
-        assert_selector "li[role=option]", count: test_case[:visible_options] + 5
-      end
+      # pagination
+      assert_options_with count: test_case[:visible_options]
+      find("#movie-field-hw-listbox").scroll_to :bottom
+      assert_options_with count: test_case[:visible_options] + 5
     end
   end
 
   test "passing render_in to combobox_tag" do
     visit render_in_path
 
-    open_combobox "movie-field"
+    open_combobox "#movie-field"
 
-    find("#movie-field").send_keys("sn")
-    assert_field "movie-field", with: "Snow White and the Seven Dwarfs"
+    assert_option_with html_markup: "div > p", text: "12 Angry Men"
+    type_in_combobox "#movie-field", "sn"
+    assert_combobox_display_and_value "#movie-field", "Snow White and the Seven Dwarfs", movies(:snow_white_and_the_seven_dwarfs).id
   end
 
   test "enum combobox" do
@@ -500,42 +459,141 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     visit enum_path
 
-    assert_field "movie_rating-hw-hidden-field", type: "hidden", with: Movie.ratings[:PG]
-    assert_field "movie_rating", with: "PG"
+    assert_combobox_display_and_value "#movie_rating", "PG", Movie.ratings[:PG]
 
-    open_combobox "rating-enum"
-    find("li[role=option]", text: "R").click
-    assert_field "rating-enum", with: "R"
-    assert_field "rating-enum-hw-hidden-field", type: "hidden", with: Movie.ratings[:R]
+    open_combobox "#rating-enum"
+    click_on_option "R"
+    assert_combobox_display_and_value "#rating-enum", "R", Movie.ratings[:R]
 
-    open_combobox "rating-enum-html"
-    assert_selector "li[role=option] p", text: Movie.ratings.keys.first
-    click_on_edge
+    open_combobox "#rating-enum-html"
+    assert_option_with html_markup: "p", text: Movie.ratings.keys.first
+    click_away
 
-    open_combobox "rating-keys"
-    find("li[role=option]", text: "PG-13").click
-    assert_field "rating-keys", with: "PG-13"
-    assert_field "rating-keys-hw-hidden-field", type: "hidden", with: "PG-13"
+    open_combobox "#rating-keys"
+    click_on_option "PG-13"
+    assert_combobox_display_and_value "#rating-keys", "PG-13", "PG-13"
 
-    open_combobox "rating-keys-html"
-    assert_selector "li[role=option] p", text: Movie.ratings.keys.first
-    click_on_edge
+    open_combobox "#rating-keys-html"
+    assert_option_with html_markup: "p", text: Movie.ratings.keys.first
+    click_away
   end
 
   private
-    def open_combobox(name = "state-field")
-      find("##{name}").click
+    def open_combobox(selector)
+      find(selector).click
+    end
+
+    def type_in_combobox(selector, *text)
+      find(selector).send_keys(*text)
+    end
+
+    def delete_from_combobox(selector, text, original:)
+      find(selector).then do |input|
+        original.chars.each { input.send_keys(:arrow_right) }
+        text.chars.each { input.send_keys(:backspace) }
+      end
+    end
+
+    def click_on_option(text)
+      find("li[role=option]", text: text).click
+    end
+
+    def assert_combobox
+      assert_selector "input[role=combobox]"
+    end
+
+    def assert_closed_combobox
+      assert_selector "input[aria-expanded=false]"
+    end
+
+    def assert_open_combobox
+      assert_selector "input[aria-expanded=true]"
+    end
+
+    def assert_listbox_with(**kwargs)
+      assert_selector "ul[role=listbox]", **kwargs
+    end
+
+    def assert_no_visible_options
+      assert_no_visible_options_with
+    end
+
+    def assert_no_visible_options_with(**kwargs)
+      assert_no_selector "li[role=option]", **kwargs
+    end
+
+    def assert_option_with(html_markup: "", **kwargs)
+      assert_selector "li[role=option] #{html_markup}".squish, **kwargs
+    end
+    alias_method :assert_options_with, :assert_option_with
+
+    def assert_combobox_display(selector, text)
+      assert_field locator_for(selector), with: text
+    end
+
+    def assert_combobox_value(selector, value)
+      assert_field "#{locator_for(selector)}-hw-hidden-field", type: "hidden", with: value
+    end
+
+    def assert_combobox_display_and_value(selector, text, value)
+      assert_combobox_display selector, text
+      assert_combobox_value selector, value
+    end
+
+    def assert_selected_option_with(selector: "", **kwargs)
+      assert_selector "li[role=option][aria-selected=true]#{selector}".squish, **kwargs
+    end
+
+    def assert_no_visible_selected_option
+      assert_no_selector "li[role=option][aria-selected=true]"
+    end
+
+    def assert_invalid_combobox
+      assert_selector "input[aria-invalid=true]"
+    end
+
+    def assert_not_invalid_combobox
+      assert_no_selector "input[aria-invalid=true]"
+    end
+
+    def assert_proper_combobox_name_choice(original:, new:, proper:)
+      if proper == :original
+        assert_selector "input[name='#{original}']", visible: :hidden
+        assert_no_selector "input[name='#{new}']", visible: :hidden
+      else
+        assert_no_selector "input[name='#{original}']", visible: :hidden
+        assert_selector "input[name='#{new}']", visible: :hidden
+      end
+    end
+
+    def locator_for(selector)
+      # https://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Matchers#has_field%3F-instance_method
+      selector.delete_prefix("#")
     end
 
     def on_small_screen
+      @on_small_screen = true
       original_size = page.current_window.size
       page.current_window.resize_to 375, 667
       yield
     ensure
+      @on_small_screen = false
       page.current_window.resize_to *original_size
     end
 
-    def click_on_edge
+    def tab_away
+      find("body").send_keys(:tab)
+    end
+
+    def click_away
+      if @on_small_screen
+        click_on_top_left_corner
+      else
+        find("#clickable").click
+      end
+    end
+
+    def click_on_top_left_corner
       page.execute_script("document.elementFromPoint(0, 0).click()")
     end
 end

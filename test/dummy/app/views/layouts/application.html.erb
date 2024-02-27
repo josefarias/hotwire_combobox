@@ -35,6 +35,7 @@
         <%= render "#{controller_name}/nav" if aside_nav? %>
       </aside>
       <main>
+        <div id="clickable" style="width: 10px; height: 10px; background-color: red; margin-bottom: 10px;"></div>
         <%= yield %>
       </main>
     </section>
