@@ -22,10 +22,6 @@ Only apps that use importmaps are currently supported. Suport for other JS solut
 
 ## Docs
 
-<p align="center">
-  <img src="docs/assets/images/docs-preview.png" height=500>
-</p>
-
 Visit [the docs site](https://hotwirecombobox.com/) for a demo and detailed documentation.
 If the site is down, you can run the docs locally by cloning [the docs repo](https://github.com/josefarias/hotwire_combobox_docs).
 
