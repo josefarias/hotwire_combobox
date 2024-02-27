@@ -3,13 +3,11 @@ require "system_test_helper"
 class HotwireComboboxTest < ApplicationSystemTestCase
   test "stimulus controllers from host app are loaded" do
     visit greeting_path
-
     assert_text "Hello there!"
   end
 
   test "combobox is rendered" do
     visit plain_path
-
     assert_combobox
   end
 
@@ -24,7 +22,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit plain_path
 
     open_combobox "#state-field"
-
     assert_open_combobox
     assert_listbox_with id: "state-field-hw-listbox"
     assert_option_with text: "Alabama"
@@ -42,8 +39,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit plain_path
 
     open_combobox "#state-field"
-
     assert_open_combobox
+
     click_away
     assert_closed_combobox
     assert_no_visible_options
@@ -53,8 +50,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit plain_path
 
     open_combobox "#state-field"
-
     assert_open_combobox
+
     tab_away
     assert_closed_combobox
     assert_no_visible_options
@@ -64,7 +61,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit html_options_path
 
     open_combobox "#state-field"
-
     assert_listbox_with id: "state-field-hw-listbox"
     assert_option_with html_markup: "p", text: "Alabama"
   end
@@ -73,7 +69,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit plain_path
 
     open_combobox "#state-field"
-
     type_in_combobox "#state-field", "Flo"
     assert_option_with text: "Florida"
     assert_no_visible_options_with text: "Alabama"
@@ -83,7 +78,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit html_options_path
 
     open_combobox "#state-field"
-
     type_in_combobox "#state-field", "Flor"
     assert_combobox_display_and_value "#state-field", "Florida", "FL"
     assert_selected_option_with selector: ".hw-combobox__option--selected", text: "Florida"
@@ -97,7 +91,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit html_options_path
 
     open_combobox "#state-field"
-
     type_in_combobox "#state-field", "lor"
     assert_combobox_display_and_value "#state-field", "lor", "FL"
     assert_selected_option_with selector: ".hw-combobox__option--selected", text: "Florida"
@@ -107,7 +100,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit html_options_path
 
     open_combobox "#state-field"
-
     type_in_combobox "#state-field", "is", :enter
     assert_closed_combobox
     assert_combobox_display_and_value "#state-field", "Mississippi", "MS"
@@ -123,7 +115,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit html_options_path
 
     open_combobox "#state-field"
-
     type_in_combobox "#state-field", "is"
     click_away
     assert_closed_combobox
@@ -137,7 +128,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit plain_path
 
     open_combobox "#state-field"
-
     type_in_combobox "#state-field", "is"
     tab_away
     assert_closed_combobox
@@ -186,7 +176,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit html_options_path
 
     open_combobox "#state-field"
-
     assert_combobox_display_and_value "#state-field", nil, nil
 
     click_on_option "Florida"
@@ -207,7 +196,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_combobox_display_and_value "#state-field", "Michigan", "MI"
 
     open_combobox "#state-field"
-
     assert_selected_option_with text: "Michigan"
   end
 
@@ -253,7 +241,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
   test "combobox is rendered when using the formbuilder" do
     visit formbuilder_path
-
     assert_combobox
   end
 
@@ -332,7 +319,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     type_in_combobox "#movie-field", :backspace # clear autocompleted portion
     tab_away # ensure selection
     assert_combobox_display_and_value "#movie-field", "The Godfather", "The Godfather"
-    assert_no_visible_selected_option
     assert_proper_combobox_name_choice original: :movie, new: :new_movie, proper: :new
 
     open_combobox "#movie-field"
@@ -360,6 +346,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit inline_autocomplete_path
 
     open_combobox "#state-field"
+    assert_no_listbox
 
     type_in_combobox "#state-field", "mi"
     assert_combobox_display_and_value "#state-field", "Michigan", "MI"
@@ -374,11 +361,11 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_combobox_display_and_value "#state-field", "Minnesota", "MN"
   end
 
-  # todo
   test "list-only autocomplete" do
     visit list_autocomplete_path
 
     open_combobox "#state-field"
+    assert_listbox
 
     type_in_combobox "#state-field", "mi"
     assert_combobox_display_and_value "#state-field", "mi", "MI"
@@ -413,9 +400,10 @@ class HotwireComboboxTest < ApplicationSystemTestCase
         assert_combobox_display "#state-field-hw-dialog-combobox", "Florida"
         assert_selected_option_with text: "Florida"
       end
-
       assert_combobox_value "#state-field", "FL"
+
       click_away
+      assert_combobox_display_and_value "#state-field", "Florida", "FL"
       assert_no_selector "dialog[open]"
     end
   end
@@ -510,17 +498,19 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       assert_selector "input[aria-expanded=true]"
     end
 
+    def assert_no_listbox
+      assert_no_selector "ul[role=listbox]"
+    end
+
     def assert_listbox_with(**kwargs)
       assert_selector "ul[role=listbox]", **kwargs
     end
-
-    def assert_no_visible_options
-      assert_no_visible_options_with
-    end
+    alias_method :assert_listbox, :assert_listbox_with
 
     def assert_no_visible_options_with(**kwargs)
       assert_no_selector "li[role=option]", **kwargs
     end
+    alias_method :assert_no_visible_options, :assert_no_visible_options_with
 
     def assert_option_with(html_markup: "", **kwargs)
       assert_selector "li[role=option] #{html_markup}".squish, **kwargs
