@@ -29,10 +29,10 @@ export default class HwComboboxController extends Concerns(...concerns) {
     "dialogCombobox",
     "dialogFocusTrap",
     "dialogListbox",
+    "endOfOptionsStream",
     "handle",
     "hiddenField",
-    "listbox",
-    "endOfOptionsStream"
+    "listbox"
   ]
 
   static values = {
