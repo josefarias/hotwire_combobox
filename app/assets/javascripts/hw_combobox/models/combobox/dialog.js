@@ -14,7 +14,7 @@ Combobox.Dialog = Base => class extends Base {
   }
 
   _moveArtifactsToDialog() {
-    this.dialogComboboxTarget.value = this._actingCombobox.value
+    this.dialogComboboxTarget.value = this._query
 
     this._actingCombobox = this.dialogComboboxTarget
     this._actingListbox = this.dialogListboxTarget
@@ -23,7 +23,7 @@ Combobox.Dialog = Base => class extends Base {
   }
 
   _moveArtifactsInline() {
-    this.comboboxTarget.value = this._actingCombobox.value
+    this.comboboxTarget.value = this._query
 
     this._actingCombobox = this.comboboxTarget
     this._actingListbox = this.listboxTarget

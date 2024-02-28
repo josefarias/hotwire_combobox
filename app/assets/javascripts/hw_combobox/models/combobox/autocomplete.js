@@ -11,14 +11,14 @@ Combobox.Autocomplete = Base => class extends Base {
   _maybeAutocompleteWith(option, { force }) {
     if (!this._autocompletesInline && !force) return
 
-    const typedValue = this._actingCombobox.value
+    const typedValue = this._query
     const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
 
     if (force) {
-      this._actingCombobox.value = autocompletedValue
+      this._query = autocompletedValue
       this._actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length)
     } else if (startsWith(autocompletedValue, typedValue)) {
-      this._actingCombobox.value = autocompletedValue
+      this._query = autocompletedValue
       this._actingCombobox.setSelectionRange(typedValue.length, autocompletedValue.length)
     }
   }
@@ -30,14 +30,14 @@ Combobox.Autocomplete = Base => class extends Base {
   }
 
   get _isExactAutocompleteMatch() {
-    return this._immediatelyAutocompletableValue === this._actingCombobox.value
+    return this._immediatelyAutocompletableValue === this._query
   }
 
   // All `_isExactAutocompleteMatch` matches are `_isPartialAutocompleteMatch` matches
   // but not all `_isPartialAutocompleteMatch` matches are `_isExactAutocompleteMatch` matches.
   get _isPartialAutocompleteMatch() {
     return !!this._immediatelyAutocompletableValue &&
-      startsWith(this._immediatelyAutocompletableValue, this._actingCombobox.value)
+      startsWith(this._immediatelyAutocompletableValue, this._query)
   }
 
   get _autocompletesList() {

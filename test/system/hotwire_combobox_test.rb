@@ -584,6 +584,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     end
 
     def click_on_top_left_corner
-      page.execute_script("document.elementFromPoint(0, 0).click()")
+      page.execute_script "document.elementFromPoint(0, 0).click()"
     end
 end
