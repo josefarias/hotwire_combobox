@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get "open", to: "comboboxes#open"
   get "html_options", to: "comboboxes#html_options"
   get "prefilled", to: "comboboxes#prefilled"
+  get "prefilled_html", to: "comboboxes#prefilled_html"
   get "required", to: "comboboxes#required"
   get "formbuilder", to: "comboboxes#formbuilder"
   get "new_options", to: "comboboxes#new_options"

@@ -209,6 +209,16 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selected_option_with text: "Michigan"
   end
 
+  test "html combobox with prefilled value" do
+    visit prefilled_html_path
+
+    assert_closed_combobox
+    assert_combobox_display_and_value "#movie-field", Movie.second.title, Movie.second.id
+
+    open_combobox "#movie-field"
+    assert_selected_option_with text: Movie.second.title
+  end
+
   test "async combobox with prefilled value" do
     visit prefilled_async_path
 
