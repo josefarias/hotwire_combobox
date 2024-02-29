@@ -11,14 +11,15 @@ Combobox.Autocomplete = Base => class extends Base {
   _autocompleteWith(option, { force }) {
     if (!this._autocompletesInline && !force) return
 
+    const typedValue = this._query
     const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
 
     if (force) {
       this._query = autocompletedValue
       this._actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length)
-    } else if (startsWith(autocompletedValue, this._query)) {
+    } else if (startsWith(autocompletedValue, typedValue)) {
       this._query = autocompletedValue
-      this._actingCombobox.setSelectionRange(this._query.length, autocompletedValue.length)
+      this._actingCombobox.setSelectionRange(typedValue.length, autocompletedValue.length)
     }
   }
 
