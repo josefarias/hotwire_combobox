@@ -108,6 +108,19 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selected_option_with selector: ".hw-combobox__option--selected", text: "Florida"
   end
 
+  test "selecting with the keyboard" do
+    visit html_options_path
+
+    open_combobox "#state-field"
+    type_in_combobox "#state-field", "mi"
+    type_in_combobox "#state-field", :down, :down
+    assert_selected_option_with text: "Mississippi"
+
+    type_in_combobox "#state-field", :enter
+    assert_closed_combobox
+    assert_combobox_display_and_value "#state-field", "Mississippi", "MS"
+  end
+
   test "pressing enter locks in the current selection, but editing the text field resets it" do
     visit html_options_path
 
