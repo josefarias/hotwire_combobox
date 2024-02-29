@@ -19,7 +19,7 @@ Combobox.Selection = Base => class extends Base {
 
     if (option) {
       this._markValid()
-      this._maybeAutocompleteWith(option, { force })
+      this._autocompleteWith(option, { force })
       this._commitSelection(option, { selected: true })
     } else {
       this._markInvalid()

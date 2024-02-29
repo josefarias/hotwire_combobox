@@ -45,6 +45,8 @@ Combobox.Filtering = Base => class extends Base {
     return this._query.length > 0
   }
 
+  // Consider +_query+ will contain the full autocompleted value
+  // after a certain point in the call chain.
   get _query() {
     return this._actingCombobox.value.trim()
   }

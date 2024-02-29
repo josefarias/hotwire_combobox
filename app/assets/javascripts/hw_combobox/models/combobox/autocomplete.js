@@ -8,7 +8,7 @@ Combobox.Autocomplete = Base => class extends Base {
     }
   }
 
-  _maybeAutocompleteWith(option, { force }) {
+  _autocompleteWith(option, { force }) {
     if (!this._autocompletesInline && !force) return
 
     const typedValue = this._query
