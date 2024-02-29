@@ -11,8 +11,8 @@ class HotwireCombobox::Listbox::Option
     option.try(:value) || option.id
   end
 
-  def content
-    option.try(:content) || option.try(:display)
+  def autocompletable_as
+    option.try(:autocompletable_as) || option.try(:display)
   end
 
   private
@@ -42,11 +42,11 @@ class HotwireCombobox::Listbox::Option
       }
     end
 
-    def filterable_as
-      option.try(:filterable_as) || option.try(:display)
+    def content
+      option.try(:content) || option.try(:display)
     end
 
-    def autocompletable_as
-      option.try(:autocompletable_as) || option.try(:display)
+    def filterable_as
+      option.try(:filterable_as) || option.try(:display)
     end
 end

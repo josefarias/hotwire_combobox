@@ -1,0 +1,2 @@
+<%= combobox_tag "movie", Movie.limit(99), id: "movie-field", value: Movie.second.id,
+      render_in: { partial: "movies/movie", formats: [:turbo_stream] } %>
