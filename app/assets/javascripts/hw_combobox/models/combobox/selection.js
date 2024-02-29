@@ -1,5 +1,5 @@
 import Combobox from "hw_combobox/models/combobox/base"
-import { wrapAroundAccess, nullEvent } from "hw_combobox/helpers"
+import { wrapAroundAccess } from "hw_combobox/helpers"
 
 Combobox.Selection = Base => class extends Base {
   selectOption(event) {
@@ -32,8 +32,6 @@ Combobox.Selection = Base => class extends Base {
     if (selected) {
       this.hiddenFieldTarget.value = option.dataset.value
       option.scrollIntoView({ block: "nearest" })
-    } else {
-      this.hiddenFieldTarget.value = null
     }
   }
 
@@ -48,6 +46,7 @@ Combobox.Selection = Base => class extends Base {
   _deselect() {
     const option = this._selectedOptionElement
     if (option) this._commitSelection(option, { selected: false })
+    this.hiddenFieldTarget.value = null
   }
 
   _selectNew() {
@@ -74,7 +73,7 @@ Combobox.Selection = Base => class extends Base {
   _ensureSelection() {
     if (this._shouldEnsureSelection) {
       this._select(this._ensurableOption, { force: true })
-      this.filter(nullEvent)
+      this.filter({ inputType: "hw:ensureSelection" })
     }
   }
 
