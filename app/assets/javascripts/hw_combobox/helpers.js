@@ -1,5 +1,3 @@
-export const nullEvent = new Event("NULL")
-
 export function Concerns(Base, ...mixins) {
   return mixins.reduce((accumulator, current) => current(accumulator), Base)
 }
@@ -39,7 +37,7 @@ export function startsWith(string, substring) {
   return string.toLowerCase().startsWith(substring.toLowerCase())
 }
 
-export function debounce(fn, delay = 150) {
+export function debounce(fn, delay = 300) {
   let timeoutId = null
 
   return (...args) => {

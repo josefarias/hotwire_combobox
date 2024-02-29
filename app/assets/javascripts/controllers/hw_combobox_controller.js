@@ -73,7 +73,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
   endOfOptionsStreamTargetConnected(element) {
     const inputType = element.dataset.inputType
 
-    if (inputType) {
+    if (inputType && inputType !== "hw:ensureSelection") {
       this._commitFilter({ inputType })
     } else {
       this._preselectOption()
