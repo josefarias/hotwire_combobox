@@ -87,6 +87,18 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_no_visible_selected_option
   end
 
+  test "autocomplete with spaces in the query" do
+    visit async_path
+
+    open_combobox "#movie-field"
+    type_in_combobox "#movie-field", "12"
+    type_in_combobox "#movie-field", " "
+    sleep 0.5 # wait for async filter
+    type_in_combobox "#movie-field", "ang", :enter
+    sleep 0.5 # wait for async filter
+    assert_combobox_display_and_value "#movie-field", "12 Angry Men", movies("12_angry_men").id
+  end
+
   test "autocomplete only works when strings match from the very beginning, but the first option is still selected" do
     visit html_options_path
 
