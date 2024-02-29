@@ -9,6 +9,14 @@ changelog:
       exclude:
         labels:
           - dependencies
+          - cosmetic
+          - bug
+    - title: 🎷🐛 Bug Fixes
+      labels:
+        - bug
+    - title: 💅 Cosmetic Changes
+      labels:
+        - cosmetic
     - title: 🗄️ Dependencies
       labels:
         - dependencies
