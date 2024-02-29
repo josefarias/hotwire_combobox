@@ -10,7 +10,7 @@ Combobox.Selection = Base => class extends Base {
 
   _connectSelection() {
     if (this.hasPrefilledDisplayValue) {
-      this._actingCombobox.value = this.prefilledDisplayValue
+      this._query = this.prefilledDisplayValue
     }
   }
 
@@ -19,7 +19,7 @@ Combobox.Selection = Base => class extends Base {
 
     if (option) {
       this._markValid()
-      this._maybeAutocompleteWith(option, { force })
+      this._autocompleteWith(option, { force })
       this._commitSelection(option, { selected: true })
     } else {
       this._markInvalid()
@@ -52,7 +52,7 @@ Combobox.Selection = Base => class extends Base {
 
   _selectNew() {
     this._resetOptions()
-    this.hiddenFieldTarget.value = this._actingCombobox.value
+    this.hiddenFieldTarget.value = this._query
     this.hiddenFieldTarget.name = this.nameWhenNewValue
   }
 

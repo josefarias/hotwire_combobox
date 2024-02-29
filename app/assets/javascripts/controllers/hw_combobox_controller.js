@@ -29,10 +29,10 @@ export default class HwComboboxController extends Concerns(...concerns) {
     "dialogCombobox",
     "dialogFocusTrap",
     "dialogListbox",
+    "endOfOptionsStream",
     "handle",
     "hiddenField",
-    "listbox",
-    "paginationFrame"
+    "listbox"
   ]
 
   static values = {
@@ -70,7 +70,13 @@ export default class HwComboboxController extends Concerns(...concerns) {
     }
   }
 
-  paginationFrameTargetConnected() {
+  endOfOptionsStreamTargetConnected(element) {
+    const inputType = element.dataset.inputType
+
     this._preselectOption()
+
+    if (inputType) {
+      this._commitFilter({ inputType })
+    }
   }
 }
