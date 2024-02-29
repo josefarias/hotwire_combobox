@@ -50,10 +50,6 @@ Combobox.Toggle = Base => class extends Base {
     return clientX >= left && clientX <= right && clientY >= top && clientY <= bottom
   }
 
-  _ensureSelection() {
-    this._selectFuzzyMatch()
-  }
-
   _openByFocusing() {
     this._actingCombobox.focus()
   }

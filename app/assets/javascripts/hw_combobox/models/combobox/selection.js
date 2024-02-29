@@ -71,9 +71,9 @@ Combobox.Selection = Base => class extends Base {
     }
   }
 
-  _selectFuzzyMatch() {
-    if (this._isFuzzyMatch) {
-      this._select(this._visibleOptionElements[0], { force: true })
+  _ensureSelection() {
+    if (this._shouldEnsureSelection) {
+      this._select(this._ensurableOption, { force: true })
       this.filter(nullEvent)
     }
   }
@@ -82,7 +82,11 @@ Combobox.Selection = Base => class extends Base {
     return this.hiddenFieldTarget.value && !this._selectedOptionElement
   }
 
-  get _isFuzzyMatch() {
-    return this._isQueried && !!this._visibleOptionElements[0] && !this._isNewOptionWithPotentialMatches
+  get _shouldEnsureSelection() {
+    return this._isQueried && !!this._ensurableOption && !this._isNewOptionWithPotentialMatches
+  }
+
+  get _ensurableOption() {
+    return this._selectedOptionElement || this._visibleOptionElements[0]
   }
 }
