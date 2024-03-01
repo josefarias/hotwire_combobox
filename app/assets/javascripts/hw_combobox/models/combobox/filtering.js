@@ -1,6 +1,6 @@
 
 import Combobox from "hw_combobox/models/combobox/base"
-import { applyFilter, debounce, isDeleteEvent } from "hw_combobox/helpers"
+import { applyFilter, debounce, isDeleteEvent, unselectedPortion } from "hw_combobox/helpers"
 import { get } from "hw_combobox/vendor/requestjs"
 
 Combobox.Filtering = Base => class extends Base {
@@ -21,13 +21,13 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   async _filterAsync(event) {
-    const query = { q: this._query, input_type: event.inputType }
+    const query = { q: this._fullQuery, input_type: event.inputType }
     await get(this.asyncSrcValue, { responseKind: "turbo-stream", query })
   }
 
   _filterSync(event) {
     this.open()
-    this._allOptionElements.forEach(applyFilter(this._query, { matching: this.filterableAttributeValue }))
+    this._allOptionElements.forEach(applyFilter(this._fullQuery, { matching: this.filterableAttributeValue }))
     this._commitFilter(event)
   }
 
@@ -42,16 +42,18 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   get _isQueried() {
-    return this._query.length > 0
+    return this._fullQuery.length > 0
   }
 
-  // Consider +_query+ will contain the full autocompleted value
-  // after a certain point in the call chain.
-  get _query() {
+  get _fullQuery() {
     return this._actingCombobox.value
   }
 
-  set _query(value) {
+  set _fullQuery(value) {
     this._actingCombobox.value = value
+  }
+
+  get _typedQuery() {
+    return unselectedPortion(this._actingCombobox)
   }
 }

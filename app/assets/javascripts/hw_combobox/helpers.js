@@ -37,7 +37,7 @@ export function startsWith(string, substring) {
   return string.toLowerCase().startsWith(substring.toLowerCase())
 }
 
-export function debounce(fn, delay = 300) {
+export function debounce(fn, delay = 150) {
   let timeoutId = null
 
   return (...args) => {
@@ -49,4 +49,16 @@ export function debounce(fn, delay = 300) {
 
 export function isDeleteEvent(event) {
   return event.inputType === "deleteContentBackward" || event.inputType === "deleteWordBackward"
+}
+
+export function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+export function unselectedPortion(element) {
+  if (element.selectionStart === element.selectionEnd) {
+    return element.value
+  } else {
+    return element.value.substring(0, element.selectionStart)
+  }
 }

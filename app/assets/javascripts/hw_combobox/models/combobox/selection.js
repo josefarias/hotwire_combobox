@@ -10,16 +10,16 @@ Combobox.Selection = Base => class extends Base {
 
   _connectSelection() {
     if (this.hasPrefilledDisplayValue) {
-      this._query = this.prefilledDisplayValue
+      this._fullQuery = this.prefilledDisplayValue
     }
   }
 
-  _select(option, { force = false } = {}) {
+  _select(option, { forceAutocomplete = false } = {}) {
     this._resetOptions()
 
     if (option) {
       this._markValid()
-      this._autocompleteWith(option, { force })
+      this._autocompleteWith(option, { force: forceAutocomplete })
       this._commitSelection(option, { selected: true })
     } else {
       this._markInvalid()
@@ -51,13 +51,13 @@ Combobox.Selection = Base => class extends Base {
 
   _selectNew() {
     this._resetOptions()
-    this.hiddenFieldTarget.value = this._query
+    this.hiddenFieldTarget.value = this._fullQuery
     this.hiddenFieldTarget.name = this.nameWhenNewValue
   }
 
   _selectIndex(index) {
     const option = wrapAroundAccess(this._visibleOptionElements, index)
-    this._select(option, { force: true })
+    this._select(option, { forceAutocomplete: true })
   }
 
   _preselectOption() {
@@ -72,7 +72,7 @@ Combobox.Selection = Base => class extends Base {
 
   _ensureSelection() {
     if (this._shouldEnsureSelection) {
-      this._select(this._ensurableOption, { force: true })
+      this._select(this._ensurableOption, { forceAutocomplete: true })
       this.filter({ inputType: "hw:ensureSelection" })
     }
   }
