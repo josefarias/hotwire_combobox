@@ -1,5 +1,5 @@
 import Combobox from "hw_combobox/models/combobox/base"
-import { startsWith } from "hw_combobox/helpers"
+import { startsWith, unselectedPortion } from "hw_combobox/helpers"
 
 Combobox.Autocomplete = Base => class extends Base {
   _connectListAutocomplete() {
@@ -11,7 +11,7 @@ Combobox.Autocomplete = Base => class extends Base {
   _autocompleteWith(option, { force }) {
     if (!this._autocompletesInline && !force) return
 
-    const typedValue = this._query
+    const typedValue = unselectedPortion(this._actingCombobox)
     const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
 
     if (force) {

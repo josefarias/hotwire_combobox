@@ -502,6 +502,20 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     click_away
   end
 
+  test "async autocomplete selections don't trample over each other" do
+    visit async_path
+
+    on_slow_device delay: 0.5 do
+      open_combobox "#movie-field"
+      type_in_combobox "#movie-field", "a"
+      sleep 0.3 # less than the delay, more than the debounce
+      type_in_combobox "#movie-field", "l"
+      sleep 0.7 # more than the delay
+
+      assert_equal "addin", current_selection_contents
+    end
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
@@ -607,6 +621,15 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       page.current_window.resize_to *original_size
     end
 
+    def on_slow_device(delay:)
+      @on_slow_device = true
+      page.execute_script "window.HotwireComboboxStreamDelay = #{delay * 1000}"
+      yield
+    ensure
+      @on_slow_device = false
+      page.execute_script "window.HotwireComboboxStreamDelay = 0"
+    end
+
     def tab_away
       find("body").send_keys(:tab)
     end
@@ -621,5 +644,9 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     def click_on_top_left_corner
       page.execute_script "document.elementFromPoint(0, 0).click()"
+    end
+
+    def current_selection_contents
+      page.evaluate_script "document.getSelection().toString()"
     end
 end
