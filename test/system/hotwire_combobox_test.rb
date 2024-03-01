@@ -623,11 +623,11 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     def on_slow_device(delay:)
       @on_slow_device = true
-      page.execute_script "window.HotwireComboboxStreamDelay = #{delay * 1000}"
+      page.execute_script "window.HOTWIRE_COMBOBOX_STREAM_DELAY = #{delay * 1000}"
       yield
     ensure
       @on_slow_device = false
-      page.execute_script "window.HotwireComboboxStreamDelay = 0"
+      page.execute_script "window.HOTWIRE_COMBOBOX_STREAM_DELAY = 0"
     end
 
     def tab_away

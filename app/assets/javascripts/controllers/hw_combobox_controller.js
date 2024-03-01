@@ -2,7 +2,7 @@ import Combobox from "hw_combobox/models/combobox"
 import { Concerns, sleep } from "hw_combobox/helpers"
 import { Controller } from "@hotwired/stimulus"
 
-window.HotwireComboboxStreamDelay = 0 // ms, for testing purposes
+window.HOTWIRE_COMBOBOX_STREAM_DELAY = 0 // ms, for testing purposes
 
 const concerns = [
   Controller,
@@ -74,7 +74,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
 
   async endOfOptionsStreamTargetConnected(element) {
     const inputType = element.dataset.inputType
-    const delay = window.HotwireComboboxStreamDelay
+    const delay = window.HOTWIRE_COMBOBOX_STREAM_DELAY
 
     if (inputType && inputType !== "hw:ensureSelection") {
       if (delay) await sleep(delay)
