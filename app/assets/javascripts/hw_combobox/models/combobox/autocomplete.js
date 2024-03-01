@@ -1,5 +1,5 @@
 import Combobox from "hw_combobox/models/combobox/base"
-import { startsWith, unselectedPortion } from "hw_combobox/helpers"
+import { startsWith } from "hw_combobox/helpers"
 
 Combobox.Autocomplete = Base => class extends Base {
   _connectListAutocomplete() {
@@ -11,14 +11,14 @@ Combobox.Autocomplete = Base => class extends Base {
   _autocompleteWith(option, { force }) {
     if (!this._autocompletesInline && !force) return
 
-    const typedValue = unselectedPortion(this._actingCombobox)
+    const typedValue = this._typedQuery
     const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
 
     if (force) {
-      this._query = autocompletedValue
+      this._fullQuery = autocompletedValue
       this._actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length)
     } else if (startsWith(autocompletedValue, typedValue)) {
-      this._query = autocompletedValue
+      this._fullQuery = autocompletedValue
       this._actingCombobox.setSelectionRange(typedValue.length, autocompletedValue.length)
     }
   }
@@ -30,14 +30,14 @@ Combobox.Autocomplete = Base => class extends Base {
   }
 
   get _isExactAutocompleteMatch() {
-    return this._immediatelyAutocompletableValue === this._query
+    return this._immediatelyAutocompletableValue === this._typedQuery
   }
 
   // All `_isExactAutocompleteMatch` matches are `_isPartialAutocompleteMatch` matches
   // but not all `_isPartialAutocompleteMatch` matches are `_isExactAutocompleteMatch` matches.
   get _isPartialAutocompleteMatch() {
     return !!this._immediatelyAutocompletableValue &&
-      startsWith(this._immediatelyAutocompletableValue, this._query)
+      startsWith(this._immediatelyAutocompletableValue, this._typedQuery)
   }
 
   get _autocompletesList() {

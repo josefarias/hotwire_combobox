@@ -10,7 +10,7 @@ Combobox.Selection = Base => class extends Base {
 
   _connectSelection() {
     if (this.hasPrefilledDisplayValue) {
-      this._query = this.prefilledDisplayValue
+      this._fullQuery = this.prefilledDisplayValue
     }
   }
 
@@ -51,7 +51,7 @@ Combobox.Selection = Base => class extends Base {
 
   _selectNew() {
     this._resetOptions()
-    this.hiddenFieldTarget.value = this._query
+    this.hiddenFieldTarget.value = this._fullQuery
     this.hiddenFieldTarget.name = this.nameWhenNewValue
   }
 
