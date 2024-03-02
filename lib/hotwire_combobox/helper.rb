@@ -45,8 +45,12 @@ module HotwireCombobox
     hw_alias :hw_async_combobox_options
 
     protected # library use only
-      def hw_listbox_options_id(id)
-        "#{id}-hw-listbox__options"
+      def hw_listbox_id(id)
+        "#{id}-hw-listbox"
+      end
+
+      def hw_pagination_frame_wrapper_id(id)
+        "#{id}__hw_combobox_pagination__wrapper"
       end
 
       def hw_pagination_frame_id(id)
