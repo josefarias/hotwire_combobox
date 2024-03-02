@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.email       = [ "jose@farias.mx" ]
   spec.homepage    = "https://github.com/josefarias/hotwire_combobox"
   spec.summary     = "Autocomplete for Rails apps using Hotwire"
-  spec.description = "A combobox implementation for Ruby on Rails apps using Hotwire."
+  spec.description = "An autocomplete combobox implementation for Ruby on Rails apps using Hotwire."
   spec.license     = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage
