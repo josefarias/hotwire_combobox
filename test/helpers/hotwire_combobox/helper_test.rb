@@ -106,8 +106,8 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
       rel: "stylesheet", href: "/stylesheets/hotwire_combobox.css"
   end
 
-  test "hw_listbox_options_id returns the same as component#listbox_options_id" do
-    assert_instance_of String, hw_listbox_options_id(:bar)
-    assert_equal hw_listbox_options_id(:bar), HotwireCombobox::Component.new(self, :foo, id: :bar).listbox_options_attrs[:id]
+  test "hw_listbox_id returns the same as component#listbox_id" do
+    assert_instance_of String, hw_listbox_id(:bar)
+    assert_equal hw_listbox_id(:bar), HotwireCombobox::Component.new(self, :foo, id: :bar).listbox_attrs[:id]
   end
 end
