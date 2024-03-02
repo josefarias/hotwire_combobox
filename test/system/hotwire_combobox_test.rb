@@ -108,7 +108,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selected_option_with selector: ".hw-combobox__option--selected", text: "Florida"
   end
 
-  focus
   test "selecting with the keyboard" do
     visit html_options_path
 
