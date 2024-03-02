@@ -30,14 +30,14 @@ Combobox.Autocomplete = Base => class extends Base {
   }
 
   get _isExactAutocompleteMatch() {
-    return this._immediatelyAutocompletableValue === this._typedQuery
+    return this._immediatelyAutocompletableValue === this._fullQuery
   }
 
   // All `_isExactAutocompleteMatch` matches are `_isPartialAutocompleteMatch` matches
   // but not all `_isPartialAutocompleteMatch` matches are `_isExactAutocompleteMatch` matches.
   get _isPartialAutocompleteMatch() {
     return !!this._immediatelyAutocompletableValue &&
-      startsWith(this._immediatelyAutocompletableValue, this._typedQuery)
+      startsWith(this._immediatelyAutocompletableValue, this._fullQuery)
   }
 
   get _autocompletesList() {
@@ -49,6 +49,6 @@ Combobox.Autocomplete = Base => class extends Base {
   }
 
   get _immediatelyAutocompletableValue() {
-    return this._visibleOptionElements[0]?.getAttribute(this.autocompletableAttributeValue)
+    return this._ensurableOption?.getAttribute(this.autocompletableAttributeValue)
   }
 }

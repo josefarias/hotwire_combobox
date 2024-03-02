@@ -34,7 +34,6 @@ Combobox.Toggle = Base => class extends Base {
   closeOnFocusOutside({ target }) {
     if (!this._isOpen) return
     if (this.element.contains(target)) return
-    if (target.matches("main")) return
 
     this.close()
   }

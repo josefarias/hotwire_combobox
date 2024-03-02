@@ -119,6 +119,19 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     type_in_combobox "#state-field", :enter
     assert_closed_combobox
     assert_combobox_display_and_value "#state-field", "Mississippi", "MS"
+
+    visit new_options_path
+
+    open_combobox "#movie-field"
+    type_in_combobox "#movie-field", "al"
+    assert_text "Aliens" # wait for async filter
+    type_in_combobox "#movie-field", :down, :down
+    assert_selected_option_with text: "Aliens"
+    type_in_combobox "#movie-field", :enter
+    assert_combobox_display_and_value "#movie-field", "Aliens", movies(:aliens).id
+
+    open_combobox "#movie-field"
+    assert_options_with count: 1 # Aliens
   end
 
   test "pressing enter locks in the current selection, but editing the text field resets it" do
@@ -351,7 +364,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox "#movie-field"
     type_in_combobox "#movie-field", "The Godfather"
     assert_text "The Godfather Part II" # wait for async filter
-    type_in_combobox "#movie-field", :backspace # clear autocompleted portion
+    clear_autocompleted_portion "#movie-field"
     tab_away # ensure selection
     assert_combobox_display_and_value "#movie-field", "The Godfather", "The Godfather"
     assert_proper_combobox_name_choice original: :movie, new: :new_movie, proper: :new
@@ -364,7 +377,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     open_combobox "#movie-field"
     assert_options_with count: 1 # Part III
-    type_in_combobox "#movie-field", :backspace
+    delete_from_combobox "#movie-field", "I", original: "The Godfather Part III"
     assert_options_with count: 2 # Parts II and III
     tab_away # ensure selection
     assert_combobox_display_and_value "#movie-field", "The Godfather Part II", movies(:the_godfather_part_ii).id
@@ -456,7 +469,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       type_in_combobox "#movie-field", "wh"
       assert_combobox_display_and_value "#movie-field", "Whiplash", movies(:whiplash).id
       assert_options_with count: 2
-      type_in_combobox "#movie-field", :backspace # clear autocompleted portion
+      clear_autocompleted_portion "#movie-field"
       delete_from_combobox "#movie-field", "wh", original: "wh"
       assert_combobox_display_and_value "#movie-field", "", nil
       assert_text "12 Angry Men"
@@ -534,6 +547,10 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     def click_on_option(text)
       find("li[role=option]", text: text).click
+    end
+
+    def clear_autocompleted_portion(selector)
+      type_in_combobox selector, :backspace
     end
 
     def assert_combobox
@@ -631,7 +648,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     end
 
     def tab_away
-      find("body").send_keys(:tab)
+      find("body").send_keys(:tab, :tab)
     end
 
     def click_away
