@@ -76,7 +76,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
     const inputType = element.dataset.inputType
     const delay = window.HOTWIRE_COMBOBOX_STREAM_DELAY
 
-    if (inputType && inputType !== "hw:ensureSelection") {
+    if (inputType && inputType !== "hw:lockInSelection") {
       if (delay) await sleep(delay)
       this._commitFilter({ inputType })
     } else {
