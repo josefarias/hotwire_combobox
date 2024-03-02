@@ -70,10 +70,10 @@ Combobox.Selection = Base => class extends Base {
     }
   }
 
-  _ensureSelection() {
-    if (this._shouldEnsureSelection) {
+  _lockInSelection() {
+    if (this._shouldLockInSelection) {
       this._select(this._ensurableOption, { forceAutocomplete: true })
-      this.filter({ inputType: "hw:ensureSelection" })
+      this.filter({ inputType: "hw:lockInSelection" })
     }
   }
 
@@ -81,7 +81,7 @@ Combobox.Selection = Base => class extends Base {
     return this.hiddenFieldTarget.value && !this._selectedOptionElement
   }
 
-  get _shouldEnsureSelection() {
+  get _shouldLockInSelection() {
     return this._isQueried && !!this._ensurableOption && !this._isNewOptionWithPotentialMatches
   }
 

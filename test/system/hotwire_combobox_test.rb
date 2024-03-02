@@ -365,7 +365,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     type_in_combobox "#movie-field", "The Godfather"
     assert_text "The Godfather Part II" # wait for async filter
     clear_autocompleted_portion "#movie-field"
-    tab_away # ensure selection
+    tab_away # lock-in selection
     assert_combobox_display_and_value "#movie-field", "The Godfather", "The Godfather"
     assert_proper_combobox_name_choice original: :movie, new: :new_movie, proper: :new
 
@@ -379,13 +379,13 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_options_with count: 1 # Part III
     delete_from_combobox "#movie-field", "I", original: "The Godfather Part III"
     assert_options_with count: 2 # Parts II and III
-    tab_away # ensure selection
+    tab_away # lock-in selection
     assert_combobox_display_and_value "#movie-field", "The Godfather Part II", movies(:the_godfather_part_ii).id
     assert_proper_combobox_name_choice original: :movie, new: :new_movie, proper: :original
 
     open_combobox "#movie-field"
     delete_from_combobox "#movie-field", " Part II", original: "The Godfather Part II"
-    tab_away # ensure selection
+    tab_away # lock-in selection
     assert_combobox_display_and_value "#movie-field", "The Godfather", "The Godfather"
     assert_proper_combobox_name_choice original: :movie, new: :new_movie, proper: :new
   end

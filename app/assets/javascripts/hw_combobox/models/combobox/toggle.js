@@ -8,7 +8,7 @@ Combobox.Toggle = Base => class extends Base {
 
   close() {
     if (this._isOpen) {
-      this._ensureSelection()
+      this._lockInSelection()
       this.expandedValue = false
     }
   }
