@@ -41,12 +41,14 @@ Combobox.Selection = Base => class extends Base {
     }
 
     option.setAttribute("aria-selected", selected)
+    this._setActiveDescendant(selected ? option.id : "")
   }
 
   _deselect() {
     const option = this._selectedOptionElement
     if (option) this._commitSelection(option, { selected: false })
     this.hiddenFieldTarget.value = null
+    this._setActiveDescendant("")
   }
 
   _selectNew() {
@@ -75,6 +77,10 @@ Combobox.Selection = Base => class extends Base {
       this._select(this._ensurableOption, { forceAutocomplete: true })
       this.filter({ inputType: "hw:lockInSelection" })
     }
+  }
+
+  _setActiveDescendant(id) {
+    this._forAllComboboxes(el => el.setAttribute("aria-activedescendant", id))
   }
 
   get _hasValueButNoSelection() {

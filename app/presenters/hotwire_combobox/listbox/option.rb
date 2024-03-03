@@ -1,3 +1,5 @@
+require "securerandom"
+
 class HotwireCombobox::Listbox::Option
   def initialize(option)
     @option = option.is_a?(Hash) ? Data.new(**option) : option
@@ -30,7 +32,7 @@ class HotwireCombobox::Listbox::Option
     end
 
     def id
-      option.try(:id)
+      option.try(:id) || SecureRandom.uuid
     end
 
     def data
