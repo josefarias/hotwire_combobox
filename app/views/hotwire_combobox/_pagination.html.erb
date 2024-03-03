@@ -1,4 +1,7 @@
 <%# locals: (for_id:, src:) -%>
 
-<%= turbo_frame_tag hw_pagination_frame_id(for_id), src: src, loading: :lazy,
-      data: { hw_combobox_target: "endOfOptionsStream", input_type: params[:input_type] } %>
+<%= tag.li id: hw_pagination_frame_wrapper_id(for_id), data: {
+      hw_combobox_target: "endOfOptionsStream", input_type: params[:input_type] },
+      aria: { hidden: true } do %>
+  <%= turbo_frame_tag hw_pagination_frame_id(for_id), src: src, loading: :lazy %>
+<% end %>

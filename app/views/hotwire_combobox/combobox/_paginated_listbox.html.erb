@@ -1,8 +1,6 @@
 <%= tag.ul **component.listbox_attrs do |ul| %>
-  <%= tag.div **component.listbox_options_attrs do %>
-    <% component.options.each do |option| %>
-      <%= render option %>
-    <% end %>
+  <% component.options.each do |option| %>
+    <%= render option %>
   <% end %>
 
   <% if component.paginated? %>

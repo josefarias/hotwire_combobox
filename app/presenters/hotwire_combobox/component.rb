@@ -77,11 +77,6 @@ class HotwireCombobox::Component
   end
 
 
-  def listbox_options_attrs
-    { id: listbox_options_id }
-  end
-
-
   def dialog_wrapper_attrs
     {
       class: "hw-combobox__dialog__wrapper"
@@ -257,11 +252,6 @@ class HotwireCombobox::Component
 
     def listbox_data
       { hw_combobox_target: "listbox" }
-    end
-
-
-    def listbox_options_id
-      "#{listbox_id}__options"
     end
 
 
