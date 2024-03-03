@@ -234,7 +234,8 @@ class HotwireCombobox::Component
         controls: listbox_id,
         owns: listbox_id,
         haspopup: "listbox",
-        autocomplete: autocomplete
+        autocomplete: autocomplete,
+        activedescendant: ""
     end
 
 
@@ -280,7 +281,8 @@ class HotwireCombobox::Component
       {
         controls: dialog_listbox_id,
         owns: dialog_listbox_id,
-        autocomplete: autocomplete
+        autocomplete: autocomplete,
+        activedescendant: ""
       }
     end
 

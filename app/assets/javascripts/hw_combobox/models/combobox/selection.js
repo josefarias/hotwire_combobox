@@ -41,6 +41,10 @@ Combobox.Selection = Base => class extends Base {
     }
 
     option.setAttribute("aria-selected", selected)
+
+    this._allComboboxes.forEach((combobox) => {
+      combobox.setAttribute("aria-activedescendant", selected ? option.id : "")
+    })
   }
 
   _deselect() {

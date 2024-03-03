@@ -21,4 +21,8 @@ Combobox.Actors = Base => class extends Base {
   set _actingCombobox(combobox) {
     this.actingCombobox = combobox
   }
+
+  get _allComboboxes() {
+    return [ this.comboboxTarget, this.dialogComboboxTarget ]
+  }
 }

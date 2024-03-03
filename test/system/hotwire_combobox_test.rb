@@ -134,6 +134,27 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_options_with count: 1 # Aliens
   end
 
+  test "aria-activedescendant attribute" do
+    visit async_path
+
+    assert_selector "input[aria-activedescendant='']"
+    assert_selector "input[aria-activedescendant='']", visible: :hidden # dialog combobox
+
+    open_combobox "#movie-field"
+    assert_text "12 Angry Men" # wait for async filter
+    type_in_combobox "#movie-field", :down, :enter
+
+    assert_selector "input[aria-activedescendant]" # attribute is present...
+    assert_no_selector "input[aria-activedescendant='']" # ...but not empty
+    assert_selector "input[aria-activedescendant]", visible: :hidden # dialog combobox
+    assert_no_selector "input[aria-activedescendant='']", visible: :hidden # dialog combobox
+
+    open_combobox "#movie-field"
+    type_in_combobox "#movie-field", :backspace
+    assert_selector "input[aria-activedescendant='']"
+    assert_selector "input[aria-activedescendant='']", visible: :hidden # dialog combobox
+  end
+
   test "pressing enter locks in the current selection, but editing the text field resets it" do
     visit html_options_path
 
