@@ -55,7 +55,7 @@ class ComboboxesController < ApplicationController
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 
     def set_states
-      @states = combobox_options State.all, id: :abbreviation, value: :abbreviation, display: :name
+      @state_options = combobox_options State.all, id: :abbreviation, value: :abbreviation, display: :name
     end
 
     def aside_nav?

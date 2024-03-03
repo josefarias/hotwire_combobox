@@ -39,11 +39,11 @@
 </style>
 
 <%
-  @states = combobox_options State.all,
+  @state_options = combobox_options State.all,
     id: :abbreviation,
     value: :abbreviation,
     display: :name,
     render_in: { partial: "states/state" }
 %>
 
-<%= combobox_tag "state", @states, id: "state-field" %>
+<%= combobox_tag "state", @state_options, id: "state-field" %>
