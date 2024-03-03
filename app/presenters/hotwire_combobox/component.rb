@@ -53,9 +53,8 @@ class HotwireCombobox::Component
       class: "hw-combobox__input",
       type: input_type,
       data: input_data,
-      aria: input_aria,
-      autocomplete: :off
-    }.with_indifferent_access.merge combobox_attrs.except(*nested_attrs)
+      aria: input_aria
+    }.merge combobox_attrs.except(*nested_attrs)
   end
 
 
