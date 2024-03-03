@@ -6,6 +6,10 @@ Combobox.Actors = Base => class extends Base {
     this._actingCombobox = this.comboboxTarget
   }
 
+  _forAllComboboxes(callback) {
+    this._allComboboxes.forEach(callback)
+  }
+
   get _actingListbox() {
     return this.actingListbox
   }
