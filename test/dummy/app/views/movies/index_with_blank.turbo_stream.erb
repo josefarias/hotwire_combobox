@@ -1,0 +1,4 @@
+<%= hw_async_combobox_options @page.records,
+      for_id: "movie-field",
+      include_blank: "All",
+      next_page: @page.last? ? nil : @page.next_param %>

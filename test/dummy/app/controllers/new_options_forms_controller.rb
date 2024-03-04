@@ -1,7 +1,7 @@
 class NewOptionsFormsController < ApplicationController
   def create
     if User.create user_params
-      redirect_to new_options_path, notice: "User created"
+      redirect_back_or_to new_options_path, notice: "User created"
     else
       head :unprocessable_entity
     end

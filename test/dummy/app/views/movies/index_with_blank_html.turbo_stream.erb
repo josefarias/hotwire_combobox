@@ -1,0 +1,5 @@
+<%= hw_async_combobox_options @page.records,
+      render_in: { partial: "movies/movie" },
+      for_id: "html-movie-field",
+      include_blank: { text: "All", partial: "movies/blank_option" },
+      next_page: @page.last? ? nil : @page.next_param %>

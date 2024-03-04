@@ -15,26 +15,30 @@ module HotwireCombobox
     end
     hw_alias :hw_combobox_style_tag
 
-    def hw_combobox_tag(name, options_or_src = [], render_in: {}, **kwargs)
-      options, src = hw_extract_options_and_src(options_or_src, render_in)
+    def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, **kwargs)
+      options, src = hw_extract_options_and_src(options_or_src, render_in, include_blank)
       component = HotwireCombobox::Component.new self, name, options: options, async_src: src, **kwargs
 
       render "hotwire_combobox/combobox", component: component
     end
     hw_alias :hw_combobox_tag
 
-    def hw_combobox_options(options, render_in: {}, display: :to_combobox_display, **methods)
+    def hw_combobox_options(options, render_in: {}, include_blank: nil, display: :to_combobox_display, **methods)
       if options.first.is_a? HotwireCombobox::Listbox::Option
         options
       else
-        render_in_proc = ->(object) { render(**render_in.merge(object: object)) } if render_in.present?
-        hw_parse_combobox_options options, render_in: render_in_proc, **methods.merge(display: display)
+        render_in_proc = render_in.present? ? hw_render_in_proc(render_in) : nil
+        options = hw_parse_combobox_options options, render_in: render_in_proc, **methods.merge(display: display)
+        options.unshift(hw_blank_option(include_blank)) if include_blank.present?
+        options
       end
     end
     hw_alias :hw_combobox_options
 
-    def hw_paginated_combobox_options(options, for_id:, src: request.path, next_page: nil, render_in: {}, **methods)
-      this_page = render("hotwire_combobox/paginated_options", for_id: for_id, options: hw_combobox_options(options, render_in: render_in, **methods))
+    def hw_paginated_combobox_options(options, for_id:, src: request.path, next_page: nil, render_in: {}, include_blank: {}, **methods)
+      include_blank = params[:page] ? nil : include_blank
+      options = hw_combobox_options(options, render_in: render_in, include_blank: include_blank, **methods)
+      this_page = render("hotwire_combobox/paginated_options", for_id: for_id, options: options)
       next_page = render("hotwire_combobox/next_page", for_id: for_id, src: src, next_page: next_page)
 
       safe_join [ this_page, next_page ]
@@ -67,12 +71,28 @@ module HotwireCombobox
         params[:page] ? :append : :update
       end
 
+      def hw_blank_option(include_blank)
+        display, content =
+          if include_blank.is_a? Hash
+            text = include_blank.delete(:text)
+            [ text, hw_render_in_proc(include_blank).call(text) ]
+          else
+            [ include_blank, include_blank ]
+          end
+
+        HotwireCombobox::Listbox::Option.new display: display, content: content, value: "", blank: true
+      end
+
     private
-      def hw_extract_options_and_src(options_or_src, render_in)
+      def hw_render_in_proc(render_in)
+        ->(object) { render(**render_in.reverse_merge(object: object)) }
+      end
+
+      def hw_extract_options_and_src(options_or_src, render_in, include_blank)
         if options_or_src.is_a? String
           [ [], hw_uri_with_params(options_or_src, format: :turbo_stream) ]
         else
-          [ hw_combobox_options(options_or_src, render_in: render_in), nil ]
+          [ hw_combobox_options(options_or_src, render_in: render_in, include_blank: include_blank), nil ]
         end
       end
 
