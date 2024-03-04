@@ -150,7 +150,7 @@ module HotwireCombobox
 
           #{header}
 
-          Plase add this as a public method and return a string.
+          Please add this as a public method and return a string.
 
           Example:
             class #{object.class} < ApplicationRecord
