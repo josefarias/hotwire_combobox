@@ -24,7 +24,7 @@ Then add the stylesheet to your layout:
 <%= combobox_style_tag %>
 ```
 
-Or add require the styles with the asset pipeline in `app/assets/stylesheets/application.css`:
+Or require the styles with the asset pipeline in `app/assets/stylesheets/application.css`:
 
 ```erb
 *= require hotwire_combobox
