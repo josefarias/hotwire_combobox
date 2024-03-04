@@ -130,23 +130,35 @@ module HotwireCombobox
         if object.respond_to? method
           object.public_send method
         else
-          raise NoMethodError, <<~MSG
-            Message from HotwireCombobox: [ACTION NEEDED]
-
-            `#{object.class}` does not respond to `##{method}`.
-
-            This method is used to determine how this option should appear in the combobox options list.
-
-            Plase add this method to your model and return a string.
-
-            Example:
-              class #{object.class} < ApplicationRecord
-                def #{method}
-                  name # or `title`, `to_s`, etc. - whatever you want to display as the option
-                end
-              end
-          MSG
+          hw_raise_no_public_method_error object, method
         end
+      end
+
+      def hw_raise_no_public_method_error(object, method)
+        if object.respond_to? method, true
+          header = "`#{object.class}` responds to `##{method}` but the method is not public."
+        else
+          header = "`#{object.class}` does not respond to `##{method}`."
+        end
+
+        if method.to_s == "to_combobox_display"
+          header << "\n\nThis method is used to determine how this option should appear in the combobox options list."
+        end
+
+        raise NoMethodError, <<~MSG
+          [ACTION NEEDED] – Message from HotwireCombobox:
+
+          #{header}
+
+          Plase add this as a public method and return a string.
+
+          Example:
+            class #{object.class} < ApplicationRecord
+              def #{method}
+                name # or `title`, `to_s`, etc.
+              end
+            end
+        MSG
       end
   end
 end
