@@ -122,7 +122,30 @@ module HotwireCombobox
         if method_or_proc.is_a? Proc
           method_or_proc.call object
         else
-          object.public_send method_or_proc
+          hw_call_method object, method_or_proc
+        end
+      end
+
+      def hw_call_method(object, method)
+        if object.respond_to? method
+          object.public_send method
+        else
+          raise NoMethodError, <<~MSG
+            Message from HotwireCombobox: [ACTION NEEDED]
+
+            `#{object.class}` does not respond to `##{method}`.
+
+            This method is used to determine how this option should appear in the combobox options list.
+
+            Plase add this method to your model and return a string.
+
+            Example:
+              class #{object.class} < ApplicationRecord
+                def #{method}
+                  name # or `title`, `to_s`, etc. - whatever you want to display as the option
+                end
+              end
+          MSG
         end
       end
   end
