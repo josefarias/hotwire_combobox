@@ -28,9 +28,10 @@ module HotwireCombobox
         options
       else
         render_in_proc = hw_render_in_proc(render_in) if render_in.present?
-        options = hw_parse_combobox_options options, render_in: render_in_proc, **methods.merge(display: display)
-        options.unshift(hw_blank_option(include_blank)) if include_blank.present?
-        options
+
+        hw_parse_combobox_options(options, render_in: render_in_proc, **methods.merge(display: display)).tap do |options|
+          options.unshift(hw_blank_option(include_blank)) if include_blank.present?
+        end
       end
     end
     hw_alias :hw_combobox_options
