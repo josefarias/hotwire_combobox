@@ -1,4 +1,4 @@
-name: CI Tests
+name: CI
 
 on:
   push:
@@ -7,13 +7,28 @@ on:
   pull_request:
 
 jobs:
-  build:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2
+          bundler: default
+          bundler-cache: true
+          rubygems: latest
+
+      - name: Lint code
+        run: bin/rubocop -f github
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: SQLite3 version
         run: sqlite3 --version
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1

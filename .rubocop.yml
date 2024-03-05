@@ -1,0 +1,12 @@
+inherit_gem: { rubocop-37signals: rubocop.yml }
+
+require: rubocop-capybara
+
+AllCops:
+  TargetRubyVersion: 3.0
+  Exclude:
+    - "test/dummy/db/schema.rb"
+
+Layout/CommentIndentation:
+  Exclude:
+    - "lib/hotwire_combobox/helper.rb"

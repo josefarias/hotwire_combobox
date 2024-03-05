@@ -14,7 +14,7 @@ class NewOptionsFormsController < ApplicationController
         .permit(
           :favorite_state_id,
           :home_state_id,
-          favorite_state_attributes: [:name],
-          home_state_attributes: [:name])
+          favorite_state_attributes: %i[ name ],
+          home_state_attributes: %i[ name ])
     end
 end
