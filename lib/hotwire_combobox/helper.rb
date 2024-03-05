@@ -27,7 +27,7 @@ module HotwireCombobox
       if options.first.is_a? HotwireCombobox::Listbox::Option
         options
       else
-        render_in_proc = render_in.present? ? hw_render_in_proc(render_in) : nil
+        render_in_proc = hw_render_in_proc(render_in) if render_in.present?
         options = hw_parse_combobox_options options, render_in: render_in_proc, **methods.merge(display: display)
         options.unshift(hw_blank_option(include_blank)) if include_blank.present?
         options
@@ -37,9 +37,9 @@ module HotwireCombobox
 
     def hw_paginated_combobox_options(options, for_id: params[:for_id], src: request.path, next_page: nil, render_in: {}, include_blank: {}, **methods)
       include_blank = params[:page] ? nil : include_blank
-      options = hw_combobox_options(options, render_in: render_in, include_blank: include_blank, **methods)
-      this_page = render("hotwire_combobox/paginated_options", for_id: for_id, options: options)
-      next_page = render("hotwire_combobox/next_page", for_id: for_id, src: src, next_page: next_page)
+      options = hw_combobox_options options, render_in: render_in, include_blank: include_blank, **methods
+      this_page = render "hotwire_combobox/paginated_options", for_id: for_id, options: options
+      next_page = render "hotwire_combobox/next_page", for_id: for_id, src: src, next_page: next_page
 
       safe_join [ this_page, next_page ]
     end
@@ -72,15 +72,17 @@ module HotwireCombobox
       end
 
       def hw_blank_option(include_blank)
-        display, content =
-          if include_blank.is_a? Hash
-            text = include_blank.delete(:text)
-            [ text, hw_render_in_proc(include_blank).call(text) ]
-          else
-            [ include_blank, include_blank ]
-          end
-
+        display, content = hw_extract_blank_display_and_content include_blank
         HotwireCombobox::Listbox::Option.new display: display, content: content, value: "", blank: true
+      end
+
+      def hw_extract_blank_display_and_content(include_blank)
+        if include_blank.is_a? Hash
+          text = include_blank.delete(:text)
+          [ text, hw_render_in_proc(include_blank).(text) ]
+        else
+          [ include_blank, include_blank ]
+        end
       end
 
       def hw_uri_with_params(url_or_path, **params)
@@ -97,11 +99,11 @@ module HotwireCombobox
         ->(object) { render(**render_in.reverse_merge(object: object)) }
       end
 
-      def hw_extract_options_and_src(options_or_src, render_in)
+      def hw_extract_options_and_src(options_or_src, render_in, include_blank)
         if options_or_src.is_a? String
           [ [], options_or_src ]
         else
-          [ hw_combobox_options(options_or_src, render_in: render_in), nil ]
+          [ hw_combobox_options(options_or_src, render_in: render_in, include_blank: include_blank), nil ]
         end
       end
 
