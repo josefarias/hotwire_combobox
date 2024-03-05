@@ -1,3 +1,5 @@
+require "securerandom"
+
 class HotwireCombobox::Component
   attr_reader :options, :dialog_label
 
@@ -187,7 +189,7 @@ class HotwireCombobox::Component
 
 
     def canonical_id
-      id || form&.field_id(name)
+      id || form&.field_id(name) || SecureRandom.uuid
     end
 
 
