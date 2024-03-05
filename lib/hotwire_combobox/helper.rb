@@ -35,7 +35,7 @@ module HotwireCombobox
     end
     hw_alias :hw_combobox_options
 
-    def hw_paginated_combobox_options(options, for_id:, src: request.path, next_page: nil, render_in: {}, include_blank: {}, **methods)
+    def hw_paginated_combobox_options(options, for_id: params[:for_id], src: request.path, next_page: nil, render_in: {}, include_blank: {}, **methods)
       include_blank = params[:page] ? nil : include_blank
       options = hw_combobox_options(options, render_in: render_in, include_blank: include_blank, **methods)
       this_page = render("hotwire_combobox/paginated_options", for_id: for_id, options: options)
@@ -48,7 +48,7 @@ module HotwireCombobox
     alias_method :hw_async_combobox_options, :hw_paginated_combobox_options
     hw_alias :hw_async_combobox_options
 
-    protected # library use only
+    # private library use only
       def hw_listbox_id(id)
         "#{id}-hw-listbox"
       end
@@ -61,9 +61,9 @@ module HotwireCombobox
         "#{id}__hw_combobox_pagination"
       end
 
-      def hw_combobox_next_page_uri(uri, next_page)
+      def hw_combobox_next_page_uri(uri, next_page, for_id)
         if next_page
-          hw_uri_with_params uri, page: next_page, q: params[:q], format: :turbo_stream
+          hw_uri_with_params uri, page: next_page, q: params[:q], for_id: for_id, format: :turbo_stream
         end
       end
 
@@ -83,19 +83,6 @@ module HotwireCombobox
         HotwireCombobox::Listbox::Option.new display: display, content: content, value: "", blank: true
       end
 
-    private
-      def hw_render_in_proc(render_in)
-        ->(object) { render(**render_in.reverse_merge(object: object)) }
-      end
-
-      def hw_extract_options_and_src(options_or_src, render_in, include_blank)
-        if options_or_src.is_a? String
-          [ [], hw_uri_with_params(options_or_src, format: :turbo_stream) ]
-        else
-          [ hw_combobox_options(options_or_src, render_in: render_in, include_blank: include_blank), nil ]
-        end
-      end
-
       def hw_uri_with_params(url_or_path, **params)
         URI.parse(url_or_path).tap do |url_or_path|
           query = URI.decode_www_form(url_or_path.query || "").to_h.merge(params)
@@ -103,6 +90,19 @@ module HotwireCombobox
         end.to_s
       rescue URI::InvalidURIError
         url_or_path
+      end
+
+    private
+      def hw_render_in_proc(render_in)
+        ->(object) { render(**render_in.reverse_merge(object: object)) }
+      end
+
+      def hw_extract_options_and_src(options_or_src, render_in)
+        if options_or_src.is_a? String
+          [ [], options_or_src ]
+        else
+          [ hw_combobox_options(options_or_src, render_in: render_in), nil ]
+        end
       end
 
       def hw_parse_combobox_options(options, render_in: nil, **methods)
@@ -142,8 +142,43 @@ module HotwireCombobox
         if method_or_proc.is_a? Proc
           method_or_proc.call object
         else
-          object.public_send method_or_proc
+          hw_call_method object, method_or_proc
         end
+      end
+
+      def hw_call_method(object, method)
+        if object.respond_to? method
+          object.public_send method
+        else
+          hw_raise_no_public_method_error object, method
+        end
+      end
+
+      def hw_raise_no_public_method_error(object, method)
+        if object.respond_to? method, true
+          header = "`#{object.class}` responds to `##{method}` but the method is not public."
+        else
+          header = "`#{object.class}` does not respond to `##{method}`."
+        end
+
+        if method.to_s == "to_combobox_display"
+          header << "\n\nThis method is used to determine how this option should appear in the combobox options list."
+        end
+
+        raise NoMethodError, <<~MSG
+          [ACTION NEEDED] – Message from HotwireCombobox:
+
+          #{header}
+
+          Please add this as a public method and return a string.
+
+          Example:
+            class #{object.class} < ApplicationRecord
+              def #{method}
+                name # or `title`, `to_s`, etc.
+              end
+            end
+        MSG
       end
   end
 end

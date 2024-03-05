@@ -1,4 +1,3 @@
 <%= hw_async_combobox_options @page.records,
       render_in: { partial: "movies/movie" },
-      for_id: "movie-field",
       next_page: @page.last? ? nil : @page.next_param %>
