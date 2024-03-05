@@ -1,0 +1,18 @@
+{
+  "name": "@josefarias/hotwire_combobox",
+  "version": "0.1.37",
+  "description": "An autocomplete combobox implementation for Ruby on Rails apps using Hotwire.",
+  "module": "app/assets/javascripts/hotwire_combobox.esm.js",
+  "main": "app/assets/javascripts/hotwire_combobox.umd.js",
+  "repository": "git@github.com:josefarias/hotwire_combobox.git",
+  "author": "Jose Farias <jose@farias.mx>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "rollup": "^4.12.0"
+  }
+}

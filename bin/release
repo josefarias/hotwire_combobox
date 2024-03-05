@@ -3,6 +3,7 @@
 require_relative "../lib/hotwire_combobox/version"
 require "bundler/gem_tasks"
 require "pathname"
+require "json"
 
 class Release
   def initialize(version, dry: false)
@@ -16,6 +17,7 @@ class Release
     bundle
     commit
     build_and_push_gem
+    build_and_push_npm_package
     cleanup
 
     puts "== Done! =="
@@ -37,6 +39,7 @@ class Release
 
       write_version_to_rb
       write_version_to_gemfile_lock
+      write_version_to_js
     end
 
     def write_version_to_rb
@@ -54,12 +57,19 @@ class Release
       pathname.write data
     end
 
+    def write_version_to_js
+      pathname = Pathname.new "package.json"
+      data = JSON.parse pathname.read
+      data["version"] = version
+      pathname.write JSON.pretty_generate(data) + "\n"
+    end
+
     def update_copyright
       puts "== Updating license year =="
 
       pathname = Pathname.new "MIT-LICENSE"
       data = pathname.read
-      data.sub! /Copyright \d{4}/, "Copyright #{Time.now.year}"
+      data.sub!(/Copyright \d{4}/, "Copyright #{Time.now.year}")
       pathname.write data
     end
 
@@ -88,6 +98,16 @@ class Release
 
         abort "❌ Failed to release gem" unless system "bundle exec rake release"
       end
+    end
+
+    def build_and_push_npm_package
+      puts "== Building and pushing npm package =="
+
+      abort "❌ Failed to build npm package" unless system "yarn build"
+      abort "❌ Must be logged in to npm" unless system "npm whoami"
+      abort "❌ npm publish failed" unless system "npm publish"
+
+      puts "✅ Successfully published npm release"
     end
 
     def cleanup
