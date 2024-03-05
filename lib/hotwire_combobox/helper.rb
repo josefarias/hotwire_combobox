@@ -64,7 +64,11 @@ module HotwireCombobox
 
       def hw_combobox_next_page_uri(uri, next_page, for_id)
         if next_page
-          hw_uri_with_params uri, page: next_page, q: params[:q], for_id: for_id, format: :turbo_stream
+          hw_uri_with_params uri,
+            page: next_page,
+            q: params[:q],
+            for_id: for_id,
+            format: :turbo_stream
         end
       end
 
@@ -74,12 +78,14 @@ module HotwireCombobox
 
       def hw_blank_option(include_blank)
         display, content = hw_extract_blank_display_and_content include_blank
+
         HotwireCombobox::Listbox::Option.new display: display, content: content, value: "", blank: true
       end
 
       def hw_extract_blank_display_and_content(include_blank)
         if include_blank.is_a? Hash
           text = include_blank.delete(:text)
+
           [ text, hw_render_in_proc(include_blank).(text) ]
         else
           [ include_blank, include_blank ]
@@ -110,7 +116,8 @@ module HotwireCombobox
 
       def hw_parse_combobox_options(options, render_in: nil, **methods)
         options.map do |option|
-          HotwireCombobox::Listbox::Option.new **hw_option_attrs_for(option, render_in: render_in, **methods)
+          HotwireCombobox::Listbox::Option.new \
+            **hw_option_attrs_for(option, render_in: render_in, **methods)
         end
       end
 
