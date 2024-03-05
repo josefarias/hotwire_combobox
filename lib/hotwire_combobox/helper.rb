@@ -33,7 +33,7 @@ module HotwireCombobox
     end
     hw_alias :hw_combobox_options
 
-    def hw_paginated_combobox_options(options, for_id:, src: request.path, next_page: nil, render_in: {}, **methods)
+    def hw_paginated_combobox_options(options, for_id: params[:for_id], src: request.path, next_page: nil, render_in: {}, **methods)
       this_page = render("hotwire_combobox/paginated_options", for_id: for_id, options: hw_combobox_options(options, render_in: render_in, **methods))
       next_page = render("hotwire_combobox/next_page", for_id: for_id, src: src, next_page: next_page)
 
@@ -44,7 +44,7 @@ module HotwireCombobox
     alias_method :hw_async_combobox_options, :hw_paginated_combobox_options
     hw_alias :hw_async_combobox_options
 
-    protected # library use only
+    # private library use only
       def hw_listbox_id(id)
         "#{id}-hw-listbox"
       end
@@ -57,23 +57,14 @@ module HotwireCombobox
         "#{id}__hw_combobox_pagination"
       end
 
-      def hw_combobox_next_page_uri(uri, next_page)
+      def hw_combobox_next_page_uri(uri, next_page, for_id)
         if next_page
-          hw_uri_with_params uri, page: next_page, q: params[:q], format: :turbo_stream
+          hw_uri_with_params uri, page: next_page, q: params[:q], for_id: for_id, format: :turbo_stream
         end
       end
 
       def hw_combobox_page_stream_action
         params[:page] ? :append : :update
-      end
-
-    private
-      def hw_extract_options_and_src(options_or_src, render_in)
-        if options_or_src.is_a? String
-          [ [], hw_uri_with_params(options_or_src, format: :turbo_stream) ]
-        else
-          [ hw_combobox_options(options_or_src, render_in: render_in), nil ]
-        end
       end
 
       def hw_uri_with_params(url_or_path, **params)
@@ -83,6 +74,15 @@ module HotwireCombobox
         end.to_s
       rescue URI::InvalidURIError
         url_or_path
+      end
+
+    private
+      def hw_extract_options_and_src(options_or_src, render_in)
+        if options_or_src.is_a? String
+          [ [], options_or_src ]
+        else
+          [ hw_combobox_options(options_or_src, render_in: render_in), nil ]
+        end
       end
 
       def hw_parse_combobox_options(options, render_in: nil, **methods)

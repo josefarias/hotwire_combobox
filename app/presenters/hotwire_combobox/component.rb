@@ -1,5 +1,5 @@
 class HotwireCombobox::Component
-  attr_reader :async_src, :options, :dialog_label
+  attr_reader :options, :dialog_label
 
   def initialize \
       view, name,
@@ -179,6 +179,10 @@ class HotwireCombobox::Component
 
     def association_exists?
       form&.object&.class&.reflect_on_association(association_name).present?
+    end
+
+    def async_src
+      view.hw_uri_with_params @async_src, for_id: canonical_id, format: :turbo_stream
     end
 
 
