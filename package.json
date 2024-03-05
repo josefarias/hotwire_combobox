@@ -7,6 +7,10 @@
   "repository": "git@github.com:josefarias/hotwire_combobox.git",
   "author": "Jose Farias <jose@farias.mx>",
   "license": "MIT",
+  "homepage": "https://hotwirecombobox.com",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rollup -c"
   },
