@@ -15,9 +15,12 @@ Rails.application.routes.draw do
   get "async_html", to: "comboboxes#async_html"
   get "render_in", to: "comboboxes#render_in"
   get "enum", to: "comboboxes#enum"
+  get "include_blank", to: "comboboxes#include_blank"
 
   resources :movies, only: %i[ index update ]
   get "movies_html", to: "movies#index_html"
+  get "movies_with_blank", to: "movies#index_with_blank"
+  get "movies_with_blank_html", to: "movies#index_with_blank_html"
 
   get "greeting", to: "greetings#new"
 

@@ -1,0 +1,13 @@
+<% if flash[:notice] %>
+  <p><%= flash[:notice] %></p>
+<% end %>
+
+<%= form_with model: User.new, url: new_options_form_path, method: :post do |form| %>
+  <%= form.label "Home State", for: "state-field" %>
+  <%= form.combobox :home_state_id, State.all, id: "state-field", include_blank: "None" %>
+
+  <%= form.submit %>
+<% end %>
+
+<%= combobox_tag "movie", movies_with_blank_path, id: "movie-field" %>
+<%= combobox_tag "movie", movies_with_blank_html_path, id: "html-movie-field" %>

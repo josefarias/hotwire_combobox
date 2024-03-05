@@ -18,7 +18,7 @@ class HotwireCombobox::Listbox::Option
   end
 
   private
-    Data = Struct.new :id, :value, :display, :content, :filterable_as, :autocompletable_as, keyword_init: true
+    Data = Struct.new :id, :value, :display, :content, :blank, :filterable_as, :autocompletable_as, keyword_init: true
 
     attr_reader :option
 
@@ -26,7 +26,7 @@ class HotwireCombobox::Listbox::Option
       {
         id: id,
         role: :option,
-        class: "hw-combobox__option",
+        class: [ "hw-combobox__option", { "hw-combobox__option--blank": blank? } ],
         data: data
       }
     end
@@ -50,5 +50,9 @@ class HotwireCombobox::Listbox::Option
 
     def filterable_as
       option.try(:filterable_as) || option.try(:display)
+    end
+
+    def blank?
+      option.try(:blank).present?
     end
 end

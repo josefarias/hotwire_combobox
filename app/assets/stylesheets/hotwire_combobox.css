@@ -121,6 +121,10 @@
   text-overflow: ellipsis;
 }
 
+.hw-combobox__option--blank {
+  border-bottom: var(--hw-border-width--slim) solid var(--hw-border-color);
+}
+
 .hw-combobox__option:hover,
 .hw-combobox__option--selected {
   background-color: var(--hw-active-bg-color);
