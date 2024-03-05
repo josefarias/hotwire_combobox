@@ -18,19 +18,89 @@ Add this line to your application's Gemfile and run `bundle install`:
 gem "hotwire_combobox"
 ```
 
-Then add the stylesheet to your layout:
+Then configure your assets:
+
+### Configuring JS
+
+Before continuing, you should know whether your app is using importmaps or JS bundling in your asset pipeline.
+
+#### Importmaps
+
+Most apps using importmaps won't need any configuration. If things aren't working for you, read on.
+
+In `app/javascript/controllers/index.js` you should be doing one of the following:
+
+Either,
+
+```js
+import { application } from "controllers/application" // or equivalent
+import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
+
+eagerLoadControllersFrom("controllers", application)
+```
+
+Or,
+
+```js
+import { application } from "controllers/application" // or equivalent
+import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
+
+lazyLoadControllersFrom("controllers", application)
+```
+
+Or,
+
+```js
+import { application } from "controllers/application" // or equivalent
+
+import HwComboboxController from "controllers/hw_combobox_controller"
+application.register("hw-combobox", HwComboboxController)
+```
+
+#### JS bundling (esbuild, rollup, etc)
+
+First, install the JS portion of HotwireCombobox from npm with one of the following:
+
+```bash
+yarn add @josefarias/hotwire_combobox
+```
+
+```bash
+npm install @josefarias/hotwire_combobox
+```
+
+Then, register the library's stimulus controller in `app/javascript/controllers/index.js` as follows:
+
+```js
+import { application } from "./application" // or equivalent
+
+import HwComboboxController from "@josefarias/hotwire_combobox"
+application.register("hw-combobox", HwComboboxController)
+```
+
+### Configuring CSS
+
+This library comes with optional default styles. Follow the instructions below to include them in your app.
+
+Read the [docs section](#Docs) for instructions on styling the combobox yourself.
+
+#### Default
+
+This approach works for all setups. Simply add the stylesheet to your layout (this would go in your document's `<head>`):
 
 ```erb
 <%= combobox_style_tag %>
 ```
 
-Or require the styles with the asset pipeline in `app/assets/stylesheets/application.css`:
+This helper accepts any of the options you can pass to `stylesheet_link_tag`.
+
+#### Sprockets
+
+Require the styles in `app/assets/stylesheets/application.css`:
 
 ```erb
 *= require hotwire_combobox
 ```
-
-Only apps that use importmaps are currently supported. Support for other JS solutions is in progress.
 
 ## Docs
 
