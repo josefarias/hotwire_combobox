@@ -16,4 +16,6 @@ gem "turbo-rails"
 gem "propshaft"
 gem "minitest-focus"
 gem "geared_pagination"
-gem "sprockets-rails", :require => "sprockets/railtie"
+gem "sprockets-rails", require: "sprockets/railtie"
+gem "rubocop-37signals", require: false
+gem "rubocop-capybara", require: false
