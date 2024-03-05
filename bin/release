@@ -16,8 +16,8 @@ class Release
     update_copyright
     bundle
     commit
-    build_and_push_gem
     build_and_push_npm_package
+    build_and_push_gem
     cleanup
 
     puts "== Done! =="
