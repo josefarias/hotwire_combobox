@@ -12,13 +12,15 @@
 
 ## Installation
 
-Add this line to your application's Gemfile and run `bundle install`:
+First, make sure [Turbo](https://github.com/hotwired/turbo-rails) and [Stimulus](https://github.com/hotwired/stimulus-rails) are configured and running properly on your app.
+
+Then, add this line to your application's Gemfile and run `bundle install`:
 
 ```ruby
 gem "hotwire_combobox"
 ```
 
-Then configure your assets:
+Finally, configure your assets:
 
 ### Configuring JS
 
@@ -28,7 +30,7 @@ Before continuing, you should know whether your app is using importmaps or JS bu
 
 Most apps using importmaps won't need any configuration. If things aren't working for you, read on.
 
-In `app/javascript/controllers/index.js` you should be doing one of the following:
+In `app/javascript/controllers/index.js` you should have one of the following:
 
 Either,
 
