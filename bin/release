@@ -87,17 +87,9 @@ class Release
       end
 
       abort("❌ Failed to commit") unless \
-        system("git add lib/hotwire_combobox/version.rb Gemfile.lock MIT-LICENSE") &&
+        system("git add lib/hotwire_combobox/version.rb Gemfile.lock MIT-LICENSE package.json") &&
         (dry? ? true : system("git commit -m 'Bump version for #{version}'")) &&
         (dry? ? true : system("git push"))
-    end
-
-    def build_and_push_gem
-      unless dry?
-        puts "== Building and pushing gem =="
-
-        abort "❌ Failed to release gem" unless system "bundle exec rake release"
-      end
     end
 
     def build_and_push_npm_package
@@ -108,6 +100,14 @@ class Release
       abort "❌ npm publish failed" unless system "npm publish"
 
       puts "✅ Successfully published npm release"
+    end
+
+    def build_and_push_gem
+      unless dry?
+        puts "== Building and pushing gem =="
+
+        abort "❌ Failed to release gem" unless system "bundle exec rake release"
+      end
     end
 
     def cleanup
