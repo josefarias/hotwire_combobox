@@ -2,7 +2,7 @@
   <img src="docs/assets/images/logo.png" height=150>
 </p>
 
-# Easy Autocomplete for Ruby on Rails
+# Easy and Accessible Autocomplete for Ruby on Rails
 
 [![CI Tests](https://github.com/josefarias/hotwire_combobox/actions/workflows/ci_tests.yml/badge.svg)](https://github.com/josefarias/hotwire_combobox/actions/workflows/ci_tests.yml) [![Gem Version](https://badge.fury.io/rb/hotwire_combobox.svg)](https://badge.fury.io/rb/hotwire_combobox)
 
