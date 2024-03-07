@@ -652,11 +652,10 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     type_in_combobox "#required", "t"
 
-    # No changes
     assert_text "event: hw-combobox:selection"
-    assert_text "value: #{movies(:a_beautiful_mind).id}"
-    assert_text "display: A Beautiful Mind"
-    assert_text "query: A Bea"
+    assert_text "value:"
+    assert_text "display: A Beat"
+    assert_text "query: A Beat"
     assert_text "fieldName: movie"
     assert_text "isNew: false"
 

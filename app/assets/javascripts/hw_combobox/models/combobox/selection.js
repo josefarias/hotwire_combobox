@@ -51,6 +51,8 @@ Combobox.Selection = Base => class extends Base {
     if (option) this._commitSelection(option, { selected: false })
     this.hiddenFieldTarget.value = null
     this._setActiveDescendant("")
+
+    this._dispatchSelectionEvent({ isNew: false })
   }
 
   _selectNew() {
