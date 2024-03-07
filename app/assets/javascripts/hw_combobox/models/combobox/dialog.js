@@ -1,12 +1,6 @@
 import Combobox from "hw_combobox/models/combobox/base"
 
 Combobox.Dialog = Base => class extends Base {
-  rerouteListboxStreamToDialog({ detail: { newStream } }) {
-    if (newStream.target == this.listboxTarget.id && this._dialogIsOpen) {
-      newStream.setAttribute("target", this.dialogListboxTarget.id)
-    }
-  }
-
   _connectDialog() {
     if (window.visualViewport) {
       window.visualViewport.addEventListener("resize", this._resizeDialog)
@@ -55,9 +49,5 @@ Combobox.Dialog = Base => class extends Base {
 
   get _smallViewport() {
     return window.matchMedia(`(max-width: ${this.smallViewportMaxWidthValue})`).matches
-  }
-
-  get _dialogIsOpen() {
-    return this.dialogTarget.open
   }
 }

@@ -41,7 +41,7 @@ Combobox.Filtering = Base => class extends Base {
       this._selectNew()
     } else if (isDeleteEvent(event)) {
       this._deselect()
-    } else if (this._isOpen) {
+    } else {
       this._select(this._visibleOptionElements[0])
     }
   }

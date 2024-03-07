@@ -232,8 +232,7 @@ class HotwireCombobox::Component
           input->hw-combobox#filter
           keydown->hw-combobox#navigate
           click@window->hw-combobox#closeOnClickOutside
-          focusin@window->hw-combobox#closeOnFocusOutside
-          turbo:before-stream-render@document->hw-combobox#rerouteListboxStreamToDialog".squish,
+          focusin@window->hw-combobox#closeOnFocusOutside".squish,
         hw_combobox_target: "combobox",
         async_id: canonical_id
     end

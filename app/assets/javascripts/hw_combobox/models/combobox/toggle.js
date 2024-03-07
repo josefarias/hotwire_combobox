@@ -72,7 +72,7 @@ Combobox.Toggle = Base => class extends Base {
   _collapse() {
     this._actingCombobox.setAttribute("aria-expanded", false) // needs to happen before resetting acting combobox
 
-    if (this._dialogIsOpen) {
+    if (this.dialogTarget.open) {
       this._closeInDialog()
     } else {
       this._closeInline()
