@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "selectionScratchpad", "validityScratchpad" ]
+  static targets = [ "selectionScratchpad" ]
 
   connect() {
     this.selectionScratchpadTarget.innerText = "Ready to listen for hw-combobox events!"
@@ -11,17 +11,14 @@ export default class extends Controller {
     this.selectionScratchpadTarget.innerText = this.#template(event)
   }
 
-  showValidity(event) {
-    this.validityScratchpadTarget.innerText = this.#template(event)
-  }
-
   #template(event) {
-    return `event: ${event.type}
-      value: ${event.detail.value}
-      display: ${event.detail.display}
-      query: ${event.detail.query}
-      fieldName: ${event.detail.fieldName}
-      isNew: ${event.detail.isNew}
+    return `event: ${String(event.type) || "<empty>"}
+      value: ${String(event.detail.value) || "<empty>"}
+      display: ${String(event.detail.display) || "<empty>"}
+      query: ${String(event.detail.query) || "<empty>"}
+      fieldName: ${String(event.detail.fieldName) || "<empty>"}
+      isNew: ${String(event.detail.isNew) || "<empty>"}
+      isValid: ${String(event.detail.isValid) || "<empty>"}
     `
   }
 }

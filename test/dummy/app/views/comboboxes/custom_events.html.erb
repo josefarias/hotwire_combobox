@@ -1,9 +1,6 @@
-<% actions = "hw-combobox:selection->combobox--events#showSelection hw-combobox:valid->combobox--events#showValidity hw-combobox:invalid->combobox--events#showValidity" %>
-
 <div data-controller="combobox--events" style="display: flex; align-items: start; gap: 1rem;">
-  <%= combobox_tag :movie, movies_path, id: "allow-new", placeholder: "allow-new", name_when_new: :new_movie, data: { action: actions } %>
-  <%= combobox_tag :movie, movies_path, id: "required", placeholder: "required", required: true, data: { action: actions } %>
+  <%= combobox_tag :movie, movies_path, id: "allow-new", placeholder: "allow-new", name_when_new: :new_movie, data: { action: "hw-combobox:selection->combobox--events#showSelection" } %>
+  <%= combobox_tag :movie, movies_path, id: "required", placeholder: "required", required: true, data: { action: "hw-combobox:selection->combobox--events#showSelection" } %>
 
   <span data-combobox--events-target="selectionScratchpad"></span>
-  <span data-combobox--events-target="validityScratchpad"></span>
 </div>

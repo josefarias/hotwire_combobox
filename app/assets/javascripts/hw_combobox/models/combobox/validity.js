@@ -12,8 +12,6 @@ Combobox.Validity = Base => class extends Base {
       combobox.removeAttribute("aria-invalid")
       combobox.removeAttribute("aria-errormessage")
     })
-
-    this._dispatchValidEvent()
   }
 
   _markInvalid() {
@@ -27,8 +25,6 @@ Combobox.Validity = Base => class extends Base {
       combobox.setAttribute("aria-invalid", true)
       combobox.setAttribute("aria-errormessage", `Please select a valid option for ${combobox.name}`)
     })
-
-    this._dispatchInvalidEvent()
   }
 
   get _valueIsValid() {

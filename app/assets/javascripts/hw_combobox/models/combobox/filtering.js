@@ -46,6 +46,11 @@ Combobox.Filtering = Base => class extends Base {
     }
   }
 
+  _clearQuery() {
+    this._fullQuery = ""
+    this.filter({ inputType: "deleteContentBackward" })
+  }
+
   get _isQueried() {
     return this._fullQuery.length > 0
   }

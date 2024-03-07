@@ -610,13 +610,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "query: A Bea"
     assert_text "fieldName: movie"
     assert_text "isNew: false"
-
-    assert_text "event: hw-combobox:valid"
-    assert_text "value: #{movies(:a_beautiful_mind).id}"
-    assert_text "display: A Beautiful Mind"
-    assert_text "query: A Bea"
-    assert_text "fieldName: movie"
-    assert_text "isNew: undefined"
+    assert_text "isValid: true"
 
     type_in_combobox "#allow-new", "t"
 
@@ -626,13 +620,18 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "query: A Beat"
     assert_text "fieldName: new_movie"
     assert_text "isNew: true"
+    assert_text "isValid: true"
 
-    assert_text "event: hw-combobox:valid"
+    click_away
+
+    # No changes
+    assert_text "event: hw-combobox:selection"
     assert_text "value: A Beat"
     assert_text "display: A Beat"
     assert_text "query: A Beat"
     assert_text "fieldName: new_movie"
-    assert_text "isNew: undefined"
+    assert_text "isNew: true"
+    assert_text "isValid: true"
 
     type_in_combobox "#required", "A Bea"
 
@@ -642,29 +641,27 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "query: A Bea"
     assert_text "fieldName: movie"
     assert_text "isNew: false"
-
-    assert_text "event: hw-combobox:valid"
-    assert_text "value: #{movies(:a_beautiful_mind).id}"
-    assert_text "display: A Beautiful Mind"
-    assert_text "query: A Bea"
-    assert_text "fieldName: movie"
-    assert_text "isNew: undefined"
+    assert_text "isValid: true"
 
     type_in_combobox "#required", "t"
 
     assert_text "event: hw-combobox:selection"
-    assert_text "value:"
+    assert_text "value: <empty>"
     assert_text "display: A Beat"
     assert_text "query: A Beat"
     assert_text "fieldName: movie"
     assert_text "isNew: false"
+    assert_text "isValid: false"
 
-    assert_text "event: hw-combobox:invalid"
-    assert_text "value:"
-    assert_text "display: A Beat"
-    assert_text "query: A Beat"
+    click_away
+
+    assert_text "event: hw-combobox:selection"
+    assert_text "value: <empty>"
+    assert_text "display: <empty>"
+    assert_text "query: <empty>"
     assert_text "fieldName: movie"
-    assert_text "isNew: undefined"
+    assert_text "isNew: false"
+    assert_text "isValid: false"
   end
 
   private
