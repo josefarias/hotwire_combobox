@@ -26,10 +26,32 @@ class HotwireCombobox::Component
 
     @combobox_attrs = input.reverse_merge(rest).with_indifferent_access
     @association_name = association_name || infer_association_name
+    @custom_attrs = Hash.new { |h, k| h[k] = {} }
   end
 
+  def render_in(view_context, &block)
+    component = block_given? ? block.call(self) : self
+    view_context.render partial: "hotwire_combobox/component", locals: { component: self }
+  end
+
+
+  def custom_attrs_for(element, **attrs)
+    element = element.to_sym.presence_in(CUSTOMIZABLE_ELEMENTS) ||
+      raise(ArgumentError, <<~MSG)
+        [ACTION NEEDED] – Message from HotwireCombobox:
+
+        You tried to customize an element called `#{element}`, but
+        HotwireCombobox does not recognize that element.
+
+        Valid elements are: #{CUSTOMIZABLE_ELEMENTS.join(", ")}.
+      MSG
+
+    @custom_attrs[element] = attrs
+  end
+
+
   def fieldset_attrs
-    {
+    customize :fieldset, base: {
       class: "hw-combobox",
       data: fieldset_data
     }
@@ -37,7 +59,7 @@ class HotwireCombobox::Component
 
 
   def hidden_field_attrs
-    {
+    customize :hidden_field, base: {
       id: hidden_field_id,
       name: hidden_field_name,
       data: hidden_field_data,
@@ -49,7 +71,7 @@ class HotwireCombobox::Component
   def input_attrs
     nested_attrs = %i[ data aria ]
 
-    {
+    base = {
       id: input_id,
       role: :combobox,
       class: "hw-combobox__input",
@@ -58,11 +80,13 @@ class HotwireCombobox::Component
       aria: input_aria,
       autocomplete: :off
     }.with_indifferent_access.merge combobox_attrs.except(*nested_attrs)
+
+    customize :input, base: base
   end
 
 
   def handle_attrs
-    {
+    customize :handle, base: {
       class: "hw-combobox__handle",
       data: handle_data
     }
@@ -70,7 +94,7 @@ class HotwireCombobox::Component
 
 
   def listbox_attrs
-    {
+    customize :listbox, base: {
       id: listbox_id,
       role: :listbox,
       class: "hw-combobox__listbox",
@@ -81,13 +105,13 @@ class HotwireCombobox::Component
 
 
   def dialog_wrapper_attrs
-    {
+    customize :dialog_wrapper, base: {
       class: "hw-combobox__dialog__wrapper"
     }
   end
 
   def dialog_attrs
-    {
+    customize :dialog, base: {
       class: "hw-combobox__dialog",
       role: :dialog,
       data: dialog_data
@@ -95,14 +119,14 @@ class HotwireCombobox::Component
   end
 
   def dialog_label_attrs
-    {
+    customize :dialog_label, base: {
       class: "hw-combobox__dialog__label",
       for: dialog_input_id
     }
   end
 
   def dialog_input_attrs
-    {
+    customize :dialog_input, base: {
       id: dialog_input_id,
       role: :combobox,
       class: "hw-combobox__dialog__input",
@@ -114,7 +138,7 @@ class HotwireCombobox::Component
   end
 
   def dialog_listbox_attrs
-    {
+    customize :dialog_listbox, base: {
       id: dialog_listbox_id,
       class: "hw-combobox__dialog__listbox",
       role: :listbox,
@@ -139,9 +163,45 @@ class HotwireCombobox::Component
   end
 
   private
+    CUSTOMIZABLE_ELEMENTS = %i[
+      fieldset
+      hidden_field
+      input
+      handle
+      listbox
+      dialog
+      dialog_wrapper
+      dialog_label
+      dialog_input
+      dialog_listbox
+    ].freeze
+
+    PROTECTED_ATTRS = %i[
+      id
+      name
+      value
+      open
+    ].freeze
+
     attr_reader :view, :autocomplete, :id, :name, :value, :form,
       :name_when_new, :open, :data, :combobox_attrs, :mobile_at,
-      :association_name
+      :association_name, :custom_attrs
+
+    def customize(element, base: {})
+      custom = custom_attrs[element].dup.symbolize_keys.delete_if do |key, _|
+        PROTECTED_ATTRS.include? key
+      end
+
+      default = base.symbolize_keys.map do |key, value|
+        if value.is_a? String
+          [ key, view.token_list(value, custom.delete(key)) ]
+        else
+          [ key, value ]
+        end
+      end.to_h
+
+      custom.deep_merge default
+    end
 
     def infer_association_name
       if name.include?("_id")

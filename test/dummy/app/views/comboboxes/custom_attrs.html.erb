@@ -1,0 +1,12 @@
+<%= combobox_tag "state", State.all do |combobox| %>
+  <% combobox.custom_attrs_for :fieldset, class: "custom-class--fieldset", data: { customized_fieldset: "" } %>
+  <% combobox.custom_attrs_for :hidden_field, class: "custom-class--hidden_field", data: { customized_hidden_field: "" } %>
+  <% combobox.custom_attrs_for :input, class: "custom-class--input", data: { customized_input: "" } %>
+  <% combobox.custom_attrs_for :handle, class: "custom-class--handle", data: { customized_handle: "" } %>
+  <% combobox.custom_attrs_for :listbox, class: "custom-class--listbox", data: { customized_listbox: "" } %>
+  <% combobox.custom_attrs_for :dialog, class: "custom-class--dialog", data: { customized_dialog: "" } %>
+  <% combobox.custom_attrs_for :dialog_wrapper, class: "custom-class--dialog_wrapper", data: { customized_dialog_wrapper: "" } %>
+  <% combobox.custom_attrs_for :dialog_label, class: "custom-class--dialog_label", data: { customized_dialog_label: "" } %>
+  <% combobox.custom_attrs_for :dialog_input, class: "custom-class--dialog_input", data: { customized_dialog_input: "" } %>
+  <% combobox.custom_attrs_for :dialog_listbox, class: "custom-class--dialog_listbox", data: { customized_dialog_listbox: "" } %>
+<% end %>

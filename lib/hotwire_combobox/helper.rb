@@ -15,11 +15,10 @@ module HotwireCombobox
     end
     hw_alias :hw_combobox_style_tag
 
-    def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, **kwargs)
+    def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, **kwargs, &block)
       options, src = hw_extract_options_and_src(options_or_src, render_in, include_blank)
       component = HotwireCombobox::Component.new self, name, options: options, async_src: src, **kwargs
-
-      render "hotwire_combobox/combobox", component: component
+      render component, &block
     end
     hw_alias :hw_combobox_tag
 

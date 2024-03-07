@@ -57,6 +57,9 @@ class ComboboxesController < ApplicationController
   def custom_events
   end
 
+  def custom_attrs
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 
