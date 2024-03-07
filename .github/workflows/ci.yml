@@ -47,7 +47,7 @@ jobs:
         run: bundle exec rake db:fixtures:load
 
       - name: Cache Chromedriver
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/chromedriver
           key: chromedriver-${{ hashFiles('**/.github/workflows/ci_tests.yml') }}
