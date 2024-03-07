@@ -2,9 +2,9 @@ import Combobox from "hw_combobox/models/combobox/base"
 import { wrapAroundAccess } from "hw_combobox/helpers"
 
 Combobox.Selection = Base => class extends Base {
-  selectOption(event) {
-    this._select(event.currentTarget)
+  selectOptionOnClick(event) {
     this.filter(event)
+    this._select(event.currentTarget)
     this.close()
   }
 

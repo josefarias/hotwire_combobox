@@ -246,6 +246,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     delete_from_combobox "#state-field", "Florida", original: "Florida"
     assert_options_with count: State.count
+
+    type_in_combobox "#state-field", :down, :down, :down
+    assert_selected_option_with text: "Michigan"
+    click_on_option "Florida"
+    assert_closed_combobox
+    assert_combobox_display_and_value "#state-field", "Florida", "FL"
   end
 
   test "combobox with prefilled value" do
