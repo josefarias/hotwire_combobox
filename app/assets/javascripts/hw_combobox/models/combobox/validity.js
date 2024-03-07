@@ -5,11 +5,11 @@ Combobox.Validity = Base => class extends Base {
     if (this._valueIsInvalid) return
 
     if (this.hasInvalidClass) {
-      this.comboboxTarget.classList.remove(this.invalidClass)
+      this._actingCombobox.classList.remove(this.invalidClass)
     }
 
-    this.comboboxTarget.removeAttribute("aria-invalid")
-    this.comboboxTarget.removeAttribute("aria-errormessage")
+    this._actingCombobox.removeAttribute("aria-invalid")
+    this._actingCombobox.removeAttribute("aria-errormessage")
 
     this._dispatchValidEvent()
   }
@@ -18,11 +18,11 @@ Combobox.Validity = Base => class extends Base {
     if (this._valueIsValid) return
 
     if (this.hasInvalidClass) {
-      this.comboboxTarget.classList.add(this.invalidClass)
+      this._actingCombobox.classList.add(this.invalidClass)
     }
 
-    this.comboboxTarget.setAttribute("aria-invalid", true)
-    this.comboboxTarget.setAttribute("aria-errormessage", `Please select a valid option for ${this.comboboxTarget.name}`)
+    this._actingCombobox.setAttribute("aria-invalid", true)
+    this._actingCombobox.setAttribute("aria-errormessage", `Please select a valid option for ${this._actingCombobox.name}`)
 
     this._dispatchInvalidEvent()
   }
@@ -32,7 +32,7 @@ Combobox.Validity = Base => class extends Base {
   }
 
   get _valueIsInvalid() {
-    const isRequiredAndEmpty = this.comboboxTarget.required && !this.hiddenFieldTarget.value
+    const isRequiredAndEmpty = this._actingCombobox.required && !this.hiddenFieldTarget.value
     return isRequiredAndEmpty
   }
 }

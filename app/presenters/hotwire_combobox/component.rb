@@ -162,7 +162,8 @@ class HotwireCombobox::Component
         hw_combobox_prefilled_display_value: prefilled_display,
         hw_combobox_filterable_attribute_value: "data-filterable-as",
         hw_combobox_autocompletable_attribute_value: "data-autocompletable-as",
-        hw_combobox_selected_class: "hw-combobox__option--selected"
+        hw_combobox_selected_class: "hw-combobox__option--selected",
+        hw_combobox_invalid_class: "hw-combobox__input--invalid"
     end
 
     def prefilled_display
