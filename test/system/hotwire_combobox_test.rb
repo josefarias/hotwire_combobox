@@ -596,6 +596,78 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_nil new_user.home_state
   end
 
+  test "custom events" do
+    visit custom_events_path
+
+    assert_text "Ready to listen for hw-combobox events!"
+
+    open_combobox "#allow-new"
+    type_in_combobox "#allow-new", "A Bea"
+
+    assert_text "event: hw-combobox:selection"
+    assert_text "value: #{movies(:a_beautiful_mind).id}"
+    assert_text "display: A Beautiful Mind"
+    assert_text "query: A Bea"
+    assert_text "fieldName: movie"
+    assert_text "isNew: false"
+
+    assert_text "event: hw-combobox:valid"
+    assert_text "value: #{movies(:a_beautiful_mind).id}"
+    assert_text "display: A Beautiful Mind"
+    assert_text "query: A Bea"
+    assert_text "fieldName: movie"
+    assert_text "isNew: undefined"
+
+    type_in_combobox "#allow-new", "t"
+
+    assert_text "event: hw-combobox:selection"
+    assert_text "value: A Beat"
+    assert_text "display: A Beat"
+    assert_text "query: A Beat"
+    assert_text "fieldName: new_movie"
+    assert_text "isNew: true"
+
+    assert_text "event: hw-combobox:valid"
+    assert_text "value: A Beat"
+    assert_text "display: A Beat"
+    assert_text "query: A Beat"
+    assert_text "fieldName: new_movie"
+    assert_text "isNew: undefined"
+
+    type_in_combobox "#required", "A Bea"
+
+    assert_text "event: hw-combobox:selection"
+    assert_text "value: #{movies(:a_beautiful_mind).id}"
+    assert_text "display: A Beautiful Mind"
+    assert_text "query: A Bea"
+    assert_text "fieldName: movie"
+    assert_text "isNew: false"
+
+    assert_text "event: hw-combobox:valid"
+    assert_text "value: #{movies(:a_beautiful_mind).id}"
+    assert_text "display: A Beautiful Mind"
+    assert_text "query: A Bea"
+    assert_text "fieldName: movie"
+    assert_text "isNew: undefined"
+
+    type_in_combobox "#required", "t"
+
+    # No changes
+    assert_text "event: hw-combobox:selection"
+    assert_text "value: #{movies(:a_beautiful_mind).id}"
+    assert_text "display: A Beautiful Mind"
+    assert_text "query: A Bea"
+    assert_text "fieldName: movie"
+    assert_text "isNew: false"
+
+    assert_text "event: hw-combobox:invalid"
+    assert_text "value:"
+    assert_text "display: A Beat"
+    assert_text "query: A Beat"
+    assert_text "fieldName: movie"
+    assert_text "isNew: undefined"
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
@@ -702,7 +774,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       yield
     ensure
       @on_small_screen = false
-      page.current_window.resize_to *original_size
+      page.current_window.resize_to(*original_size)
     end
 
     def on_slow_device(delay:)

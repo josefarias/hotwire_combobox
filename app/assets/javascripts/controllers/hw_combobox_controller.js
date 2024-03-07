@@ -10,6 +10,7 @@ const concerns = [
   Combobox.AsyncLoading,
   Combobox.Autocomplete,
   Combobox.Dialog,
+  Combobox.Events,
   Combobox.Filtering,
   Combobox.Navigation,
   Combobox.NewOptions,

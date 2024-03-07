@@ -150,7 +150,7 @@ class HotwireCombobox::Component
     end
 
     def fieldset_data
-      data.reverse_merge \
+      data.merge \
         async_id: canonical_id,
         controller: view.token_list("hw-combobox", data[:controller]),
         hw_combobox_expanded_value: open,
@@ -189,7 +189,7 @@ class HotwireCombobox::Component
 
 
     def canonical_id
-      @id ||= id || form&.field_id(name) || SecureRandom.uuid
+      @canonical_id ||= id || form&.field_id(name) || SecureRandom.uuid
     end
 
 
@@ -225,7 +225,7 @@ class HotwireCombobox::Component
     end
 
     def input_data
-      combobox_attrs.fetch(:data, {}).reverse_merge! \
+      combobox_attrs.fetch(:data, {}).merge \
         action: "
           focus->hw-combobox#open
           input->hw-combobox#filter
@@ -237,7 +237,7 @@ class HotwireCombobox::Component
     end
 
     def input_aria
-      combobox_attrs.fetch(:aria, {}).reverse_merge! \
+      combobox_attrs.fetch(:aria, {}).merge \
         controls: listbox_id,
         owns: listbox_id,
         haspopup: "listbox",
