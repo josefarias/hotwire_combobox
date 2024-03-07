@@ -62,3 +62,20 @@ export function unselectedPortion(element) {
     return element.value.substring(0, element.selectionStart)
   }
 }
+
+export function dispatch(eventName, { target, cancelable, detail } = {}) {
+  const event = new CustomEvent(eventName, {
+    cancelable,
+    bubbles: true,
+    composed: true,
+    detail
+  })
+
+  if (target && target.isConnected) {
+    target.dispatchEvent(event)
+  } else {
+    document.documentElement.dispatchEvent(event)
+  }
+
+  return event
+}

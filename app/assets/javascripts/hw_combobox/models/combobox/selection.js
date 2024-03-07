@@ -18,9 +18,9 @@ Combobox.Selection = Base => class extends Base {
     this._resetOptions()
 
     if (option) {
-      this._markValid()
       this._autocompleteWith(option, { force: forceAutocomplete })
       this._commitSelection(option, { selected: true })
+      this._markValid()
     } else {
       this._markInvalid()
     }
@@ -33,6 +33,8 @@ Combobox.Selection = Base => class extends Base {
       this.hiddenFieldTarget.value = option.dataset.value
       option.scrollIntoView({ block: "nearest" })
     }
+
+    this._dispatchSelectionEvent({ isNew: false })
   }
 
   _markSelected(option, { selected }) {
@@ -46,15 +48,22 @@ Combobox.Selection = Base => class extends Base {
 
   _deselect() {
     const option = this._selectedOptionElement
+
     if (option) this._commitSelection(option, { selected: false })
+
     this.hiddenFieldTarget.value = null
     this._setActiveDescendant("")
+
+    if (!option) this._dispatchSelectionEvent({ isNew: false })
   }
 
   _selectNew() {
     this._resetOptions()
     this.hiddenFieldTarget.value = this._fullQuery
     this.hiddenFieldTarget.name = this.nameWhenNewValue
+    this._markValid()
+
+    this._dispatchSelectionEvent({ isNew: true })
   }
 
   _selectIndex(index) {
@@ -76,6 +85,11 @@ Combobox.Selection = Base => class extends Base {
     if (this._shouldLockInSelection) {
       this._select(this._ensurableOption, { forceAutocomplete: true })
       this.filter({ inputType: "hw:lockInSelection" })
+    }
+
+    if (this._isUnjustifiablyBlank) {
+      this._deselect()
+      this._clearQuery()
     }
   }
 

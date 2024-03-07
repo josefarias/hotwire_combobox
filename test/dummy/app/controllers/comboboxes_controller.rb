@@ -54,6 +54,9 @@ class ComboboxesController < ApplicationController
   def include_blank
   end
 
+  def custom_events
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 

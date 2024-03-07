@@ -30,4 +30,11 @@ Combobox.Options = Base => class extends Base {
   get _selectedOptionIndex() {
     return [ ...this._visibleOptionElements ].indexOf(this._selectedOptionElement)
   }
+
+  get _isUnjustifiablyBlank() {
+    const valueIsMissing = !this.hiddenFieldTarget.value
+    const noBlankOptionSelected = !this._selectedOptionElement
+
+    return valueIsMissing && noBlankOptionSelected
+  }
 }

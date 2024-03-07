@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get "render_in", to: "comboboxes#render_in"
   get "enum", to: "comboboxes#enum"
   get "include_blank", to: "comboboxes#include_blank"
+  get "custom_events", to: "comboboxes#custom_events"
 
   resources :movies, only: %i[ index update ]
   get "movies_html", to: "movies#index_html"
