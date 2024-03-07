@@ -745,10 +745,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     def assert_invalid_combobox
       assert_selector "input[aria-invalid=true]"
+      assert_selector "dialog input[aria-invalid=true]", visible: :hidden
     end
 
     def assert_not_invalid_combobox
       assert_no_selector "input[aria-invalid=true]"
+      assert_no_selector "dialog input[aria-invalid=true]", visible: :hidden
     end
 
     def assert_proper_combobox_name_choice(original:, new:, proper:)

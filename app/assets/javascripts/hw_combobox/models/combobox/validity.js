@@ -4,12 +4,14 @@ Combobox.Validity = Base => class extends Base {
   _markValid() {
     if (this._valueIsInvalid) return
 
-    if (this.hasInvalidClass) {
-      this._actingCombobox.classList.remove(this.invalidClass)
-    }
+    this._forAllComboboxes(combobox => {
+      if (this.hasInvalidClass) {
+        combobox.classList.remove(this.invalidClass)
+      }
 
-    this._actingCombobox.removeAttribute("aria-invalid")
-    this._actingCombobox.removeAttribute("aria-errormessage")
+      combobox.removeAttribute("aria-invalid")
+      combobox.removeAttribute("aria-errormessage")
+    })
 
     this._dispatchValidEvent()
   }
@@ -17,12 +19,14 @@ Combobox.Validity = Base => class extends Base {
   _markInvalid() {
     if (this._valueIsValid) return
 
-    if (this.hasInvalidClass) {
-      this._actingCombobox.classList.add(this.invalidClass)
-    }
+    this._forAllComboboxes(combobox => {
+      if (this.hasInvalidClass) {
+        combobox.classList.add(this.invalidClass)
+      }
 
-    this._actingCombobox.setAttribute("aria-invalid", true)
-    this._actingCombobox.setAttribute("aria-errormessage", `Please select a valid option for ${this._actingCombobox.name}`)
+      combobox.setAttribute("aria-invalid", true)
+      combobox.setAttribute("aria-errormessage", `Please select a valid option for ${combobox.name}`)
+    })
 
     this._dispatchInvalidEvent()
   }
