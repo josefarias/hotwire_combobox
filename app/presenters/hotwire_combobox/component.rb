@@ -189,7 +189,7 @@ class HotwireCombobox::Component
 
 
     def canonical_id
-      id || form&.field_id(name) || SecureRandom.uuid
+      @id ||= id || form&.field_id(name) || SecureRandom.uuid
     end
 
 

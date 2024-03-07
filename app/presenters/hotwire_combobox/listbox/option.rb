@@ -32,7 +32,7 @@ class HotwireCombobox::Listbox::Option
     end
 
     def id
-      option.try(:id) || SecureRandom.uuid
+      @id ||= option.try(:id) || SecureRandom.uuid
     end
 
     def data
