@@ -458,21 +458,21 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
   test "dialog" do
     on_small_screen do
-      visit html_options_path
+      visit async_html_path
 
       assert_no_selector "dialog[open]"
-      open_combobox "#state-field"
+      open_combobox "#movie-field"
       assert_selector "dialog[open]"
 
       within "dialog" do
-        type_in_combobox "#state-field-hw-dialog-combobox", "Flor"
-        assert_combobox_display "#state-field-hw-dialog-combobox", "Florida"
-        assert_selected_option_with text: "Florida"
+        type_in_combobox "#movie-field-hw-dialog-combobox", "whi"
+        assert_combobox_display "#movie-field-hw-dialog-combobox", "Whiplash"
+        assert_selected_option_with text: "Whiplash"
       end
-      assert_combobox_value "#state-field", "FL"
+      assert_combobox_value "#movie-field", movies(:whiplash).id
 
       click_away
-      assert_combobox_display_and_value "#state-field", "Florida", "FL"
+      assert_combobox_display_and_value "#movie-field", "Whiplash", movies(:whiplash).id
       assert_no_selector "dialog[open]"
     end
   end
