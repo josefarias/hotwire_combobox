@@ -1,7 +1,11 @@
 :root {
   --hw-active-bg-color: #F3F4F6;
-
   --hw-border-color: #D1D5DB;
+  --hw-invalid-color: #EF4444;
+  --hw-dialog-label-color: #1D1D1D;
+  --hw-focus-color: #2563EB;
+  --hw-option-bg-color: #FFFFFF;
+
   --hw-border-radius: 0.375rem;
   --hw-border-width--slim: 1px;
   --hw-border-width--thick: 2px;
@@ -9,7 +13,6 @@
   --hw-dialog-font-size: 1.25rem;
   --hw-dialog-input-height: 2.5rem;
   --hw-dialog-label-alignment: center;
-  --hw-dialog-label-color: #1D1D1D;
   --hw-dialog-label-padding: 0.5rem 0 0.375rem;
   --hw-dialog-label-size: 1.05rem;
   --hw-dialog-listbox-margin: 1.25rem 0 0;
@@ -24,15 +27,11 @@
 
   --hw-combobox-width: 10rem;
 
-  --hw-focus-color: #2563EB;
-
   --hw-line-height: 1.5rem;
 
   --hw-listbox-height: calc(var(--hw-line-height) * 10);
   --hw-listbox-offset-top: calc(var(--hw-line-height) * 1.625);
   --hw-listbox-z-index: 10;
-
-  --hw-option-bg-color: #FFFFFF;
 
   --hw-padding--slim: 0.375rem;
   --hw-padding--thick: 0.75rem;
@@ -64,6 +63,15 @@
   text-overflow: ellipsis;
 }
 
+.hw-combobox__input:focus-visible {
+  box-shadow: 0 0 0 var(--hw-border-width--thick) var(--hw-focus-color);
+  outline: none;
+}
+
+.hw-combobox__input--invalid {
+  border: var(--hw-border-width--slim) solid var(--hw-invalid-color);
+}
+
 .hw-combobox__handle {
   height: 100%;
   position: absolute;
@@ -83,11 +91,6 @@
   position: absolute;
   right: 0;
   top: 0;
-}
-
-.hw-combobox__input:focus-visible {
-  box-shadow: 0 0 0 var(--hw-border-width--thick) var(--hw-focus-color);
-  outline: none;
 }
 
 .hw-combobox__listbox {
