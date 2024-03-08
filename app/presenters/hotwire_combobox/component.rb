@@ -24,7 +24,7 @@ class HotwireCombobox::Component
       view, autocomplete, id, name.to_s, value, form, async_src,
       name_when_new, open, data, mobile_at, options, dialog_label
 
-    @combobox_attrs = input.reverse_merge(rest).with_indifferent_access
+    @combobox_attrs = input.reverse_merge(rest).deep_symbolize_keys
     @association_name = association_name || infer_association_name
     @custom_attrs = Hash.new { |h, k| h[k] = {} }
   end
@@ -46,7 +46,9 @@ class HotwireCombobox::Component
         Valid elements are: #{CUSTOMIZABLE_ELEMENTS.join(", ")}.
       MSG
 
-    @custom_attrs[element] = attrs
+    @custom_attrs[element] = attrs.deep_symbolize_keys.delete_if do |key, _|
+      PROTECTED_ATTRS.include? key
+    end
   end
 
 
@@ -190,13 +192,10 @@ class HotwireCombobox::Component
       :association_name, :custom_attrs
 
     def customize(element, base: {})
-      custom = custom_attrs[element].dup.symbolize_keys.delete_if do |key, _|
-        PROTECTED_ATTRS.include? key
-      end
-
-      default = base.symbolize_keys.map do |key, value|
-        if value.is_a? String
-          [ key, view.token_list(value, custom.delete(key)) ]
+      custom = custom_attrs[element]
+      default = base.deep_symbolize_keys.map do |key, value|
+        if value.is_a?(String) || value.is_a?(Symbol)
+          [ key, view.token_list(value.to_s, custom.delete(key)) ]
         else
           [ key, value ]
         end

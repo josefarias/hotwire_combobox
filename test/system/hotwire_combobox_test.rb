@@ -674,37 +674,36 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit custom_attrs_path
 
     assert_selector ".custom-class--fieldset"
-    assert_selector ".custom-class--hidden_field"
     assert_selector ".custom-class--input"
     assert_selector ".custom-class--handle"
-    assert_selector ".custom-class--listbox"
-    assert_selector ".custom-class--dialog"
-    assert_selector ".custom-class--dialog_wrapper"
-    assert_selector ".custom-class--dialog_label"
-    assert_selector ".custom-class--dialog_input"
-    assert_selector ".custom-class--dialog_listbox"
+    assert_selector ".custom-class--hidden_field", visible: :hidden
+    assert_selector ".custom-class--listbox", visible: :hidden
+    assert_selector ".custom-class--dialog", visible: :hidden
+    assert_selector ".custom-class--dialog_wrapper", visible: :hidden
+    assert_selector ".custom-class--dialog_label", visible: :hidden
+    assert_selector ".custom-class--dialog_input", visible: :hidden
+    assert_selector ".custom-class--dialog_listbox", visible: :hidden
 
     assert_selector ".hw-combobox"
     assert_selector ".hw-combobox__input"
     assert_selector ".hw-combobox__handle"
-    assert_selector ".hw-combobox__listbox"
-    assert_selector ".hw-combobox__option"
-    assert_selector ".hw-combobox__option"
-    assert_selector ".hw-combobox__dialog"
-    assert_selector ".hw-combobox__dialog__label"
-    assert_selector ".hw-combobox__dialog__input"
-    assert_selector ".hw-combobox__dialog__listbox"
+    assert_selector ".hw-combobox__listbox", visible: :hidden
+    assert_selector ".hw-combobox__option", visible: :hidden
+    assert_selector ".hw-combobox__dialog", visible: :hidden
+    assert_selector ".hw-combobox__dialog__label", visible: :hidden
+    assert_selector ".hw-combobox__dialog__input", visible: :hidden
+    assert_selector ".hw-combobox__dialog__listbox", visible: :hidden
 
-    assert_selector "[data-customized-fieldset"
-    assert_selector "[data-customized-hidden-field"
-    assert_selector "[data-customized-input"
-    assert_selector "[data-customized-handle"
-    assert_selector "[data-customized-listbox"
-    assert_selector "[data-customized-dialog"
-    assert_selector "[data-customized-dialog-wrapper"
-    assert_selector "[data-customized-dialog-label"
-    assert_selector "[data-customized-dialog-input"
-    assert_selector "[data-customized-dialog-listbox"
+    assert_selector "[data-customized-fieldset]"
+    assert_selector "[data-customized-input]"
+    assert_selector "[data-customized-handle]"
+    assert_selector "[data-customized-hidden-field]", visible: :hidden
+    assert_selector "[data-customized-listbox]", visible: :hidden
+    assert_selector "[data-customized-dialog]", visible: :hidden
+    assert_selector "[data-customized-dialog-wrapper]", visible: :hidden
+    assert_selector "[data-customized-dialog-label]", visible: :hidden
+    assert_selector "[data-customized-dialog-input]", visible: :hidden
+    assert_selector "[data-customized-dialog-listbox]", visible: :hidden
   end
 
   private
