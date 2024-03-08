@@ -1,6 +1,8 @@
 require "securerandom"
 
 class HotwireCombobox::Component
+  include Customizable
+
   attr_reader :options, :dialog_label
 
   def initialize \
@@ -26,29 +28,11 @@ class HotwireCombobox::Component
 
     @combobox_attrs = input.reverse_merge(rest).deep_symbolize_keys
     @association_name = association_name || infer_association_name
-    @custom_attrs = Hash.new { |h, k| h[k] = {} }
   end
 
   def render_in(view_context, &block)
     block.call(self) if block_given?
     view_context.render partial: "hotwire_combobox/component", locals: { component: self }
-  end
-
-
-  def customize(element, **attrs)
-    element = element.to_sym.presence_in(CUSTOMIZABLE_ELEMENTS) ||
-      raise(ArgumentError, <<~MSG)
-        [ACTION NEEDED] – Message from HotwireCombobox:
-
-        You tried to customize an element called `#{element}`, but
-        HotwireCombobox does not recognize that element.
-
-        Please choose one of the valid elements: #{CUSTOMIZABLE_ELEMENTS.join(", ")}.
-      MSG
-
-    @custom_attrs[element] = attrs.deep_symbolize_keys.delete_if do |key, _|
-      PROTECTED_ATTRS.include? key
-    end
   end
 
 
@@ -81,7 +65,7 @@ class HotwireCombobox::Component
       data: input_data,
       aria: input_aria,
       autocomplete: :off
-    }.with_indifferent_access.merge combobox_attrs.except(*nested_attrs)
+    }.merge combobox_attrs.except(*nested_attrs)
 
     apply_customizations_to :input, base: base
   end
@@ -165,44 +149,9 @@ class HotwireCombobox::Component
   end
 
   private
-    CUSTOMIZABLE_ELEMENTS = %i[
-      fieldset
-      hidden_field
-      input
-      handle
-      listbox
-      dialog
-      dialog_wrapper
-      dialog_label
-      dialog_input
-      dialog_listbox
-    ].freeze
-
-    PROTECTED_ATTRS = %i[
-      id
-      name
-      value
-      open
-      role
-      hidden
-    ].freeze
-
     attr_reader :view, :autocomplete, :id, :name, :value, :form,
       :name_when_new, :open, :data, :combobox_attrs, :mobile_at,
-      :association_name, :custom_attrs
-
-    def apply_customizations_to(element, base: {})
-      custom = custom_attrs[element]
-      default = base.deep_symbolize_keys.map do |key, value|
-        if value.is_a?(String) || value.is_a?(Symbol)
-          [ key, view.token_list(value.to_s, custom.delete(key)) ]
-        else
-          [ key, value ]
-        end
-      end.to_h
-
-      custom.deep_merge default
-    end
+      :association_name
 
     def infer_association_name
       if name.include?("_id")
