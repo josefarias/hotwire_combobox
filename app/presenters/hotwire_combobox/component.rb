@@ -181,6 +181,8 @@ class HotwireCombobox::Component
       name
       value
       open
+      role
+      hidden
     ].freeze
 
     attr_reader :view, :autocomplete, :id, :name, :value, :form,

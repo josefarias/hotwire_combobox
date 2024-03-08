@@ -12,4 +12,26 @@ class HotwireCombobox::ComponentTest < ApplicationViewTestCase
       assert_equal :on, component.input_attrs[:autocomplete]
     end
   end
+
+  test "protected attributes cannot be overridden" do
+    component = HotwireCombobox::Component.new(view, "field-name", id: "id-string")
+    component.custom_attrs_for :input, id: "foo", name: "bar", role: "baz", value: "qux", aria: { haspopup: "foobar" }, data: { hw_combobox_target: "thud" }
+    html = render component
+
+    assert_attrs html, tag_name: :input, id: "id-string"
+    assert_attrs html, tag_name: :input, name: "field-name"
+    assert_attrs html, tag_name: :input, role: :combobox
+    assert_attrs html, tag_name: :input, "aria-haspopup": "listbox"
+    assert_attrs html, tag_name: :input, "data-hw-combobox-target": "combobox"
+
+    assert_no_attrs html, tag_name: :input, value: ""
+  end
+
+  test "attributes can be customized" do
+    component = HotwireCombobox::Component.new(view, "field-name", id: "id-string")
+    component.custom_attrs_for :input, class: "my-custom-class", data: { my_custom_attr: "value" }
+    html = render component
+
+    assert_attrs html, tag_name: :input, class: "hw-combobox__input my-custom-class", "data-my-custom-attr": "value"
+  end
 end

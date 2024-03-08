@@ -670,6 +670,43 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "isValid: false"
   end
 
+  test "customized elements" do
+    visit custom_attrs_path
+
+    assert_selector ".custom-class--fieldset"
+    assert_selector ".custom-class--hidden_field"
+    assert_selector ".custom-class--input"
+    assert_selector ".custom-class--handle"
+    assert_selector ".custom-class--listbox"
+    assert_selector ".custom-class--dialog"
+    assert_selector ".custom-class--dialog_wrapper"
+    assert_selector ".custom-class--dialog_label"
+    assert_selector ".custom-class--dialog_input"
+    assert_selector ".custom-class--dialog_listbox"
+
+    assert_selector ".hw-combobox"
+    assert_selector ".hw-combobox__input"
+    assert_selector ".hw-combobox__handle"
+    assert_selector ".hw-combobox__listbox"
+    assert_selector ".hw-combobox__option"
+    assert_selector ".hw-combobox__option"
+    assert_selector ".hw-combobox__dialog"
+    assert_selector ".hw-combobox__dialog__label"
+    assert_selector ".hw-combobox__dialog__input"
+    assert_selector ".hw-combobox__dialog__listbox"
+
+    assert_selector "[data-customized-fieldset"
+    assert_selector "[data-customized-hidden-field"
+    assert_selector "[data-customized-input"
+    assert_selector "[data-customized-handle"
+    assert_selector "[data-customized-listbox"
+    assert_selector "[data-customized-dialog"
+    assert_selector "[data-customized-dialog-wrapper"
+    assert_selector "[data-customized-dialog-label"
+    assert_selector "[data-customized-dialog-input"
+    assert_selector "[data-customized-dialog-listbox"
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
