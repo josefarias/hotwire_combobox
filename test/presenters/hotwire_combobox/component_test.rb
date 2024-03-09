@@ -13,6 +13,15 @@ class HotwireCombobox::ComponentTest < ApplicationViewTestCase
     end
   end
 
+  test "attributes can be customized" do
+    component = HotwireCombobox::Component.new(view, "field-name", id: "id-string")
+    component.customize_input class: "my-custom-class", data: { my_custom_attr: "value" }
+    html = render component
+
+    assert_attrs html, tag_name: :input, class: "hw-combobox__input my-custom-class"
+    assert_attrs html, tag_name: :input, "data-my-custom-attr": "value"
+  end
+
   test "protected attributes cannot be overridden" do
     component = HotwireCombobox::Component.new(view, "field-name", id: "id-string")
     component.customize_input id: "foo", name: "bar", role: "baz", value: "qux", aria: { haspopup: "foobar" }, data: { hw_combobox_target: "thud" }
@@ -25,14 +34,5 @@ class HotwireCombobox::ComponentTest < ApplicationViewTestCase
     assert_attrs html, tag_name: :input, "data-hw-combobox-target": "combobox"
 
     assert_no_attrs html, tag_name: :input, value: ""
-  end
-
-  test "attributes can be customized" do
-    component = HotwireCombobox::Component.new(view, "field-name", id: "id-string")
-    component.customize_input class: "my-custom-class", data: { my_custom_attr: "value" }
-    html = render component
-
-    assert_attrs html, tag_name: :input, class: "hw-combobox__input my-custom-class"
-    assert_attrs html, tag_name: :input, "data-my-custom-attr": "value"
   end
 end
