@@ -702,7 +702,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     assert_selector ".hw-combobox"
     assert_selector ".hw-combobox__label"
-    assert_selector ".hw-combobox__main-wrapper"
+    assert_selector ".hw-combobox__main__wrapper"
     assert_selector ".hw-combobox__input"
     assert_selector ".hw-combobox__handle"
     assert_selector ".hw-combobox__listbox", visible: :hidden

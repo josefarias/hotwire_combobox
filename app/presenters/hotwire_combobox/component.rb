@@ -66,7 +66,7 @@ class HotwireCombobox::Component
 
   def main_wrapper_attrs
     apply_customizations_to :main_wrapper, base: {
-      class: "hw-combobox__main-wrapper",
+      class: "hw-combobox__main__wrapper",
       data: main_wrapper_data
     }
   end

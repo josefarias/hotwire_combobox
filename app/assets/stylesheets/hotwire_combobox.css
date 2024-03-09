@@ -54,7 +54,7 @@
   }
 }
 
-.hw-combobox__main-wrapper {
+.hw-combobox__main__wrapper {
   position: relative;
   width: min-content;
 }
