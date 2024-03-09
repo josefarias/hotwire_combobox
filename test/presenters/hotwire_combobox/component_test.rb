@@ -35,4 +35,16 @@ class HotwireCombobox::ComponentTest < ApplicationViewTestCase
 
     assert_no_attrs html, tag_name: :input, value: ""
   end
+
+  test "dialog label is customizable" do
+    component = HotwireCombobox::Component.new(view, "field-name", label: "Custom Label")
+
+    assert_equal "Custom Label", component.label
+    assert_equal "Custom Label", component.dialog_label
+
+    component = HotwireCombobox::Component.new(view, "field-name", label: "Custom Label", dialog_label: "Dialog Label")
+
+    assert_equal "Custom Label", component.label
+    assert_equal "Dialog Label", component.dialog_label
+  end
 end

@@ -3,7 +3,7 @@ require "securerandom"
 class HotwireCombobox::Component
   include Customizable
 
-  attr_reader :options, :dialog_label
+  attr_reader :options, :label
 
   def initialize \
       view, name,
@@ -15,15 +15,16 @@ class HotwireCombobox::Component
       form:             nil,
       id:               nil,
       input:            {},
+      label:            nil,
       mobile_at:        "640px",
       name_when_new:    nil,
       open:             false,
       options:          [],
       value:            nil,
       **rest
-    @view, @autocomplete, @id, @name, @value, @form, @async_src,
+    @view, @autocomplete, @id, @name, @value, @form, @async_src, @label,
     @name_when_new, @open, @data, @mobile_at, @options, @dialog_label =
-      view, autocomplete, id, name.to_s, value, form, async_src,
+      view, autocomplete, id, name.to_s, value, form, async_src, label,
       name_when_new, open, data, mobile_at, options, dialog_label
 
     @combobox_attrs = input.reverse_merge(rest).deep_symbolize_keys
@@ -44,12 +45,29 @@ class HotwireCombobox::Component
   end
 
 
+  def label_attrs
+    apply_customizations_to :label, base: {
+      class: "hw-combobox__label",
+      for: input_id,
+      hidden: label.blank?
+    }
+  end
+
+
   def hidden_field_attrs
     apply_customizations_to :hidden_field, base: {
       id: hidden_field_id,
       name: hidden_field_name,
       data: hidden_field_data,
       value: hidden_field_value
+    }
+  end
+
+
+  def main_wrapper_attrs
+    apply_customizations_to :main_wrapper, base: {
+      class: "hw-combobox__main-wrapper",
+      data: main_wrapper_data
     }
   end
 
@@ -102,6 +120,10 @@ class HotwireCombobox::Component
       role: :dialog,
       data: dialog_data
     }
+  end
+
+  def dialog_label
+    @dialog_label || label
   end
 
   def dialog_label_attrs
@@ -201,6 +223,11 @@ class HotwireCombobox::Component
 
     def canonical_id
       @canonical_id ||= id || form&.field_id(name) || SecureRandom.uuid
+    end
+
+
+    def main_wrapper_data
+      { hw_combobox_target: "mainWrapper" }
     end
 
 

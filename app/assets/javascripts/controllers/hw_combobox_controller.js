@@ -35,7 +35,8 @@ export default class HwComboboxController extends Concerns(...concerns) {
     "endOfOptionsStream",
     "handle",
     "hiddenField",
-    "listbox"
+    "listbox",
+    "mainWrapper"
   ]
 
   static values = {

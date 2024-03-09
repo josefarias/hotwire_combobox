@@ -25,7 +25,7 @@ Combobox.Toggle = Base => class extends Base {
     const target = event.target
 
     if (!this._isOpen) return
-    if (this.element.contains(target) && !this._isDialogDismisser(target)) return
+    if (this.mainWrapperTarget.contains(target) && !this._isDialogDismisser(target)) return
     if (this._withinElementBounds(event)) return
 
     this.close()
@@ -43,7 +43,7 @@ Combobox.Toggle = Base => class extends Base {
   // These events don't contain any telling information, so we use `_withinElementBounds`
   // as an alternative to check whether the click is legitimate.
   _withinElementBounds(event) {
-    const { left, right, top, bottom } = this.element.getBoundingClientRect()
+    const { left, right, top, bottom } = this.mainWrapperTarget.getBoundingClientRect()
     const { clientX, clientY } = event
 
     return clientX >= left && clientX <= right && clientY >= top && clientY <= bottom
