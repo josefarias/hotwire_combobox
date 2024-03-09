@@ -1,6 +1,8 @@
 require "securerandom"
 
 class HotwireCombobox::Component
+  include Customizable
+
   attr_reader :options, :dialog_label
 
   def initialize \
@@ -24,12 +26,18 @@ class HotwireCombobox::Component
       view, autocomplete, id, name.to_s, value, form, async_src,
       name_when_new, open, data, mobile_at, options, dialog_label
 
-    @combobox_attrs = input.reverse_merge(rest).with_indifferent_access
+    @combobox_attrs = input.reverse_merge(rest).deep_symbolize_keys
     @association_name = association_name || infer_association_name
   end
 
+  def render_in(view_context, &block)
+    block.call(self) if block_given?
+    view_context.render partial: "hotwire_combobox/component", locals: { component: self }
+  end
+
+
   def fieldset_attrs
-    {
+    apply_customizations_to :fieldset, base: {
       class: "hw-combobox",
       data: fieldset_data
     }
@@ -37,7 +45,7 @@ class HotwireCombobox::Component
 
 
   def hidden_field_attrs
-    {
+    apply_customizations_to :hidden_field, base: {
       id: hidden_field_id,
       name: hidden_field_name,
       data: hidden_field_data,
@@ -49,7 +57,7 @@ class HotwireCombobox::Component
   def input_attrs
     nested_attrs = %i[ data aria ]
 
-    {
+    base = {
       id: input_id,
       role: :combobox,
       class: "hw-combobox__input",
@@ -57,12 +65,14 @@ class HotwireCombobox::Component
       data: input_data,
       aria: input_aria,
       autocomplete: :off
-    }.with_indifferent_access.merge combobox_attrs.except(*nested_attrs)
+    }.merge combobox_attrs.except(*nested_attrs)
+
+    apply_customizations_to :input, base: base
   end
 
 
   def handle_attrs
-    {
+    apply_customizations_to :handle, base: {
       class: "hw-combobox__handle",
       data: handle_data
     }
@@ -70,7 +80,7 @@ class HotwireCombobox::Component
 
 
   def listbox_attrs
-    {
+    apply_customizations_to :listbox, base: {
       id: listbox_id,
       role: :listbox,
       class: "hw-combobox__listbox",
@@ -81,13 +91,13 @@ class HotwireCombobox::Component
 
 
   def dialog_wrapper_attrs
-    {
+    apply_customizations_to :dialog_wrapper, base: {
       class: "hw-combobox__dialog__wrapper"
     }
   end
 
   def dialog_attrs
-    {
+    apply_customizations_to :dialog, base: {
       class: "hw-combobox__dialog",
       role: :dialog,
       data: dialog_data
@@ -95,14 +105,14 @@ class HotwireCombobox::Component
   end
 
   def dialog_label_attrs
-    {
+    apply_customizations_to :dialog_label, base: {
       class: "hw-combobox__dialog__label",
       for: dialog_input_id
     }
   end
 
   def dialog_input_attrs
-    {
+    apply_customizations_to :dialog_input, base: {
       id: dialog_input_id,
       role: :combobox,
       class: "hw-combobox__dialog__input",
@@ -114,7 +124,7 @@ class HotwireCombobox::Component
   end
 
   def dialog_listbox_attrs
-    {
+    apply_customizations_to :dialog_listbox, base: {
       id: dialog_listbox_id,
       class: "hw-combobox__dialog__listbox",
       role: :listbox,
