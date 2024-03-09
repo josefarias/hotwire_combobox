@@ -33,30 +33,16 @@ module HotwireCombobox::Component::Customizable
     end
 
     def customize(element, **attrs)
-      element = element.to_sym.presence_in(CUSTOMIZABLE_ELEMENTS) ||
-        raise(ArgumentError, <<~MSG)
-          [ACTION NEEDED] – Message from HotwireCombobox:
+      element = element.to_sym.presence_in(CUSTOMIZABLE_ELEMENTS)
+      sanitized_attrs = attrs.deep_symbolize_keys.except(*PROTECTED_ATTRS)
 
-          You tried to customize an element called `#{element}`, but
-          HotwireCombobox does not recognize that element.
-
-          Please choose one of the valid elements: #{CUSTOMIZABLE_ELEMENTS.join(", ")}.
-        MSG
-
-      custom_attrs[element] = attrs.deep_symbolize_keys.delete_if do |key, _|
-        PROTECTED_ATTRS.include? key
-      end
+      custom_attrs.store element, sanitized_attrs
     end
 
     def apply_customizations_to(element, base: {})
       custom = custom_attrs[element]
-      default = base.deep_symbolize_keys.map do |key, value|
-        if value.is_a?(String) || value.is_a?(Symbol)
-          [ key, view.token_list(value.to_s, custom.delete(key)) ]
-        else
-          [ key, value ]
-        end
-      end.to_h
+      coalesce = ->(k, v) { v.is_a?(String) ? view.token_list(v, custom.delete(k)) : v }
+      default = base.map { |k, v| [ k, coalesce.(k, v) ] }.to_h
 
       custom.deep_merge default
     end
