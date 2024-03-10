@@ -1,7 +1,9 @@
 module HotwireCombobox::Component::Customizable
   CUSTOMIZABLE_ELEMENTS = %i[
     fieldset
+    label
     hidden_field
+    main_wrapper
     input
     handle
     listbox
@@ -19,6 +21,7 @@ module HotwireCombobox::Component::Customizable
     open
     role
     hidden
+    for
   ].freeze
 
   CUSTOMIZABLE_ELEMENTS.each do |element|
