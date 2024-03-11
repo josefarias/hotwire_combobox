@@ -21,7 +21,8 @@
 
   --hw-font-size: 1rem;
 
-  --hw-handle-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  --hw-handle-image--left: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8L10 12'/%3E%3C/svg%3E");
+  --hw-handle-image--right: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M10 12L14 8'/%3E%3C/svg%3E");
   --hw-handle-offset-right: 0.375rem;
   --hw-handle-width: 1.5em;
 
@@ -88,7 +89,7 @@
 }
 
 .hw-combobox__handle::before {
-  background-image: var(--hw-handle-image);
+  background-image: var(--hw-handle-image--left);
   background-position: center;
   background-repeat: no-repeat;
   background-size: var(--hw-handle-width);
@@ -98,6 +99,33 @@
   position: absolute;
   right: 0;
   top: 0;
+  transition: transform 0.3s ease;
+}
+
+.hw-combobox__handle::after {
+  background-image: var(--hw-handle-image--right);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--hw-handle-width);
+  bottom: 0;
+  content: '';
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: transform 0.3s ease;
+}
+
+.hw-combobox__input[data-queried] + .hw-combobox__handle::before {
+  cursor: pointer;
+  transform: translateX(0.180rem) scale(1.2, 1.2);
+  stroke-width: 1;
+}
+
+.hw-combobox__input[data-queried] + .hw-combobox__handle::after {
+  cursor: pointer;
+  transform: translateX(-0.180rem) scale(1.2, 1.2);
+  stroke-width: 1;
 }
 
 .hw-combobox__listbox {
