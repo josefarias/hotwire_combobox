@@ -727,6 +727,16 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector "[data-customized-dialog-listbox]", visible: :hidden
   end
 
+  test "clear button" do
+    visit plain_path
+
+    open_combobox "#state-field"
+    type_in_combobox "#state-field", "mi"
+    assert_combobox_display_and_value "#state-field", "Michigan", "MI"
+    find(".hw-combobox__handle").click
+    assert_combobox_display_and_value "#state-field", "", ""
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
