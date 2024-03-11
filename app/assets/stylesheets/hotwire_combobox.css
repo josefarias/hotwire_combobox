@@ -22,8 +22,10 @@
   --hw-font-size: 1rem;
 
   --hw-handle-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  --hw-handle-image--queried: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 18 18 6M6 6l12 12'/%3E%3C/svg%3E");
   --hw-handle-offset-right: 0.375rem;
   --hw-handle-width: 1.5em;
+  --hw-handle-width--queried: 1em;
 
   --hw-combobox-width: 10rem;
 
@@ -98,6 +100,12 @@
   position: absolute;
   right: 0;
   top: 0;
+}
+
+.hw-combobox__input[data-queried] + .hw-combobox__handle::before {
+  background-image: var(--hw-handle-image--queried);
+  background-size: var(--hw-handle-width--queried);
+  cursor: pointer;
 }
 
 .hw-combobox__listbox {
