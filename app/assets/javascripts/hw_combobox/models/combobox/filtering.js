@@ -10,6 +10,8 @@ Combobox.Filtering = Base => class extends Base {
     } else {
       this._filterSync(event)
     }
+
+    this._actingCombobox.toggleAttribute("data-queried", this._isQueried)
   }
 
   _initializeFiltering() {

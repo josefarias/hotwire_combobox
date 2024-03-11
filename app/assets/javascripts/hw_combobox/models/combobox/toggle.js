@@ -38,6 +38,15 @@ Combobox.Toggle = Base => class extends Base {
     this.close()
   }
 
+  clearOrToggleOnHandleClick() {
+    if (this._isQueried) {
+      this._clearQuery()
+      this._actingCombobox.focus()
+    } else {
+      this.toggle()
+    }
+  }
+
   // Some browser extensions like 1Password overlay elements on top of the combobox.
   // Hovering over these elements emits a click event for some reason.
   // These events don't contain any telling information, so we use `_withinElementBounds`

@@ -287,7 +287,7 @@ class HotwireCombobox::Component
 
     def handle_data
       {
-        action: "click->hw-combobox#toggle",
+        action: "click->hw-combobox#clearOrToggleOnHandleClick",
         hw_combobox_target: "handle"
       }
     end
