@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "selectionScratchpad" ]
+  static targets = [ "selectionScratchpad", "closedScratchpad" ]
 
   connect() {
     this.selectionScratchpadTarget.innerText = "Ready to listen for hw-combobox events!"
@@ -11,14 +11,24 @@ export default class extends Controller {
     this.selectionScratchpadTarget.innerText = this.#template(event)
   }
 
+  showClosed(event) {
+    this.closedScratchpadTarget.innerText = this.#template(event)
+  }
+
   #template(event) {
-    return `event: ${String(event.type) || "<empty>"}
-      value: ${String(event.detail.value) || "<empty>"}
-      display: ${String(event.detail.display) || "<empty>"}
-      query: ${String(event.detail.query) || "<empty>"}
-      fieldName: ${String(event.detail.fieldName) || "<empty>"}
-      isNew: ${String(event.detail.isNew) || "<empty>"}
-      isValid: ${String(event.detail.isValid) || "<empty>"}
+    const cast = (string) => {
+      let _string = String(string)
+      if (_string === "undefined") _string = ""
+      return _string || "<empty>"
+    }
+
+    return `event: ${cast(event.type) || "<empty>"}
+      value: ${cast(event.detail.value) || "<empty>"}
+      display: ${cast(event.detail.display) || "<empty>"}
+      query: ${cast(event.detail.query) || "<empty>"}
+      fieldName: ${cast(event.detail.fieldName) || "<empty>"}
+      isNew: ${cast(event.detail.isNew) || "<empty>"}
+      isValid: ${cast(event.detail.isValid) || "<empty>"}
     `
   }
 }
