@@ -746,6 +746,14 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_combobox_display_and_value "#movie-field", "A Few Good Men", movies(:a_few_good_men).id
   end
 
+  test "selection with conflicting order" do
+    visit conflicting_order_path
+
+    open_combobox "#conflicting-order"
+    click_on_option "A"
+    assert_combobox_display_and_value "#conflicting-order", "A", "A"
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
@@ -763,7 +771,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     end
 
     def click_on_option(text)
-      find("li[role=option]", text: text).click
+      find("li[role=option]", exact_text: text).click
     end
 
     def clear_autocompleted_portion(selector)
