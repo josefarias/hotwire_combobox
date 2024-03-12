@@ -632,6 +632,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "isNew: false"
     assert_text "isValid: true"
 
+    assert_no_text "event: hw-combobox:closed"
+
     type_in_combobox "#allow-new", "t"
 
     assert_text "event: hw-combobox:selection"
@@ -642,6 +644,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "isNew: true"
     assert_text "isValid: true"
 
+    assert_no_text "event: hw-combobox:closed"
+
     click_away
 
     # No changes
@@ -651,6 +655,14 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "query: A Beat"
     assert_text "fieldName: new_movie"
     assert_text "isNew: true"
+    assert_text "isValid: true"
+
+    assert_text "event: hw-combobox:closed"
+    assert_text "value: A Beat"
+    assert_text "display: A Beat"
+    assert_text "query: A Beat"
+    assert_text "fieldName: new_movie"
+    assert_text "isNew: <empty>"
     assert_text "isValid: true"
 
     type_in_combobox "#required", "A Bea"

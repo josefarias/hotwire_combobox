@@ -10,6 +10,7 @@ Combobox.Toggle = Base => class extends Base {
     if (this._isOpen) {
       this._lockInSelection()
       this.expandedValue = false
+      this._dispatchClosedEvent()
     }
   }
 
