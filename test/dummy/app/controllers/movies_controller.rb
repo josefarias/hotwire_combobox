@@ -15,6 +15,7 @@ class MoviesController < ApplicationController
 
   private
     def set_page
-      set_page_and_extract_portion_from Movie.search(params[:q]).alphabetically, per_page: 5
+      movies = params[:full_search] ? Movie.full_search(params[:q]) : Movie.search(params[:q])
+      set_page_and_extract_portion_from movies.alphabetically, per_page: 5
     end
 end
