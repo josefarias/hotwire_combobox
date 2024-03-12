@@ -737,6 +737,15 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_combobox_display_and_value "#state-field", "", ""
   end
 
+  test "substring matching in async free-text combobox" do
+    visit freetext_async_path
+
+    open_combobox "#movie-field"
+    type_in_combobox "#movie-field", "few"
+    click_on_option "A Few Good Men"
+    assert_combobox_display_and_value "#movie-field", "A Few Good Men", movies(:a_few_good_men).id
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
