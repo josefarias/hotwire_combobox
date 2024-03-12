@@ -1,7 +1,5 @@
 module HotwireCombobox
   class Engine < ::Rails::Engine
-    isolate_namespace HotwireCombobox
-
     initializer "hotwire_combobox.view_helpers" do
       ActiveSupport.on_load :action_view do
         require "hotwire_combobox/helper"
