@@ -80,7 +80,8 @@ import HwComboboxController from "@josefarias/hotwire_combobox"
 application.register("hw-combobox", HwComboboxController)
 ```
 
-Keep in mind you need to update both the npm package and the gem every time there's a new version of HotwireCombobox.
+> [!WARNING]
+> Keep in mind you need to update both the npm package and the gem every time there's a new version of HotwireCombobox. You should always run the same version number on both sides.
 
 ### Configuring CSS
 
