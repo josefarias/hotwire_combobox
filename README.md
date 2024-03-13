@@ -80,6 +80,8 @@ import HwComboboxController from "@josefarias/hotwire_combobox"
 application.register("hw-combobox", HwComboboxController)
 ```
 
+Keep in mind you need to update both the npm package and the gem every time there's a new version of HotwireCombobox.
+
 ### Configuring CSS
 
 This library comes with optional default styles. Follow the instructions below to include them in your app.
