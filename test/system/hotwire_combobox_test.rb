@@ -757,7 +757,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   test "allows multiple selections (hides already-selected options, stays open)" do
     visit multiple_path
 
-    assert_selector "div[id='FL'] div", text: 'Florida'
+    assert_selector "div[id='FL'] div", text: "Florida"
     open_combobox "#state-field"
     assert_no_selector "li[role=option]", text: "Florida"
 
@@ -771,13 +771,13 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_current_option_with text: "Alabama"
     type_in_combobox "#state-field", :enter
     assert_open_combobox
-    assert_selector "div[id='AL'] div", text: 'Alabama'
+    assert_selector "div[id='AL'] div", text: "Alabama"
     find("#AL .hw-combobox__multiple_selection__remove").click
-    assert_no_selector "div[id='AL'] div", text: 'Alabama'
+    assert_no_selector "div[id='AL'] div", text: "Alabama"
 
-    click_on_option 'Minnesota'
+    click_on_option "Minnesota"
     assert_open_combobox
-    assert_selector "div[id='MN'] div", text: 'Minnesota'
+    assert_selector "div[id='MN'] div", text: "Minnesota"
   end
 
   private
