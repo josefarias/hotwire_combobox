@@ -9,8 +9,8 @@ module HotwireCombobox
 
         unless HotwireCombobox.bypass_convenience_methods?
           module FormBuilderExtensions
-            def combobox(*args, **kwargs)
-              @template.hw_combobox_tag(*args, **kwargs.merge(form: self))
+            def combobox(*args, **kwargs, &block)
+              @template.hw_combobox_tag(*args, **kwargs.merge(form: self), &block)
             end
           end
 
