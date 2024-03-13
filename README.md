@@ -109,6 +109,19 @@ Require the styles in `app/assets/stylesheets/application.css`:
 Visit [the docs site](https://hotwirecombobox.com/) for a demo and detailed documentation.
 If the site is down, you can run the docs locally by cloning [the docs repo](https://github.com/josefarias/hotwire_combobox_docs).
 
+## Notes about accessibility
+
+This gem follows the [APG combobox pattern guidelines](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) with some exceptions we feel increase the usefulness of the component without much detriment to the overall accessible experience.
+
+These are the exceptions:
+
+1. Users cannot manipulate the combobox while it's closed. As long as the combobox is focused, the listbox is shown.
+2. The escape key closes the listbox and blurs the combobox. It does not clear the combobox.
+3. The listbox has wrap-around selection. That is, pressing `Up Arrow` when the user is on the first option will select the last option. And pressing `Down Arrow` when on the last option will select the first option. In paginated comboboxes, the first and last options refer to the currently available options. More options may be loaded after navigating to the last currently available option.
+4. It is possible to have an unlabled combobox, as that responsibility is delegated to the implementing user.
+
+It should be noted none of the maintainers use assistive technologies in their daily lives. If you do, and you feel these exceptions are detrimental to your ability to use the component, or if you find an undocumented exception, please [open a GitHub issue](https://github.com/josefarias/hotwire_combobox/issues). We'll get it sorted.
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](./CONTRIBUTING.md).
