@@ -70,6 +70,12 @@ class ComboboxesController < ApplicationController
     @hashes = State.limit(3).map { |state| { display: state.name, value: state.abbreviation } }
   end
 
+  def multiple
+  end
+
+  def multiple_custom_events
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 

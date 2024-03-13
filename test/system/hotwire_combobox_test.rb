@@ -791,6 +791,61 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_option_with text: "display: Alabama\nvalue: AL"
   end
 
+  test "allows multiple selections (hides already-selected options, stays open)" do
+    visit multiple_path
+
+    assert_selector "div[id='FL'] div", text: "Florida"
+    open_combobox "#state-field"
+    assert_no_selector "li[role=option]", text: "Florida"
+
+    type_in_combobox "#state-field", "mi"
+    assert_no_selector "li[role=option]", text: "Alabama"
+    delete_from_combobox "#state-field", "mi", original: "mi"
+    assert_selector "li[role=option]", text: "Alabama"
+    assert_no_selector "li[role=option]", text: "Florida"
+
+    type_in_combobox "#state-field", :down
+    assert_current_option_with text: "Alabama"
+    type_in_combobox "#state-field", :enter
+    assert_open_combobox
+    assert_selector "div[id='AL'] div", text: "Alabama"
+    find("#AL .hw-combobox__multiple_selection__remove").click
+    assert_no_selector "div[id='AL'] div", text: "Alabama"
+
+    click_on_option "Minnesota"
+    assert_open_combobox
+    assert_selector "div[id='MN'] div", text: "Minnesota"
+  end
+
+  test "multiple selection with custom events" do
+    visit multiple_custom_events_path
+
+    assert_text "Ready to listen for hw-combobox events!"
+
+    open_combobox "#state-field"
+    type_in_combobox "#state-field", "mi"
+
+    assert_no_text "event: hw-combobox:selection"
+    assert_no_text "event: hw-combobox:closed"
+
+    click_on_option "Minnesota"
+
+    assert_text "event: hw-combobox:selection"
+    assert_text 'value: ["FL","MO","MN"]'
+    assert_no_text "event: hw-combobox:closed"
+
+    find("#MO .hw-combobox__multiple_selection__remove").click
+    assert_text 'value: ["FL","MN"]'
+    assert_no_text "event: hw-combobox:closed"
+
+    click_away
+
+    assert_text "event: hw-combobox:selection"
+    assert_text 'value: ["FL","MN"]'
+
+    assert_text "event: hw-combobox:closed"
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
@@ -861,6 +916,10 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     def assert_selected_option_with(selector: "", **kwargs)
       assert_selector "li[role=option][aria-selected=true]#{selector}".squish, **kwargs
+    end
+
+    def assert_current_option_with(selector: "", **kwargs)
+      assert_selector "li[role=option][aria-current=true]#{selector}".squish, **kwargs
     end
 
     def assert_no_visible_selected_option

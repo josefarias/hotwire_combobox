@@ -13,6 +13,7 @@ const concerns = [
   Combobox.Events,
   Combobox.Filtering,
   Combobox.FormField,
+  Combobox.MultipleSelection,
   Combobox.Navigation,
   Combobox.NewOptions,
   Combobox.Options,
@@ -24,7 +25,8 @@ const concerns = [
 export default class HwComboboxController extends Concerns(...concerns) {
   static classes = [
     "invalid",
-    "selected"
+    "selected",
+    "navigated"
   ]
 
   static targets = [
@@ -36,6 +38,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
     "endOfOptionsStream",
     "handle",
     "hiddenField",
+    "innerWrapper",
     "listbox",
     "mainWrapper"
   ]
@@ -46,6 +49,8 @@ export default class HwComboboxController extends Concerns(...concerns) {
     autocomplete: String,
     expanded: Boolean,
     filterableAttribute: String,
+    isMultiple: Boolean,
+    multipleSelections: Object,
     nameWhenNew: String,
     originalName: String,
     prefilledDisplay: String,
@@ -85,5 +90,9 @@ export default class HwComboboxController extends Concerns(...concerns) {
     } else {
       this._preselect()
     }
+  }
+
+  isMultiple() {
+    return this.hasIsMultipleValue && this.isMultipleValue
   }
 }
