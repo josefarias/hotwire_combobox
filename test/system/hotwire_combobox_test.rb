@@ -768,6 +768,13 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_combobox_display_and_value "#conflicting-order", "A", "A"
   end
 
+  test "render_in locals" do
+    visit render_in_locals_path
+
+    open_combobox "#state-field"
+    assert_option_with text: "display: Alabama\nvalue: AL"
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
