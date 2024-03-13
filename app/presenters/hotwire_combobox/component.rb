@@ -3,7 +3,7 @@ require "securerandom"
 class HotwireCombobox::Component
   include Customizable
 
-  attr_reader :options, :label
+  attr_reader :options, :label, :multiple
 
   def initialize \
       view, name,
@@ -17,15 +17,16 @@ class HotwireCombobox::Component
       input:            {},
       label:            nil,
       mobile_at:        "640px",
+      multiple:         false,
       name_when_new:    nil,
       open:             false,
       options:          [],
       value:            nil,
       **rest
     @view, @autocomplete, @id, @name, @value, @form, @async_src, @label,
-    @name_when_new, @open, @data, @mobile_at, @options, @dialog_label =
+    @name_when_new, @open, @data, @mobile_at, @multiple, @options, @dialog_label =
       view, autocomplete, id, name.to_s, value, form, async_src, label,
-      name_when_new, open, data, mobile_at, options, dialog_label
+      name_when_new, open, data, mobile_at, multiple, options, dialog_label
 
     @combobox_attrs = input.reverse_merge(rest).deep_symbolize_keys
     @association_name = association_name || infer_association_name
@@ -39,7 +40,7 @@ class HotwireCombobox::Component
 
   def fieldset_attrs
     apply_customizations_to :fieldset, base: {
-      class: "hw-combobox",
+      class: "hw-combobox#{" hw-combobox--multiple" if multiple}",
       data: fieldset_data
     }
   end
@@ -68,6 +69,14 @@ class HotwireCombobox::Component
     apply_customizations_to :main_wrapper, base: {
       class: "hw-combobox__main__wrapper",
       data: main_wrapper_data
+    }
+  end
+
+
+  def inner_wrapper_attrs
+    apply_customizations_to :inner_wrapper, base: {
+      class: "hw-combobox__inner__wrapper",
+      data: { hw_combobox_target: "innerWrapper" }
     }
   end
 
@@ -192,17 +201,30 @@ class HotwireCombobox::Component
         hw_combobox_small_viewport_max_width_value: mobile_at,
         hw_combobox_async_src_value: async_src,
         hw_combobox_prefilled_display_value: prefilled_display,
+        hw_combobox_is_multiple_value: multiple,
+        hw_combobox_multiple_selections_value: multiple_selections&.to_json,
         hw_combobox_filterable_attribute_value: "data-filterable-as",
         hw_combobox_autocompletable_attribute_value: "data-autocompletable-as",
         hw_combobox_selected_class: "hw-combobox__option--selected",
-        hw_combobox_invalid_class: "hw-combobox__input--invalid"
+        hw_combobox_invalid_class: "hw-combobox__input--invalid",
+        hw_combobox_navigated_class: "hw-combobox__option--navigated"
     end
 
     def prefilled_display
+      return if multiple
+
       if async_src && associated_object
         associated_object.to_combobox_display
       elsif hidden_field_value
         options.find { |option| option.value == hidden_field_value }&.autocompletable_as
+      end
+    end
+
+    def multiple_selections
+      return unless multiple
+
+      Array(value).each_with_object({}) do |loop_value, hash|
+        hash[loop_value] = options.find { |option| option.value == loop_value }&.content
       end
     end
 
@@ -281,7 +303,8 @@ class HotwireCombobox::Component
         owns: listbox_id,
         haspopup: "listbox",
         autocomplete: autocomplete,
-        activedescendant: ""
+        activedescendant: "",
+        multiselectable: multiple
     end
 
 

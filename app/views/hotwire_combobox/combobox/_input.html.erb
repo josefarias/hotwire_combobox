@@ -1,2 +1,4 @@
-<%= tag.input **component.input_attrs %>
-<%= tag.span **component.handle_attrs %>
+<%= tag.div **component.inner_wrapper_attrs do %>
+  <%= tag.input **component.input_attrs %>
+  <%= tag.span **component.handle_attrs %>
+<% end %>

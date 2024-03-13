@@ -66,6 +66,9 @@ class ComboboxesController < ApplicationController
   def conflicting_order
   end
 
+  def multiple
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 

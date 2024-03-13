@@ -1,5 +1,5 @@
 import Combobox from "hw_combobox/models/combobox/base"
-import { visible } from "hw_combobox/helpers"
+import { unselected, visible } from "hw_combobox/helpers"
 
 Combobox.Options = Base => class extends Base {
   _resetOptions() {
@@ -19,8 +19,13 @@ Combobox.Options = Base => class extends Base {
     return this._actingListbox.querySelectorAll(`[${this.filterableAttributeValue}]`)
   }
 
+  get _unselectedOptionElements() {
+    return [ ...this._allOptionElements ].filter(unselected)
+  }
+
   get _visibleOptionElements() {
-    return [ ...this._allOptionElements ].filter(visible)
+    const optionElements = this.isMultiple() ? this._unselectedOptionElements : this._allOptionElements
+    return [ ...optionElements ].filter(visible)
   }
 
   get _selectedOptionElement() {
@@ -36,5 +41,17 @@ Combobox.Options = Base => class extends Base {
     const noBlankOptionSelected = !this._selectedOptionElement
 
     return valueIsMissing && noBlankOptionSelected
+  }
+
+  get _navigatedOptionElement() {
+    if (this.isMultiple()) {
+      return this._actingListbox.querySelector("[role=option][aria-current=true]")
+    } else {
+      return this._selectedOptionElement
+    }
+  }
+
+  get _navigatedOptionIndex() {
+    return [ ...this._visibleOptionElements ].indexOf(this._navigatedOptionElement)
   }
 }

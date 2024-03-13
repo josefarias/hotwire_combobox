@@ -40,12 +40,12 @@ Combobox.Filtering = Base => class extends Base {
 
   _commitFilter(event) {
     if (this._shouldTreatAsNewOptionForFiltering(!isDeleteEvent(event))) {
-      this._selectNew()
+      if (!this.isMultiple()) this._selectNew()
     } else if (isDeleteEvent(event)) {
-      this._deselect()
+      if (!this.isMultiple()) this._deselect()
     } else if (event.inputType === "hw:lockInSelection") {
       this._select(this._ensurableOption)
-    } else if (this._isOpen) {
+    } else if (this._isOpen && !this.isMultiple()) {
       this._select(this._visibleOptionElements[0])
     }
   }
