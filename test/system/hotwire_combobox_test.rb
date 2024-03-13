@@ -699,6 +699,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   test "customized elements" do
     visit custom_attrs_path
 
+    assert_selector ".custom-class-for-form"
     assert_selector ".custom-class--fieldset"
     assert_selector ".custom-class--label"
     assert_selector ".custom-class--main_wrapper"
@@ -712,19 +713,20 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector ".custom-class--dialog_input", visible: :hidden
     assert_selector ".custom-class--dialog_listbox", visible: :hidden
 
-    assert_selector ".hw-combobox"
-    assert_selector ".hw-combobox__label"
-    assert_selector ".hw-combobox__main__wrapper"
-    assert_selector ".hw-combobox__input"
-    assert_selector ".hw-combobox__handle"
-    assert_selector ".hw-combobox__listbox", visible: :hidden
+    assert_selector ".hw-combobox", count: 2
+    assert_selector ".hw-combobox__label", count: 2
+    assert_selector ".hw-combobox__main__wrapper", count: 2
+    assert_selector ".hw-combobox__input", count: 2
+    assert_selector ".hw-combobox__handle", count: 2
+    assert_selector ".hw-combobox__listbox", visible: :hidden, count: 2
     assert_selector ".hw-combobox__option", visible: :hidden
-    assert_selector ".hw-combobox__dialog", visible: :hidden
-    assert_selector ".hw-combobox__dialog__wrapper", visible: :hidden
-    assert_selector ".hw-combobox__dialog__label", visible: :hidden
-    assert_selector ".hw-combobox__dialog__input", visible: :hidden
-    assert_selector ".hw-combobox__dialog__listbox", visible: :hidden
+    assert_selector ".hw-combobox__dialog", visible: :hidden, count: 2
+    assert_selector ".hw-combobox__dialog__wrapper", visible: :hidden, count: 2
+    assert_selector ".hw-combobox__dialog__label", visible: :hidden, count: 2
+    assert_selector ".hw-combobox__dialog__input", visible: :hidden, count: 2
+    assert_selector ".hw-combobox__dialog__listbox", visible: :hidden, count: 2
 
+    assert_selector "[data-custom-data-for-form]"
     assert_selector "[data-customized-fieldset]"
     assert_selector "[data-customized-label]"
     assert_selector "[data-customized-main-wrapper]"
