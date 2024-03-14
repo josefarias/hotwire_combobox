@@ -26,11 +26,9 @@ module HotwireCombobox
       if options.first.is_a? HotwireCombobox::Listbox::Option
         options
       else
-        render_in_proc = hw_render_in_proc(render_in) if render_in.present?
-
-        hw_parse_combobox_options(options, render_in: render_in_proc, **methods.merge(display: display)).tap do |options|
-          options.unshift(hw_blank_option(include_blank)) if include_blank.present?
-        end
+        opts = hw_parse_combobox_options options, render_in_proc: hw_render_in_proc(render_in), **methods.merge(display: display)
+        opts.unshift(hw_blank_option(include_blank)) if include_blank.present?
+        opts
       end
     end
     hw_alias :hw_combobox_options
@@ -85,7 +83,7 @@ module HotwireCombobox
         if include_blank.is_a? Hash
           text = include_blank.delete(:text)
 
-          [ text, hw_render_in_proc(include_blank).(text) ]
+          [ text, hw_call_render_in_proc(hw_render_in_proc(include_blank), text, display: text, value: "") ]
         else
           [ include_blank, include_blank ]
         end
@@ -102,7 +100,9 @@ module HotwireCombobox
 
     private
       def hw_render_in_proc(render_in)
-        ->(object) { render(**render_in.reverse_merge(object: object)) }
+        if render_in.present?
+          ->(object, locals) { render(**render_in.reverse_merge(object: object, locals: locals)) }
+        end
       end
 
       def hw_extract_options_and_src(options_or_src, render_in, include_blank)
@@ -113,38 +113,48 @@ module HotwireCombobox
         end
       end
 
-      def hw_parse_combobox_options(options, render_in: nil, **methods)
+      def hw_parse_combobox_options(options, render_in_proc: nil, **methods)
         options.map do |option|
           HotwireCombobox::Listbox::Option.new \
-            **hw_option_attrs_for(option, render_in: render_in, **methods)
+            **hw_option_attrs_for(option, render_in_proc: render_in_proc, **methods)
         end
       end
 
-      def hw_option_attrs_for(option, render_in: nil, **methods)
+      def hw_option_attrs_for(option, render_in_proc: nil, **methods)
         case option
         when Hash
-          option
+          option.tap do |attrs|
+            attrs[:content] = hw_call_render_in_proc(render_in_proc, attrs[:display], attrs) if render_in_proc
+          end
         when String
           {}.tap do |attrs|
             attrs[:display] = option
             attrs[:value] = option
-            attrs[:content] = render_in.(option) if render_in
+            attrs[:content] = hw_call_render_in_proc(render_in_proc, attrs[:display], attrs) if render_in_proc
           end
         when Array
           {}.tap do |attrs|
             attrs[:display] = option.first
             attrs[:value] = option.last
-            attrs[:content] = render_in.(option.first) if render_in
+            attrs[:content] = hw_call_render_in_proc(render_in_proc, attrs[:display], attrs) if render_in_proc
           end
         else
           {}.tap do |attrs|
-            attrs[:value] = hw_call_method_or_proc(option, methods[:value] || :id)
-
             attrs[:id] = hw_call_method_or_proc(option, methods[:id]) if methods[:id]
             attrs[:display] = hw_call_method_or_proc(option, methods[:display]) if methods[:display]
-            attrs[:content] = hw_call_method_or_proc(option, render_in || methods[:content]) if render_in || methods[:content]
+            attrs[:value] = hw_call_method_or_proc(option, methods[:value] || :id)
+
+            if render_in_proc
+              attrs[:content] = hw_call_render_in_proc(render_in_proc, option, attrs)
+            elsif methods[:content]
+              attrs[:content] = hw_call_method_or_proc(option, methods[:content])
+            end
           end
         end
+      end
+
+      def hw_call_render_in_proc(render_in_proc, object, attrs)
+        render_in_proc.(object, combobox_display: attrs[:display], combobox_value: attrs[:value])
       end
 
       def hw_call_method_or_proc(object, method_or_proc)

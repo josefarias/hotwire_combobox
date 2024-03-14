@@ -12,3 +12,9 @@
   <% combobox.customize_dialog_input class: "custom-class--dialog_input", data: { customized_dialog_input: "" } %>
   <% combobox.customize_dialog_listbox class: "custom-class--dialog_listbox", data: { customized_dialog_listbox: "" } %>
 <% end %>
+
+<%= form_with model: Movie.new do |f| %>
+  <%= f.combobox :rating, Movie.ratings, label: "rating" do |combobox| %>
+    <% combobox.customize_fieldset class: "custom-class-for-form", data: { custom_data_for_form: "" } %>
+  <% end %>
+<% end %>

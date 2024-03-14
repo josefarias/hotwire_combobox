@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   get "custom_attrs", to: "comboboxes#custom_attrs"
   get "conflicting_order", to: "comboboxes#conflicting_order"
   get "multiple", to: "comboboxes#multiple"
+  get "render_in_locals", to: "comboboxes#render_in_locals"
 
   resources :movies, only: %i[ index update ]
   get "movies_html", to: "movies#index_html"

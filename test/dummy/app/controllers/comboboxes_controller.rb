@@ -69,6 +69,10 @@ class ComboboxesController < ApplicationController
   def multiple
   end
 
+  def render_in_locals
+    @hashes = State.limit(3).map { |state| { display: state.name, value: state.abbreviation } }
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 
