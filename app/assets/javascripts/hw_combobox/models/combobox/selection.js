@@ -95,11 +95,6 @@ Combobox.Selection = Base => class extends Base {
       this._selectAndReplaceFullQuery(this._ensurableOption)
       this.filter({ inputType: "hw:lockInSelection" })
     }
-
-    if (this._isUnjustifiablyBlank) {
-      this._deselect()
-      this._clearQuery()
-    }
   }
 
   _setActiveDescendant(id) {

@@ -9,7 +9,10 @@ Combobox.Toggle = Base => class extends Base {
   close() {
     if (this._isOpen) {
       this._lockInSelection()
+      this._clearInvalidQuery()
+
       this.expandedValue = false
+
       this._dispatchClosedEvent()
     }
   }
@@ -79,6 +82,8 @@ Combobox.Toggle = Base => class extends Base {
     this._actingCombobox.setAttribute("aria-expanded", true) // needs to happen after setting acting combobox
   }
 
+  // +._collapse()+ differs from `.close()` in that it might be called by stimulus on connect because
+  // it interprets a change in `expandedValue` — whereas `.close()` is only called internally by us.
   _collapse() {
     this._actingCombobox.setAttribute("aria-expanded", false) // needs to happen before resetting acting combobox
 
@@ -117,6 +122,13 @@ Combobox.Toggle = Base => class extends Base {
 
   _restoreBodyScroll() {
     enableBodyScroll(this.dialogListboxTarget)
+  }
+
+  _clearInvalidQuery() {
+    if (this._isUnjustifiablyBlank) {
+      this._deselect()
+      this._clearQuery()
+    }
   }
 
   get _isOpen() {
