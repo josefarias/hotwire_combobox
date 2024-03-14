@@ -45,7 +45,7 @@ Combobox.Filtering = Base => class extends Base {
       this._deselect()
     } else if (event.inputType === "hw:lockInSelection") {
       this._select(this._ensurableOption)
-    } else if (this._isOpen) {
+    } else if (this._isOpen && this._fullQuery) {
       this._select(this._visibleOptionElements[0])
     }
   }
