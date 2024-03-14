@@ -25,7 +25,7 @@ Combobox.Selection = Base => class extends Base {
   _select(option, autocompleteStrategy) {
     const previousValue = this._value
 
-    this._resetOptions()
+    this._resetOptionsSilently()
 
     autocompleteStrategy(option)
 
@@ -40,7 +40,7 @@ Combobox.Selection = Base => class extends Base {
   _selectNew() {
     const previousValue = this._value
 
-    this._resetOptions()
+    this._resetOptionsSilently()
     this._setValue(this._fullQuery)
     this._setName(this.nameWhenNewValue)
     this._markValid()
@@ -56,6 +56,12 @@ Combobox.Selection = Base => class extends Base {
 
     this._setValue(null)
     this._setActiveDescendant("")
+
+    return previousValue
+  }
+
+  _deselectAndNotify() {
+    const previousValue = this._deselect()
     this._dispatchSelectionEvent({ isNewAndAllowed: false, previousValue: previousValue })
   }
 

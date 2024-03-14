@@ -48,7 +48,7 @@ Combobox.Filtering = Base => class extends Base {
     } else if (this._isOpen && this._visibleOptionElements[0]) {
       this._selectAndAutocompleteMissingPortion(this._visibleOptionElements[0])
     } else if (this._isOpen) {
-      this._resetOptions()
+      this._resetOptionsAndNotify()
       this._markInvalid()
     }
   }
