@@ -5,7 +5,7 @@ Combobox.Selection = Base => class extends Base {
   selectOptionOnClick(event) {
     this.filter(event)
     this._select(event.currentTarget, { forceAutocomplete: true })
-    this.close({ optionDirectlyClicked: true })
+    this.close()
   }
 
   _connectSelection() {
