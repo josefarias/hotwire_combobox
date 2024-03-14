@@ -44,9 +44,9 @@ Combobox.Filtering = Base => class extends Base {
     } else if (isDeleteEvent(event)) {
       this._deselect()
     } else if (event.inputType === "hw:lockInSelection") {
-      this._select(this._ensurableOption)
+      this._selectAndAutocompleteMissingPortion(this._ensurableOption)
     } else if (this._isOpen) {
-      this._select(this._visibleOptionElements[0])
+      this._selectAndAutocompleteMissingPortion(this._visibleOptionElements[0])
     }
   }
 

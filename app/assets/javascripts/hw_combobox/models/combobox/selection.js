@@ -4,7 +4,7 @@ import { wrapAroundAccess } from "hw_combobox/helpers"
 Combobox.Selection = Base => class extends Base {
   selectOptionOnClick(event) {
     this.filter(event)
-    this._select(event.currentTarget, { forceAutocomplete: true })
+    this._selectAndReplaceFullQuery(event.currentTarget)
     this.close()
   }
 
@@ -14,17 +14,21 @@ Combobox.Selection = Base => class extends Base {
     }
   }
 
-  _select(option, { forceAutocomplete = false } = {}) {
+  _selectAndReplaceFullQuery(option) {
+    this._select(option, this._replaceFullQueryWithAutocompletedValue.bind(this))
+  }
+
+  _selectAndAutocompleteMissingPortion(option) {
+    this._select(option, this._autocompleteMissingPortionOnly.bind(this))
+  }
+
+  _select(option, autocompleteStrategy) {
     this._resetOptions()
 
     if (option) {
       const previousValue = this._value
 
-      if (forceAutocomplete) {
-        this._replaceFullQueryWithAutocompletedValue(option)
-      } else {
-        this._autocompleteMissingPortionOnly(option)
-      }
+      autocompleteStrategy(option)
 
       this._setValue(option.dataset.value)
       this._markSelected(option)
@@ -73,7 +77,7 @@ Combobox.Selection = Base => class extends Base {
 
   _selectIndex(index) {
     const option = wrapAroundAccess(this._visibleOptionElements, index)
-    this._select(option, { forceAutocomplete: true })
+    this._selectAndReplaceFullQuery(option)
   }
 
   _preselectOption() {
@@ -88,7 +92,7 @@ Combobox.Selection = Base => class extends Base {
 
   _lockInSelection() {
     if (this._shouldLockInSelection) {
-      this._select(this._ensurableOption, { forceAutocomplete: true })
+      this._selectAndReplaceFullQuery(this._ensurableOption)
       this.filter({ inputType: "hw:lockInSelection" })
     }
 
