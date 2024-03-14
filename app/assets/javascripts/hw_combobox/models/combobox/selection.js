@@ -5,7 +5,7 @@ Combobox.Selection = Base => class extends Base {
   selectOptionOnClick(event) {
     this.filter(event)
     this._select(event.currentTarget, { forceAutocomplete: true })
-    this.close()
+    this.close({ optionDirectlyClicked: true })
   }
 
   _connectSelection() {
@@ -15,7 +15,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _select(option, { forceAutocomplete = false } = {}) {
-    this._resetOptions()
+    if (option !== this._selectedOptionElement) this._resetOptions()
 
     if (option) {
       this._autocompleteWith(option, { force: forceAutocomplete })
@@ -27,6 +27,8 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _commitSelection(option, { selected }) {
+    if (selected && option === this._selectedOptionElement) return
+
     this._markSelected(option, { selected })
 
     if (selected) {
