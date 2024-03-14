@@ -43,10 +43,13 @@ Combobox.Filtering = Base => class extends Base {
       this._selectNew()
     } else if (isDeleteEvent(event)) {
       this._deselect()
-    } else if (event.inputType === "hw:lockInSelection") {
+    } else if (event.inputType === "hw:lockInSelection" && this._ensurableOption) {
       this._selectAndAutocompleteMissingPortion(this._ensurableOption)
-    } else if (this._isOpen) {
+    } else if (this._isOpen && this._visibleOptionElements[0]) {
       this._selectAndAutocompleteMissingPortion(this._visibleOptionElements[0])
+    } else if (this._isOpen) {
+      this._resetOptions()
+      this._markInvalid()
     }
   }
 

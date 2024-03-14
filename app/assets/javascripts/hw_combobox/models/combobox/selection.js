@@ -23,22 +23,18 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _select(option, autocompleteStrategy) {
+    const previousValue = this._value
+
     this._resetOptions()
 
-    if (option) {
-      const previousValue = this._value
+    autocompleteStrategy(option)
 
-      autocompleteStrategy(option)
+    this._setValue(option.dataset.value)
+    this._markSelected(option)
+    this._markValid()
+    this._dispatchSelectionEvent({ isNewAndAllowed: false, previousValue: previousValue })
 
-      this._setValue(option.dataset.value)
-      this._markSelected(option)
-      this._markValid()
-      this._dispatchSelectionEvent({ isNewAndAllowed: false, previousValue: previousValue })
-
-      option.scrollIntoView({ block: "nearest" })
-    } else {
-      this._markInvalid()
-    }
+    option.scrollIntoView({ block: "nearest" })
   }
 
   _selectNew() {
