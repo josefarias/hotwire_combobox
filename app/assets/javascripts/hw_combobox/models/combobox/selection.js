@@ -20,7 +20,12 @@ Combobox.Selection = Base => class extends Base {
     if (option) {
       const previousValue = this._value
 
-      this._autocompleteWith(option, { force: forceAutocomplete })
+      if (forceAutocomplete) {
+        this._replaceFullQueryWithAutocompletedValue(option)
+      } else {
+        this._autocompleteMissingPortionOnly(option)
+      }
+
       this._setValue(option.dataset.value)
       this._markSelected(option)
       this._markValid()
