@@ -27,8 +27,9 @@ export default class extends Controller {
       display: ${cast(event.detail.display) || "<empty>"}
       query: ${cast(event.detail.query) || "<empty>"}
       fieldName: ${cast(event.detail.fieldName) || "<empty>"}
-      isNew: ${cast(event.detail.isNew) || "<empty>"}
+      isNewAndAllowed: ${cast(event.detail.isNewAndAllowed) || "<empty>"}
       isValid: ${cast(event.detail.isValid) || "<empty>"}
+      previousValue: ${cast(event.detail.previousValue) || "<empty>"}
     `
   }
 }

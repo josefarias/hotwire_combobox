@@ -18,27 +18,40 @@ Combobox.Selection = Base => class extends Base {
     this._resetOptions()
 
     if (option) {
+      const previousValue = this._value
+
       this._autocompleteWith(option, { force: forceAutocomplete })
-      this._commitSelection(option, { selected: true })
+      this._setValue(option.dataset.value)
+      this._markSelected(option)
       this._markValid()
+      this._dispatchSelectionEvent({ isNewAndAllowed: false, previousValue: previousValue })
+
+      option.scrollIntoView({ block: "nearest" })
     } else {
       this._markInvalid()
     }
   }
 
-  _commitSelection(option, { selected }) {
-    if (selected) {
-      this._markSelected(option)
-    } else {
-      this._markNotSelected(option)
+  _selectNew() {
+    const previousValue = this._value
+
+    this._resetOptions()
+    this._setValue(this._fullQuery)
+    this._setName(this.nameWhenNewValue)
+    this._markValid()
+    this._dispatchSelectionEvent({ isNewAndAllowed: true, previousValue: previousValue })
+  }
+
+  _deselect() {
+    const previousValue = this._value
+
+    if (this._selectedOptionElement) {
+      this._markNotSelected(this._selectedOptionElement)
     }
 
-    if (selected) {
-      this.hiddenFieldTarget.value = option.dataset.value
-      option.scrollIntoView({ block: "nearest" })
-    }
-
-    this._dispatchSelectionEvent({ isNew: false })
+    this._setValue(null)
+    this._setActiveDescendant("")
+    this._dispatchSelectionEvent({ isNewAndAllowed: false, previousValue: previousValue })
   }
 
   _markSelected(option) {
@@ -53,26 +66,6 @@ Combobox.Selection = Base => class extends Base {
     this._removeActiveDescendant()
   }
 
-  _deselect() {
-    const option = this._selectedOptionElement
-
-    if (option) this._commitSelection(option, { selected: false })
-
-    this.hiddenFieldTarget.value = null
-    this._setActiveDescendant("")
-
-    if (!option) this._dispatchSelectionEvent({ isNew: false })
-  }
-
-  _selectNew() {
-    this._resetOptions()
-    this.hiddenFieldTarget.value = this._fullQuery
-    this.hiddenFieldTarget.name = this.nameWhenNewValue
-    this._markValid()
-
-    this._dispatchSelectionEvent({ isNew: true })
-  }
-
   _selectIndex(index) {
     const option = wrapAroundAccess(this._visibleOptionElements, index)
     this._select(option, { forceAutocomplete: true })
@@ -81,7 +74,7 @@ Combobox.Selection = Base => class extends Base {
   _preselectOption() {
     if (this._hasValueButNoSelection && this._allOptions.length < 100) {
       const option = this._allOptions.find(option => {
-        return option.dataset.value === this.hiddenFieldTarget.value
+        return option.dataset.value === this._value
       })
 
       if (option) this._markSelected(option)
@@ -108,8 +101,20 @@ Combobox.Selection = Base => class extends Base {
     this._setActiveDescendant("")
   }
 
+  _setValue(value) {
+    this.hiddenFieldTarget.value = value
+  }
+
+  _setName(value) {
+    this.hiddenFieldTarget.name = value
+  }
+
+  get _value() {
+    return this.hiddenFieldTarget.value
+  }
+
   get _hasValueButNoSelection() {
-    return this.hiddenFieldTarget.value && !this._selectedOptionElement
+    return this._value && !this._selectedOptionElement
   }
 
   get _shouldLockInSelection() {

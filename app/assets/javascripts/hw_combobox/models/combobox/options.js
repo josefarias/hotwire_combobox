@@ -4,7 +4,7 @@ import { visible } from "hw_combobox/helpers"
 Combobox.Options = Base => class extends Base {
   _resetOptions() {
     this._deselect()
-    this.hiddenFieldTarget.name = this.originalNameValue
+    this._setName(this.originalNameValue)
   }
 
   get _allowNew() {
@@ -32,7 +32,7 @@ Combobox.Options = Base => class extends Base {
   }
 
   get _isUnjustifiablyBlank() {
-    const valueIsMissing = !this.hiddenFieldTarget.value
+    const valueIsMissing = !this._value
     const noBlankOptionSelected = !this._selectedOptionElement
 
     return valueIsMissing && noBlankOptionSelected

@@ -629,8 +629,9 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "display: A Beautiful Mind"
     assert_text "query: A Bea"
     assert_text "fieldName: movie"
-    assert_text "isNew: false"
+    assert_text "isNewAndAllowed: false"
     assert_text "isValid: true"
+    assert_text "previousValue: <empty>"
 
     assert_no_text "event: hw-combobox:closed"
 
@@ -641,28 +642,20 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "display: A Beat"
     assert_text "query: A Beat"
     assert_text "fieldName: new_movie"
-    assert_text "isNew: true"
+    assert_text "isNewAndAllowed: true"
     assert_text "isValid: true"
+    assert_text "previousValue: #{movies(:a_beautiful_mind).id}"
 
     assert_no_text "event: hw-combobox:closed"
 
     click_away
-
-    # No changes
-    assert_text "event: hw-combobox:selection"
-    assert_text "value: A Beat"
-    assert_text "display: A Beat"
-    assert_text "query: A Beat"
-    assert_text "fieldName: new_movie"
-    assert_text "isNew: true"
-    assert_text "isValid: true"
 
     assert_text "event: hw-combobox:closed"
     assert_text "value: A Beat"
     assert_text "display: A Beat"
     assert_text "query: A Beat"
     assert_text "fieldName: new_movie"
-    assert_text "isNew: <empty>"
+    assert_text "isNewAndAllowed: <empty>"
     assert_text "isValid: true"
 
     type_in_combobox "#required", "A Bea"
@@ -672,8 +665,9 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "display: A Beautiful Mind"
     assert_text "query: A Bea"
     assert_text "fieldName: movie"
-    assert_text "isNew: false"
+    assert_text "isNewAndAllowed: false"
     assert_text "isValid: true"
+    assert_text "previousValue: <empty>"
 
     type_in_combobox "#required", "t"
 
@@ -682,17 +676,18 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "display: A Beat"
     assert_text "query: A Beat"
     assert_text "fieldName: movie"
-    assert_text "isNew: false"
+    assert_text "isNewAndAllowed: false"
     assert_text "isValid: false"
+    assert_text "previousValue: #{movies(:a_beautiful_mind).id}"
 
     click_away
 
-    assert_text "event: hw-combobox:selection"
+    assert_text "event: hw-combobox:closed"
     assert_text "value: <empty>"
-    assert_text "display: <empty>"
-    assert_text "query: <empty>"
+    assert_text "display: A Beat"
+    assert_text "query: A Beat"
     assert_text "fieldName: movie"
-    assert_text "isNew: false"
+    assert_text "isNewAndAllowed: false"
     assert_text "isValid: false"
   end
 
