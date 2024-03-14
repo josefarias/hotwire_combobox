@@ -27,7 +27,11 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _commitSelection(option, { selected }) {
-    this._markSelected(option, { selected })
+    if (selected) {
+      this._markSelected(option)
+    } else {
+      this._markNotSelected(option)
+    }
 
     if (selected) {
       this.hiddenFieldTarget.value = option.dataset.value
@@ -37,13 +41,16 @@ Combobox.Selection = Base => class extends Base {
     this._dispatchSelectionEvent({ isNew: false })
   }
 
-  _markSelected(option, { selected }) {
-    if (this.hasSelectedClass) {
-      option.classList.toggle(this.selectedClass, selected)
-    }
+  _markSelected(option) {
+    if (this.hasSelectedClass) option.classList.add(this.selectedClass)
+    option.setAttribute("aria-selected", true)
+    this._setActiveDescendant(option.id)
+  }
 
-    option.setAttribute("aria-selected", selected)
-    this._setActiveDescendant(selected ? option.id : "")
+  _markNotSelected(option) {
+    if (this.hasSelectedClass) option.classList.remove(this.selectedClass)
+    option.removeAttribute("aria-selected")
+    this._removeActiveDescendant()
   }
 
   _deselect() {
@@ -77,7 +84,7 @@ Combobox.Selection = Base => class extends Base {
         return option.dataset.value === this.hiddenFieldTarget.value
       })
 
-      if (option) this._markSelected(option, { selected: true })
+      if (option) this._markSelected(option)
     }
   }
 
@@ -95,6 +102,10 @@ Combobox.Selection = Base => class extends Base {
 
   _setActiveDescendant(id) {
     this._forAllComboboxes(el => el.setAttribute("aria-activedescendant", id))
+  }
+
+  _removeActiveDescendant() {
+    this._setActiveDescendant("")
   }
 
   get _hasValueButNoSelection() {
