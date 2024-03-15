@@ -1,10 +1,9 @@
 import Combobox from "hw_combobox/models/combobox/base"
-import { wrapAroundAccess } from "hw_combobox/helpers"
+import { wrapAroundAccess, isDeleteEvent } from "hw_combobox/helpers"
 
 Combobox.Selection = Base => class extends Base {
   selectOptionOnClick(event) {
-    this.filter(event)
-    this._selectAndReplaceFullQuery(event.currentTarget)
+    this._forceSelectionAndFilter(event.currentTarget, event)
     this.close()
   }
 
@@ -14,12 +13,19 @@ Combobox.Selection = Base => class extends Base {
     }
   }
 
-  _selectAndReplaceFullQuery(option) {
-    this._select(option, this._replaceFullQueryWithAutocompletedValue.bind(this))
-  }
-
-  _selectAndAutocompleteMissingPortion(option) {
-    this._select(option, this._autocompleteMissingPortionOnly.bind(this))
+  _selectBasedOnQuery(event) {
+    if (this._shouldTreatAsNewOptionForFiltering(!isDeleteEvent(event))) {
+      this._selectNew()
+    } else if (isDeleteEvent(event)) {
+      this._deselect()
+    } else if (event.inputType === "hw:lockInSelection" && this._ensurableOption) {
+      this._selectAndAutocompleteMissingPortion(this._ensurableOption)
+    } else if (this._isOpen && this._visibleOptionElements[0]) {
+      this._selectAndAutocompleteMissingPortion(this._visibleOptionElements[0])
+    } else if (this._isOpen) {
+      this._resetOptionsAndNotify()
+      this._markInvalid()
+    }
   }
 
   _select(option, autocompleteStrategy) {
@@ -65,21 +71,18 @@ Combobox.Selection = Base => class extends Base {
     this._dispatchSelectionEvent({ isNewAndAllowed: false, previousValue: previousValue })
   }
 
-  _markSelected(option) {
-    if (this.hasSelectedClass) option.classList.add(this.selectedClass)
-    option.setAttribute("aria-selected", true)
-    this._setActiveDescendant(option.id)
+  _forceSelectionAndFilter(option, event) {
+    this._forceSelectionWithoutFiltering(option)
+    this._filter(event)
   }
 
-  _markNotSelected(option) {
-    if (this.hasSelectedClass) option.classList.remove(this.selectedClass)
-    option.removeAttribute("aria-selected")
-    this._removeActiveDescendant()
+  _forceSelectionWithoutFiltering(option) {
+    this._selectAndReplaceFullQuery(option)
   }
 
   _selectIndex(index) {
     const option = wrapAroundAccess(this._visibleOptionElements, index)
-    this._selectAndReplaceFullQuery(option)
+    this._forceSelectionWithoutFiltering(option)
   }
 
   _preselectOption() {
@@ -92,11 +95,30 @@ Combobox.Selection = Base => class extends Base {
     }
   }
 
+  _selectAndReplaceFullQuery(option) {
+    this._select(option, this._replaceFullQueryWithAutocompletedValue.bind(this))
+  }
+
+  _selectAndAutocompleteMissingPortion(option) {
+    this._select(option, this._autocompleteMissingPortionOnly.bind(this))
+  }
+
   _lockInSelection() {
     if (this._shouldLockInSelection) {
-      this._selectAndReplaceFullQuery(this._ensurableOption)
-      this.filter({ inputType: "hw:lockInSelection" })
+      this._forceSelectionAndFilter(this._ensurableOption, { inputType: "hw:lockInSelection" })
     }
+  }
+
+  _markSelected(option) {
+    if (this.hasSelectedClass) option.classList.add(this.selectedClass)
+    option.setAttribute("aria-selected", true)
+    this._setActiveDescendant(option.id)
+  }
+
+  _markNotSelected(option) {
+    if (this.hasSelectedClass) option.classList.remove(this.selectedClass)
+    option.removeAttribute("aria-selected")
+    this._removeActiveDescendant()
   }
 
   _setActiveDescendant(id) {
