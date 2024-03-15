@@ -15,7 +15,7 @@ Combobox.Autocomplete = Base => class extends Base {
     this._actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length)
   }
 
-  _autocompleteMissingPortionOnly(option) {
+  _autocompleteMissingPortion(option) {
     const typedValue = this._typedQuery
     const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
 

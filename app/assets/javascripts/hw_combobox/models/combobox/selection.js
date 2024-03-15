@@ -107,7 +107,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _selectAndAutocompleteMissingPortion(option) {
-    this._select(option, this._autocompleteMissingPortionOnly.bind(this))
+    this._select(option, this._autocompleteMissingPortion.bind(this))
   }
 
   _lockInSelection() {
