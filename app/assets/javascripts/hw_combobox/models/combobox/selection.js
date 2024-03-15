@@ -2,7 +2,7 @@ import Combobox from "hw_combobox/models/combobox/base"
 import { wrapAroundAccess, isDeleteEvent } from "hw_combobox/helpers"
 
 Combobox.Selection = Base => class extends Base {
-  selectOptionOnClick(event) {
+  selectOnClick(event) {
     this._forceSelectionAndFilter(event.currentTarget, event)
     this.close()
   }
@@ -13,12 +13,12 @@ Combobox.Selection = Base => class extends Base {
     }
   }
 
-  _selectBasedOnQuery(event) {
-    if (this._shouldTreatAsNewOptionForFiltering(!isDeleteEvent(event))) {
+  _selectOnQuery(inputEvent) {
+    if (this._shouldTreatAsNewOptionForFiltering(!isDeleteEvent(inputEvent))) {
       this._selectNew()
-    } else if (isDeleteEvent(event)) {
+    } else if (isDeleteEvent(inputEvent)) {
       this._deselect()
-    } else if (event.inputType === "hw:lockInSelection" && this._ensurableOption) {
+    } else if (inputEvent.inputType === "hw:lockInSelection" && this._ensurableOption) {
       this._selectAndAutocompleteMissingPortion(this._ensurableOption)
     } else if (this._isOpen && this._visibleOptionElements[0]) {
       this._selectAndAutocompleteMissingPortion(this._visibleOptionElements[0])
@@ -29,20 +29,20 @@ Combobox.Selection = Base => class extends Base {
       // When selecting from an async dialog listbox: selection is forced, the listbox is filtered,
       // and the dialog is closed. Filtering ends with an `endOfOptionsStream` target connected
       // to the now invisible combobox, which is now closed because Turbo waits for "nextRepaint"
-      // before rendering turbo streams. This ultimately calls +_selectBasedOnQuery+. We do want
-      // to call +_selectBasedOnQuery+ in this case to account for e.g. selection of
+      // before rendering turbo streams. This ultimately calls +_selectOnQuery+. We do want
+      // to call +_selectOnQuery+ in this case to account for e.g. selection of
       // new options. But we will noop here if it's none of the cases checked above.
     }
   }
 
   _select(option, autocompleteStrategy) {
-    const previousValue = this._value
+    const previousValue = this._fieldValue
 
     this._resetOptionsSilently()
 
     autocompleteStrategy(option)
 
-    this._setValue(option.dataset.value)
+    this._setFieldValue(option.dataset.value)
     this._markSelected(option)
     this._markValid()
     this._dispatchSelectionEvent({ isNewAndAllowed: false, previousValue: previousValue })
@@ -51,23 +51,23 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _selectNew() {
-    const previousValue = this._value
+    const previousValue = this._fieldValue
 
     this._resetOptionsSilently()
-    this._setValue(this._fullQuery)
-    this._setName(this.nameWhenNewValue)
+    this._setFieldValue(this._fullQuery)
+    this._setFieldName(this.nameWhenNewValue)
     this._markValid()
     this._dispatchSelectionEvent({ isNewAndAllowed: true, previousValue: previousValue })
   }
 
   _deselect() {
-    const previousValue = this._value
+    const previousValue = this._fieldValue
 
     if (this._selectedOptionElement) {
       this._markNotSelected(this._selectedOptionElement)
     }
 
-    this._setValue(null)
+    this._setFieldValue(null)
     this._setActiveDescendant("")
 
     return previousValue
@@ -78,36 +78,36 @@ Combobox.Selection = Base => class extends Base {
     this._dispatchSelectionEvent({ isNewAndAllowed: false, previousValue: previousValue })
   }
 
-  _forceSelectionAndFilter(option, event) {
-    this._forceSelectionWithoutFiltering(option)
-    this._filter(event)
-  }
-
-  _forceSelectionWithoutFiltering(option) {
-    this._selectAndReplaceFullQuery(option)
-  }
-
   _selectIndex(index) {
     const option = wrapAroundAccess(this._visibleOptionElements, index)
     this._forceSelectionWithoutFiltering(option)
   }
 
-  _preselectOption() {
+  _preselect() {
     if (this._hasValueButNoSelection && this._allOptions.length < 100) {
       const option = this._allOptions.find(option => {
-        return option.dataset.value === this._value
+        return option.dataset.value === this._fieldValue
       })
 
       if (option) this._markSelected(option)
     }
   }
 
-  _selectAndReplaceFullQuery(option) {
+  _selectAndAutocompleteMissingPortion(option) {
+    this._select(option, this._autocompleteMissingPortion.bind(this))
+  }
+
+  _selectAndAutocompleteFullQuery(option) {
     this._select(option, this._replaceFullQueryWithAutocompletedValue.bind(this))
   }
 
-  _selectAndAutocompleteMissingPortion(option) {
-    this._select(option, this._autocompleteMissingPortion.bind(this))
+  _forceSelectionAndFilter(option, event) {
+    this._forceSelectionWithoutFiltering(option)
+    this._filter(event)
+  }
+
+  _forceSelectionWithoutFiltering(option) {
+    this._selectAndAutocompleteFullQuery(option)
   }
 
   _lockInSelection() {
@@ -136,20 +136,8 @@ Combobox.Selection = Base => class extends Base {
     this._setActiveDescendant("")
   }
 
-  _setValue(value) {
-    this.hiddenFieldTarget.value = value
-  }
-
-  _setName(value) {
-    this.hiddenFieldTarget.name = value
-  }
-
-  get _value() {
-    return this.hiddenFieldTarget.value
-  }
-
   get _hasValueButNoSelection() {
-    return this._value && !this._selectedOptionElement
+    return this._fieldValue && !this._selectedOptionElement
   }
 
   get _shouldLockInSelection() {

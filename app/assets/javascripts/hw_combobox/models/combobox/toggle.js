@@ -71,9 +71,9 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   _expand() {
-    if (this._preselectOnExpansion) this._preselectOption()
+    if (this._preselectOnExpansion) this._preselect()
 
-    if (this._autocompletesList && this._smallViewport) {
+    if (this._autocompletesList && this._isSmallViewport) {
       this._openInDialog()
     } else {
       this._openInline()

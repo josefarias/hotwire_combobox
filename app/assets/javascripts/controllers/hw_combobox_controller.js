@@ -12,6 +12,7 @@ const concerns = [
   Combobox.Dialog,
   Combobox.Events,
   Combobox.Filtering,
+  Combobox.FormField,
   Combobox.Navigation,
   Combobox.NewOptions,
   Combobox.Options,
@@ -80,9 +81,9 @@ export default class HwComboboxController extends Concerns(...concerns) {
 
     if (inputType && inputType !== "hw:lockInSelection") {
       if (delay) await sleep(delay)
-      this._selectBasedOnQuery({ inputType })
+      this._selectOnQuery({ inputType })
     } else {
-      this._preselectOption()
+      this._preselect()
     }
   }
 }

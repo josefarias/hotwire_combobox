@@ -8,7 +8,7 @@ Combobox.Filtering = Base => class extends Base {
     this._filter(event)
 
     if (this._isSync) {
-      this._selectBasedOnQuery(event)
+      this._selectOnQuery(event)
     } else {
       // noop, async selection is handled by stimulus callbacks
     }
@@ -25,7 +25,7 @@ Combobox.Filtering = Base => class extends Base {
       this._filterSync()
     }
 
-    this._actingCombobox.toggleAttribute("data-queried", this._isQueried)
+    this._markQueried()
   }
 
   _debouncedFilterAsync(event) {
@@ -43,13 +43,16 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _filterSync() {
-    this.open()
     this._allOptionElements.forEach(applyFilter(this._fullQuery, { matching: this.filterableAttributeValue }))
   }
 
   _clearQuery() {
     this._fullQuery = ""
     this.filterAndSelect({ inputType: "deleteContentBackward" })
+  }
+
+  _markQueried() {
+    this._actingCombobox.toggleAttribute("data-queried", this._isQueried)
   }
 
   get _isQueried() {
