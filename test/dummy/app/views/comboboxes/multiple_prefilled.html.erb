@@ -5,6 +5,6 @@
   }
 </style>
 
-<%= combobox_tag "state", @state_options, id: "state-field", multiple: true, value: [], placeholder: 'State' do |combobox| %>
+<%= combobox_tag "state", @state_options, id: "state-field", multiple: true, value: ['FL', 'MO'] do |combobox| %>
   <% combobox.customize_main_wrapper class: "wide-multiple-field" %>
 <% end %>

@@ -73,6 +73,9 @@ class ComboboxesController < ApplicationController
   def multiple
   end
 
+  def multiple_prefilled
+  end
+
   def multiple_custom_events
   end
 

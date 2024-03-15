@@ -37,6 +37,7 @@ Combobox.MultipleSelection = Base => class extends Base {
 
   _setMultipleValue() {
     this._setFieldValue(JSON.stringify(this._multipleSelectionValues()))
+    this._swapPlaceholder()
   }
 
   _multipleSelectionValues() {
@@ -44,6 +45,20 @@ Combobox.MultipleSelection = Base => class extends Base {
       return Object.keys(this.multipleSelectionsValue)
     }
     return []
+  }
+
+  _swapPlaceholder() {
+    if (this._fieldValue == '[]') {
+      if (this.comboboxTarget.hasAttribute('data-placeholder-disabled')) {
+        this.comboboxTarget.setAttribute('placeholder', this.comboboxTarget.getAttribute('data-placeholder-disabled'))
+        this.comboboxTarget.removeAttribute('data-placeholder-disabled')
+      }
+    } else {
+      if (this.comboboxTarget.hasAttribute('placeholder')) {
+        this.comboboxTarget.setAttribute('data-placeholder-disabled', this.comboboxTarget.getAttribute('placeholder'))
+        this.comboboxTarget.removeAttribute('placeholder')
+      }
+    }
   }
 
   _addSelection(option) {

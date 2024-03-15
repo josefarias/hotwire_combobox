@@ -791,8 +791,20 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_option_with text: "display: Alabama\nvalue: AL"
   end
 
-  test "allows multiple selections (hides already-selected options, stays open)" do
+  test "allows multiple selections (stays open, swaps out placeholder when selected)" do
     visit multiple_path
+
+    assert_selector "input[placeholder='State']"
+    open_combobox "#state-field"
+    click_on_option "Alabama"
+    assert_open_combobox
+    assert_no_selector "input[placeholder='State']"
+    find("#AL .hw-combobox__multiple_selection__remove").click
+    assert_selector "input[placeholder='State']"
+  end
+
+  test "prefills multiple selections and hides already-selected options" do
+    visit multiple_prefilled_path
 
     assert_selector "div[id='FL'] div", text: "Florida"
     open_combobox "#state-field"

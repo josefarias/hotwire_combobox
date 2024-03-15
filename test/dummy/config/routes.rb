@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   get "conflicting_order", to: "comboboxes#conflicting_order"
   get "render_in_locals", to: "comboboxes#render_in_locals"
   get "multiple", to: "comboboxes#multiple"
+  get "multiple_prefilled", to: "comboboxes#multiple_prefilled"
   get "multiple_custom_events", to: "comboboxes#multiple_custom_events"
 
   resources :movies, only: %i[ index update ]
