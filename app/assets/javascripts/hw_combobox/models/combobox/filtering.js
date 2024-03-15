@@ -1,3 +1,4 @@
+
 import Combobox from "hw_combobox/models/combobox/base"
 import { applyFilter, debounce, unselectedPortion } from "hw_combobox/helpers"
 import { get } from "hw_combobox/vendor/requestjs"
@@ -6,7 +7,7 @@ Combobox.Filtering = Base => class extends Base {
   filterAndSelect(event) {
     this._filter(event)
 
-    if (this._isSync && !this.isMultiple()) {
+    if (this._isSync) {
       this._selectOnQuery(event)
     } else {
       // noop, async selection is handled by stimulus callbacks

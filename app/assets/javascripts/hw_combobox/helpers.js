@@ -2,10 +2,6 @@ export function Concerns(Base, ...mixins) {
   return mixins.reduce((accumulator, current) => current(accumulator), Base)
 }
 
-export function unselected(target) {
-  return target.getAttribute("aria-selected") !== "true"
-}
-
 export function visible(target) {
   return !(target.hidden || target.closest("[hidden]"))
 }
