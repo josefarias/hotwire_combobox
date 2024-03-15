@@ -302,6 +302,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_not_invalid_combobox
     type_in_combobox "#state-field", "foobar", :enter
     assert_invalid_combobox
+    assert_combobox_display_and_value "#state-field", nil, nil
   end
 
   test "combobox is not invalid if empty but not required" do
@@ -621,79 +622,94 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     assert_text "Ready to listen for hw-combobox events!"
 
+    assert_no_text "selections:"
+
     open_combobox "#allow-new"
     type_in_combobox "#allow-new", "A Bea"
 
+    assert_text "selections: 1."
     assert_text "event: hw-combobox:selection"
     assert_text "value: #{movies(:a_beautiful_mind).id}"
     assert_text "display: A Beautiful Mind"
     assert_text "query: A Bea"
     assert_text "fieldName: movie"
-    assert_text "isNew: false"
+    assert_text "isNewAndAllowed: false"
     assert_text "isValid: true"
+    assert_text "previousValue: <empty>"
 
     assert_no_text "event: hw-combobox:closed"
 
     type_in_combobox "#allow-new", "t"
 
+    assert_text "selections: 2."
     assert_text "event: hw-combobox:selection"
     assert_text "value: A Beat"
     assert_text "display: A Beat"
     assert_text "query: A Beat"
     assert_text "fieldName: new_movie"
-    assert_text "isNew: true"
+    assert_text "isNewAndAllowed: true"
     assert_text "isValid: true"
+    assert_text "previousValue: #{movies(:a_beautiful_mind).id}"
 
+    assert_no_text "closings:"
     assert_no_text "event: hw-combobox:closed"
 
     click_away
 
-    # No changes
-    assert_text "event: hw-combobox:selection"
-    assert_text "value: A Beat"
-    assert_text "display: A Beat"
-    assert_text "query: A Beat"
-    assert_text "fieldName: new_movie"
-    assert_text "isNew: true"
-    assert_text "isValid: true"
-
+    assert_text "closings: 1."
     assert_text "event: hw-combobox:closed"
     assert_text "value: A Beat"
     assert_text "display: A Beat"
     assert_text "query: A Beat"
     assert_text "fieldName: new_movie"
-    assert_text "isNew: <empty>"
+    assert_text "isNewAndAllowed: <empty>"
     assert_text "isValid: true"
 
+    open_combobox "#required"
     type_in_combobox "#required", "A Bea"
 
+    assert_text "selections: 3."
     assert_text "event: hw-combobox:selection"
     assert_text "value: #{movies(:a_beautiful_mind).id}"
     assert_text "display: A Beautiful Mind"
     assert_text "query: A Bea"
     assert_text "fieldName: movie"
-    assert_text "isNew: false"
+    assert_text "isNewAndAllowed: false"
     assert_text "isValid: true"
+    assert_text "previousValue: <empty>"
 
     type_in_combobox "#required", "t"
 
+    assert_text "selections: 4."
     assert_text "event: hw-combobox:selection"
     assert_text "value: <empty>"
     assert_text "display: A Beat"
     assert_text "query: A Beat"
     assert_text "fieldName: movie"
-    assert_text "isNew: false"
+    assert_text "isNewAndAllowed: false"
     assert_text "isValid: false"
+    assert_text "previousValue: #{movies(:a_beautiful_mind).id}"
 
     click_away
 
-    assert_text "event: hw-combobox:selection"
+    assert_text "closings: 2."
+    assert_text "event: hw-combobox:closed"
     assert_text "value: <empty>"
-    assert_text "display: <empty>"
-    assert_text "query: <empty>"
+    assert_text "display: A Beat"
+    assert_text "query: A Beat"
     assert_text "fieldName: movie"
-    assert_text "isNew: false"
+    assert_text "isNewAndAllowed: false"
     assert_text "isValid: false"
+
+    open_combobox "#required"
+    type_in_combobox "#required", "The Godfather"
+    click_on_option "The Godfather Part II"
+    open_combobox "#required"
+    click_on_option "The Godfather Part III"
+
+    assert_text "previousValue: #{movies(:the_godfather_part_ii).id}"
+    assert_text "selections: 6."
+    assert_text "closings: 4."
   end
 
   test "customized elements" do

@@ -1,7 +1,20 @@
-<div data-controller="combobox--events" style="display: flex; align-items: start; gap: 1rem;">
-  <%= combobox_tag :movie, movies_path, id: "allow-new", placeholder: "allow-new", name_when_new: :new_movie, data: { action: "hw-combobox:selection->combobox--events#showSelection hw-combobox:closed->combobox--events#showClosed" } %>
-  <%= combobox_tag :movie, movies_path, id: "required", placeholder: "required", required: true, data: { action: "hw-combobox:selection->combobox--events#showSelection" } %>
+<style>
+  #required { width: 12.5rem; }
+</style>
 
-  <span data-combobox--events-target="selectionScratchpad"></span>
-  <span data-combobox--events-target="closedScratchpad"></span>
+<div data-controller="combobox--events" style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
+  <div style="display: flex; align-items: start; gap: 1rem;">
+    <span data-combobox--events-target="selectionScratchpad"></span>
+    <span data-combobox--events-target="closedScratchpad"></span>
+  </div>
+
+  <div style="display: flex; align-items: start; gap: 1rem;">
+    <div data-combobox--events-target="selectionCount"></div>
+    <div data-combobox--events-target="closedCount"></div>
+  </div>
+
+  <div style="display: flex; align-items: start; gap: 1rem;">
+    <%= combobox_tag :movie, movies_path, id: "allow-new", placeholder: "allow-new", name_when_new: :new_movie, data: { action: "hw-combobox:selection->combobox--events#showSelection hw-combobox:closed->combobox--events#showClosed" } %>
+    <%= combobox_tag :movie, movies_path, id: "required", placeholder: "required", required: true, data: { action: "hw-combobox:selection->combobox--events#showSelection hw-combobox:closed->combobox--events#showClosed" } %>
+  </div>
 </div>

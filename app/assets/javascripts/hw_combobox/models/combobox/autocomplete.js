@@ -8,16 +8,18 @@ Combobox.Autocomplete = Base => class extends Base {
     }
   }
 
-  _autocompleteWith(option, { force }) {
-    if (!this._autocompletesInline && !force) return
+  _replaceFullQueryWithAutocompletedValue(option) {
+    const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
 
+    this._fullQuery = autocompletedValue
+    this._actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length)
+  }
+
+  _autocompleteMissingPortion(option) {
     const typedValue = this._typedQuery
     const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
 
-    if (force) {
-      this._fullQuery = autocompletedValue
-      this._actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length)
-    } else if (startsWith(autocompletedValue, typedValue)) {
+    if (this._autocompletesInline && startsWith(autocompletedValue, typedValue)) {
       this._fullQuery = autocompletedValue
       this._actingCombobox.setSelectionRange(typedValue.length, autocompletedValue.length)
     }

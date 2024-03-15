@@ -2,9 +2,17 @@ import Combobox from "hw_combobox/models/combobox/base"
 import { visible } from "hw_combobox/helpers"
 
 Combobox.Options = Base => class extends Base {
-  _resetOptions() {
-    this._deselect()
-    this.hiddenFieldTarget.name = this.originalNameValue
+  _resetOptionsSilently() {
+    this._resetOptions(this._deselect.bind(this))
+  }
+
+  _resetOptionsAndNotify() {
+    this._resetOptions(this._deselectAndNotify.bind(this))
+  }
+
+  _resetOptions(deselectionStrategy) {
+    this._setName(this.originalNameValue)
+    deselectionStrategy()
   }
 
   get _allowNew() {
@@ -32,7 +40,7 @@ Combobox.Options = Base => class extends Base {
   }
 
   get _isUnjustifiablyBlank() {
-    const valueIsMissing = !this.hiddenFieldTarget.value
+    const valueIsMissing = !this._value
     const noBlankOptionSelected = !this._selectedOptionElement
 
     return valueIsMissing && noBlankOptionSelected

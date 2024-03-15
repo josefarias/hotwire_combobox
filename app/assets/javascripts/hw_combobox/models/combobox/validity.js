@@ -34,7 +34,7 @@ Combobox.Validity = Base => class extends Base {
   // +_valueIsInvalid+ only checks if `comboboxTarget` (and not `_actingCombobox`) is required
   // because the `required` attribute is only forwarded to the `comboboxTarget` element
   get _valueIsInvalid() {
-    const isRequiredAndEmpty = this.comboboxTarget.required && !this.hiddenFieldTarget.value
+    const isRequiredAndEmpty = this.comboboxTarget.required && !this._value
     return isRequiredAndEmpty
   }
 }

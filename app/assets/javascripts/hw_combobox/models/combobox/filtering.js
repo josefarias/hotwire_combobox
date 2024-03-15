@@ -1,21 +1,31 @@
 
 import Combobox from "hw_combobox/models/combobox/base"
-import { applyFilter, debounce, isDeleteEvent, unselectedPortion } from "hw_combobox/helpers"
+import { applyFilter, debounce, unselectedPortion } from "hw_combobox/helpers"
 import { get } from "hw_combobox/vendor/requestjs"
 
 Combobox.Filtering = Base => class extends Base {
-  filter(event) {
-    if (this._isAsync) {
-      this._debouncedFilterAsync(event)
-    } else {
-      this._filterSync(event)
-    }
+  filterAndSelect(event) {
+    this._filter(event)
 
-    this._actingCombobox.toggleAttribute("data-queried", this._isQueried)
+    if (this._isSync) {
+      this._selectBasedOnQuery(event)
+    } else {
+      // noop, async selection is handled by stimulus callbacks
+    }
   }
 
   _initializeFiltering() {
     this._debouncedFilterAsync = debounce(this._debouncedFilterAsync.bind(this))
+  }
+
+  _filter(event) {
+    if (this._isAsync) {
+      this._debouncedFilterAsync(event)
+    } else {
+      this._filterSync()
+    }
+
+    this._actingCombobox.toggleAttribute("data-queried", this._isQueried)
   }
 
   _debouncedFilterAsync(event) {
@@ -32,27 +42,14 @@ Combobox.Filtering = Base => class extends Base {
     await get(this.asyncSrcValue, { responseKind: "turbo-stream", query })
   }
 
-  _filterSync(event) {
+  _filterSync() {
     this.open()
     this._allOptionElements.forEach(applyFilter(this._fullQuery, { matching: this.filterableAttributeValue }))
-    this._commitFilter(event)
-  }
-
-  _commitFilter(event) {
-    if (this._shouldTreatAsNewOptionForFiltering(!isDeleteEvent(event))) {
-      this._selectNew()
-    } else if (isDeleteEvent(event)) {
-      this._deselect()
-    } else if (event.inputType === "hw:lockInSelection") {
-      this._select(this._ensurableOption)
-    } else if (this._isOpen) {
-      this._select(this._visibleOptionElements[0])
-    }
   }
 
   _clearQuery() {
     this._fullQuery = ""
-    this.filter({ inputType: "deleteContentBackward" })
+    this.filterAndSelect({ inputType: "deleteContentBackward" })
   }
 
   get _isQueried() {

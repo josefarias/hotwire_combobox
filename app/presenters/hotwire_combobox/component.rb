@@ -266,7 +266,7 @@ class HotwireCombobox::Component
       combobox_attrs.fetch(:data, {}).merge \
         action: "
           focus->hw-combobox#open
-          input->hw-combobox#filter
+          input->hw-combobox#filterAndSelect
           keydown->hw-combobox#navigate
           click@window->hw-combobox#closeOnClickOutside
           focusin@window->hw-combobox#closeOnFocusOutside
@@ -316,7 +316,7 @@ class HotwireCombobox::Component
     def dialog_input_data
       {
         action: "
-          input->hw-combobox#filter
+          input->hw-combobox#filterAndSelect
           keydown->hw-combobox#navigate
           click@window->hw-combobox#closeOnClickOutside".squish,
         hw_combobox_target: "dialogCombobox"

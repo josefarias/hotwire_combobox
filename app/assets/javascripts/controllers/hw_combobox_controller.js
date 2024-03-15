@@ -80,7 +80,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
 
     if (inputType && inputType !== "hw:lockInSelection") {
       if (delay) await sleep(delay)
-      this._commitFilter({ inputType })
+      this._selectBasedOnQuery({ inputType })
     } else {
       this._preselectOption()
     }
