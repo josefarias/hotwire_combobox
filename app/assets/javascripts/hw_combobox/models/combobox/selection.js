@@ -3,11 +3,17 @@ import { wrapAroundAccess, isDeleteEvent } from "hw_combobox/helpers"
 
 Combobox.Selection = Base => class extends Base {
   selectOnClick(event) {
-    this._forceSelectionAndFilter(event.currentTarget, event)
-    this.close()
+    if (this.isMultiple()) {
+      this._addSelection(event.currentTarget)
+    } else {
+      this._forceSelectionAndFilter(event.currentTarget, event)
+      this.close()
+    }
   }
 
   _connectSelection() {
+    if (this.isMultiple()) return this._connectMultipleSelection()
+
     if (this.hasPrefilledDisplayValue) {
       this._fullQuery = this.prefilledDisplayValue
     }
@@ -84,13 +90,18 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _preselect() {
-    if (this._hasValueButNoSelection && this._allOptions.length < 100) {
-      const option = this._allOptions.find(option => {
-        return option.dataset.value === this._fieldValue
-      })
+    if(this.isMultiple()) return this._preselectMultiple()
 
+    if (this._hasValueButNoSelection && this._allOptions.length < 100) {
+      const option = this._findOptionByValue(this._fieldValue)
       if (option) this._markSelected(option)
     }
+  }
+
+  _findOptionByValue(value) {
+    return this._allOptions.find(option => {
+      return option.dataset.value === value
+    })
   }
 
   _selectAndAutocompleteMissingPortion(option) {

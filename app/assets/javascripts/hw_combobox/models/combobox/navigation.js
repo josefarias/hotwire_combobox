@@ -26,13 +26,13 @@ Combobox.Navigation = Base => class extends Base {
       cancel(event)
     },
     Enter: (event) => {
-      this.close()
       if (this.isMultiple()) {
         const currentIndex = this._navigatedOptionIndex
         this._selectNavigatedOption()
         this._navigateToIndex(currentIndex)
         this._actingCombobox.focus()
       } else {
+        this.close()
         this._actingCombobox.blur()
       }
       cancel(event)
@@ -49,8 +49,7 @@ Combobox.Navigation = Base => class extends Base {
     if (this.isMultiple()) {
       this._navigateMultiple(option)
     } else {
-      this._select(option, { forceAutocomplete: true })
-      this._dispatchSelectionEvent({})
+      this._selectAndAutocompleteFullQuery(option)
     }
   }
 
@@ -77,7 +76,11 @@ Combobox.Navigation = Base => class extends Base {
   _selectNavigatedOption() {
     const option = this._navigatedOptionElement
     if (option) {
-      this._select(option)
+      if (this.isMultiple()) {
+        this._addSelection(option)
+      } else {
+        this._select(option)
+      }
       this._removeCurrentNavigation(option)
     }
   }

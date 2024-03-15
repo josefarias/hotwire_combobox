@@ -827,16 +827,20 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     assert_no_text "event: hw-combobox:selection"
     assert_no_text "event: hw-combobox:closed"
+    assert_no_text "selections:"
 
     click_on_option "Minnesota"
 
     assert_text "event: hw-combobox:selection"
     assert_text 'value: ["FL","MO","MN"]'
+    assert_text "selections: 1."
     assert_no_text "event: hw-combobox:closed"
 
     find("#MO .hw-combobox__multiple_selection__remove").click
     assert_text 'value: ["FL","MN"]'
+    assert_text "selections: 2."
     assert_no_text "event: hw-combobox:closed"
+    assert_no_text "closings:"
 
     click_away
 
@@ -844,6 +848,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text 'value: ["FL","MN"]'
 
     assert_text "event: hw-combobox:closed"
+    assert_text "closings: 1."
   end
 
   private

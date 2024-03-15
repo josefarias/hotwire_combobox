@@ -6,7 +6,7 @@ Combobox.Filtering = Base => class extends Base {
   filterAndSelect(event) {
     this._filter(event)
 
-    if (this._isSync) {
+    if (this._isSync && !this.isMultiple()) {
       this._selectOnQuery(event)
     } else {
       // noop, async selection is handled by stimulus callbacks
