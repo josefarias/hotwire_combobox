@@ -1,6 +1,6 @@
 {
   "name": "@josefarias/hotwire_combobox",
-  "version": "0.1.42",
+  "version": "0.1.43",
   "description": "An autocomplete combobox implementation for Ruby on Rails apps using Hotwire.",
   "module": "app/assets/javascripts/hotwire_combobox.esm.js",
   "main": "app/assets/javascripts/hotwire_combobox.umd.js",
