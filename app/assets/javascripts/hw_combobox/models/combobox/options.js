@@ -11,7 +11,7 @@ Combobox.Options = Base => class extends Base {
   }
 
   _resetOptions(deselectionStrategy) {
-    this._setName(this.originalNameValue)
+    this._setFieldName(this.originalNameValue)
     deselectionStrategy()
   }
 
@@ -40,7 +40,7 @@ Combobox.Options = Base => class extends Base {
   }
 
   get _isUnjustifiablyBlank() {
-    const valueIsMissing = !this._value
+    const valueIsMissing = !this._fieldValue
     const noBlankOptionSelected = !this._selectedOptionElement
 
     return valueIsMissing && noBlankOptionSelected

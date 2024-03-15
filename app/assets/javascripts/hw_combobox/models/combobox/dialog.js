@@ -53,7 +53,7 @@ Combobox.Dialog = Base => class extends Base {
     this.dialogFocusTrapTarget.focus()
   }
 
-  get _smallViewport() {
+  get _isSmallViewport() {
     return window.matchMedia(`(max-width: ${this.smallViewportMaxWidthValue})`).matches
   }
 
