@@ -40,7 +40,7 @@ class HotwireCombobox::Component
 
   def fieldset_attrs
     apply_customizations_to :fieldset, base: {
-      class: "hw-combobox#{" hw-combobox--multiple" if multiple}",
+      class: [ "hw-combobox", { "hw-combobox--multiple": multiple } ],
       data: fieldset_data
     }
   end
@@ -75,8 +75,7 @@ class HotwireCombobox::Component
 
   def inner_wrapper_attrs
     apply_customizations_to :inner_wrapper, base: {
-      class: "hw-combobox__inner__wrapper",
-      data: { hw_combobox_target: "innerWrapper" }
+      class: "hw-combobox__inner__wrapper"
     }
   end
 
@@ -112,7 +111,8 @@ class HotwireCombobox::Component
       role: :listbox,
       class: "hw-combobox__listbox",
       hidden: "",
-      data: listbox_data
+      data: listbox_data,
+      aria: listbox_aria
     }
   end
 
@@ -159,7 +159,8 @@ class HotwireCombobox::Component
       id: dialog_listbox_id,
       class: "hw-combobox__dialog__listbox",
       role: :listbox,
-      data: dialog_listbox_data
+      data: dialog_listbox_data,
+      aria: dialog_listbox_aria
     }
   end
 
@@ -201,30 +202,17 @@ class HotwireCombobox::Component
         hw_combobox_small_viewport_max_width_value: mobile_at,
         hw_combobox_async_src_value: async_src,
         hw_combobox_prefilled_display_value: prefilled_display,
-        hw_combobox_is_multiple_value: multiple,
-        hw_combobox_multiple_selections_value: multiple_selections&.to_json,
         hw_combobox_filterable_attribute_value: "data-filterable-as",
         hw_combobox_autocompletable_attribute_value: "data-autocompletable-as",
         hw_combobox_selected_class: "hw-combobox__option--selected",
-        hw_combobox_invalid_class: "hw-combobox__input--invalid",
-        hw_combobox_navigated_class: "hw-combobox__option--navigated"
+        hw_combobox_invalid_class: "hw-combobox__input--invalid"
     end
 
     def prefilled_display
-      return if multiple
-
       if async_src && associated_object
         associated_object.to_combobox_display
       elsif hidden_field_value
         options.find { |option| option.value == hidden_field_value }&.autocompletable_as
-      end
-    end
-
-    def multiple_selections
-      return unless multiple
-
-      Array(value).each_with_object({}) do |loop_value, hash|
-        hash[loop_value] = options.find { |option| option.value == loop_value }&.content
       end
     end
 
@@ -303,8 +291,7 @@ class HotwireCombobox::Component
         owns: listbox_id,
         haspopup: "listbox",
         autocomplete: autocomplete,
-        activedescendant: "",
-        multiselectable: multiple
+        activedescendant: ""
     end
 
 
@@ -322,6 +309,10 @@ class HotwireCombobox::Component
 
     def listbox_data
       { hw_combobox_target: "listbox" }
+    end
+
+    def listbox_aria
+      { multiselectable: multiple }
     end
 
 
@@ -361,6 +352,10 @@ class HotwireCombobox::Component
 
     def dialog_listbox_data
       { hw_combobox_target: "dialogListbox" }
+    end
+
+    def dialog_listbox_aria
+      { multiselectable: multiple }
     end
 
     def dialog_focus_trap_data

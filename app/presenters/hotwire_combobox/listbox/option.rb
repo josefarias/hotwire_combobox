@@ -31,7 +31,8 @@ class HotwireCombobox::Listbox::Option
         id: id,
         role: :option,
         class: [ "hw-combobox__option", { "hw-combobox__option--blank": blank? } ],
-        data: data
+        data: data,
+        aria: aria
       }
     end
 
@@ -46,6 +47,10 @@ class HotwireCombobox::Listbox::Option
         autocompletable_as: autocompletable_as,
         value: value
       }
+    end
+
+    def aria
+      { selected: false }
     end
 
     def filterable_as
