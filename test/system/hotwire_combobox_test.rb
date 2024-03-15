@@ -622,9 +622,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     assert_text "Ready to listen for hw-combobox events!"
 
+    assert_no_text "selections:"
+
     open_combobox "#allow-new"
     type_in_combobox "#allow-new", "A Bea"
 
+    assert_text "selections: 1."
     assert_text "event: hw-combobox:selection"
     assert_text "value: #{movies(:a_beautiful_mind).id}"
     assert_text "display: A Beautiful Mind"
@@ -638,6 +641,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     type_in_combobox "#allow-new", "t"
 
+    assert_text "selections: 2."
     assert_text "event: hw-combobox:selection"
     assert_text "value: A Beat"
     assert_text "display: A Beat"
@@ -647,10 +651,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "isValid: true"
     assert_text "previousValue: #{movies(:a_beautiful_mind).id}"
 
+    assert_no_text "closings:"
     assert_no_text "event: hw-combobox:closed"
 
     click_away
 
+    assert_text "closings: 1."
     assert_text "event: hw-combobox:closed"
     assert_text "value: A Beat"
     assert_text "display: A Beat"
@@ -659,8 +665,10 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "isNewAndAllowed: <empty>"
     assert_text "isValid: true"
 
+    open_combobox "#required"
     type_in_combobox "#required", "A Bea"
 
+    assert_text "selections: 3."
     assert_text "event: hw-combobox:selection"
     assert_text "value: #{movies(:a_beautiful_mind).id}"
     assert_text "display: A Beautiful Mind"
@@ -672,6 +680,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     type_in_combobox "#required", "t"
 
+    assert_text "selections: 4."
     assert_text "event: hw-combobox:selection"
     assert_text "value: <empty>"
     assert_text "display: A Beat"
@@ -683,6 +692,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     click_away
 
+    assert_text "closings: 2."
     assert_text "event: hw-combobox:closed"
     assert_text "value: <empty>"
     assert_text "display: A Beat"
@@ -690,6 +700,16 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "fieldName: movie"
     assert_text "isNewAndAllowed: false"
     assert_text "isValid: false"
+
+    open_combobox "#required"
+    type_in_combobox "#required", "The Godfather"
+    click_on_option "The Godfather Part II"
+    open_combobox "#required"
+    click_on_option "The Godfather Part III"
+
+    assert_text "previousValue: #{movies(:the_godfather_part_ii).id}"
+    assert_text "selections: 6."
+    assert_text "closings: 4."
   end
 
   test "customized elements" do
