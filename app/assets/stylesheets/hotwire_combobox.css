@@ -28,6 +28,7 @@
   --hw-handle-width--queried: 1rem;
 
   --hw-combobox-width: 10rem;
+  --hw-combobox-width--multiple: 30rem;
 
   --hw-line-height: 1.5rem;
 
@@ -220,6 +221,10 @@
 }
 
 .hw-combobox--multiple {
+  .hw-combobox__main__wrapper {
+    width: var(--hw-combobox-width--multiple);
+  }
+
   .hw-combobox__inner__wrapper {
     display: flex;
     flex: 1 1;
@@ -255,9 +260,5 @@
 
   .hw-combobox__input {
     flex: 2 1;
-  }
-
-  .hw-combobox__option--selected {
-    display: none;
   }
 }
