@@ -25,6 +25,13 @@ Combobox.Selection = Base => class extends Base {
     } else if (this._isOpen) {
       this._resetOptionsAndNotify()
       this._markInvalid()
+    } else {
+      // When selecting from an async dialog listbox: selection is forced, the listbox is filtered,
+      // and the dialog is closed. Filtering ends with an `endOfOptionsStream` target connected
+      // to the now invisible combobox, which is now closed because Turbo waits for "nextRepaint"
+      // before rendering turbo streams. This ultimately calls +_selectBasedOnQuery+. We do want
+      // to call +_selectBasedOnQuery+ in this case to account for e.g. selection of
+      // new options. But we will noop here if it's none of the cases checked above.
     }
   }
 
