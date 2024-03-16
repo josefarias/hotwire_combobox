@@ -2,8 +2,8 @@ import Combobox from "hw_combobox/models/combobox/base"
 import { wrapAroundAccess, isDeleteEvent } from "hw_combobox/helpers"
 
 Combobox.Selection = Base => class extends Base {
-  selectOnClick(event) {
-    this._forceSelectionAndFilter(event.currentTarget, event)
+  selectOnClick({ currentTarget, inputType }) {
+    this._forceSelectionAndFilter(currentTarget, inputType)
     this.close()
   }
 
@@ -13,12 +13,12 @@ Combobox.Selection = Base => class extends Base {
     }
   }
 
-  _selectOnQuery(inputEvent) {
-    if (this._shouldTreatAsNewOptionForFiltering(!isDeleteEvent(inputEvent))) {
+  _selectOnQuery(inputType) {
+    if (this._shouldTreatAsNewOptionForFiltering(!isDeleteEvent({ inputType: inputType }))) {
       this._selectNew()
-    } else if (isDeleteEvent(inputEvent)) {
+    } else if (isDeleteEvent({ inputType: inputType })) {
       this._deselect()
-    } else if (inputEvent.inputType === "hw:lockInSelection" && this._ensurableOption) {
+    } else if (inputType === "hw:lockInSelection" && this._ensurableOption) {
       this._selectAndAutocompleteMissingPortion(this._ensurableOption)
     } else if (this._isOpen && this._visibleOptionElements[0]) {
       this._selectAndAutocompleteMissingPortion(this._visibleOptionElements[0])
@@ -36,13 +36,13 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _select(option, autocompleteStrategy) {
-    const previousValue = this._fieldValue
+    const previousValue = this._fieldValueString
 
     this._resetOptionsSilently()
 
     autocompleteStrategy(option)
 
-    this._setFieldValue(option.dataset.value)
+    this._fieldValue = option.dataset.value
     this._markSelected(option)
     this._markValid()
     this._dispatchSelectionEvent({ isNewAndAllowed: false, previousValue: previousValue })
@@ -51,23 +51,23 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _selectNew() {
-    const previousValue = this._fieldValue
+    const previousValue = this._fieldValueString
 
     this._resetOptionsSilently()
-    this._setFieldValue(this._fullQuery)
-    this._setFieldName(this.nameWhenNewValue)
+    this._fieldValue = this._fullQuery
+    this._fieldName = this.nameWhenNewValue
     this._markValid()
     this._dispatchSelectionEvent({ isNewAndAllowed: true, previousValue: previousValue })
   }
 
   _deselect() {
-    const previousValue = this._fieldValue
+    const previousValue = this._fieldValueString
 
     if (this._selectedOptionElement) {
       this._markNotSelected(this._selectedOptionElement)
     }
 
-    this._setFieldValue(null)
+    this._fieldValue = ""
     this._setActiveDescendant("")
 
     return previousValue
@@ -84,6 +84,8 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _preselect() {
+    // TODO: Implement preselection in multiselect, consider associations in form builders
+
     if (this._hasValueButNoSelection && this._allOptions.length < 100) {
       const option = this._allOptions.find(option => {
         return option.dataset.value === this._fieldValue
@@ -101,9 +103,9 @@ Combobox.Selection = Base => class extends Base {
     this._select(option, this._replaceFullQueryWithAutocompletedValue.bind(this))
   }
 
-  _forceSelectionAndFilter(option, event) {
+  _forceSelectionAndFilter(option, inputType) {
     this._forceSelectionWithoutFiltering(option)
-    this._filter(event)
+    this._filter(inputType)
   }
 
   _forceSelectionWithoutFiltering(option) {
@@ -112,7 +114,7 @@ Combobox.Selection = Base => class extends Base {
 
   _lockInSelection() {
     if (this._shouldLockInSelection) {
-      this._forceSelectionAndFilter(this._ensurableOption, { inputType: "hw:lockInSelection" })
+      this._forceSelectionAndFilter(this._ensurableOption, "hw:lockInSelection")
     }
   }
 
@@ -137,7 +139,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   get _hasValueButNoSelection() {
-    return this._fieldValue && !this._selectedOptionElement
+    return this._hasFieldValue && !this._selectedOptionElement
   }
 
   get _shouldLockInSelection() {

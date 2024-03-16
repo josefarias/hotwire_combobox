@@ -18,6 +18,7 @@ Combobox.Toggle = Base => class extends Base {
       this.expandedValue = false
 
       this._dispatchClosedEvent()
+      this._createChip()
     }
   }
 
@@ -71,7 +72,9 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   _expand() {
-    if (this._preselectOnExpansion) this._preselect()
+    if (this._isSync) {
+      this._preselect()
+    }
 
     if (this._autocompletesList && this._isSmallViewport) {
       this._openInDialog()
@@ -133,9 +136,5 @@ Combobox.Toggle = Base => class extends Base {
 
   get _isOpen() {
     return this.expandedValue
-  }
-
-  get _preselectOnExpansion() {
-    return !this._isAsync // async comboboxes preselect based on callbacks
   }
 }

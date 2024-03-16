@@ -263,6 +263,7 @@
   }
 
   .hw-combobox__input {
+    min-width: calc(var(--hw-combobox-width) / 2);
     flex-grow: 1;
     line-height: var(--hw-line-height--multiple);
     max-width: 100%;

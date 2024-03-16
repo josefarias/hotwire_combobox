@@ -192,7 +192,6 @@ class HotwireCombobox::Component
       data.merge \
         async_id: canonical_id,
         controller: view.token_list("hw-combobox", data[:controller]),
-        action: "hw-combobox:closed->hw-combobox#createChip",
         hw_combobox_expanded_value: open,
         hw_combobox_name_when_new_value: name_when_new,
         hw_combobox_original_name_value: hidden_field_name,
@@ -237,7 +236,7 @@ class HotwireCombobox::Component
 
     def main_wrapper_data
       {
-        action: ("click->hw-combobox#openByFocusing" if multiple?),
+        action: ("click->hw-combobox#openByFocusing:self" if multiple?),
         hw_combobox_target: "mainWrapper"
       }
     end

@@ -4,11 +4,11 @@ import { applyFilter, debounce, unselectedPortion } from "hw_combobox/helpers"
 import { get } from "hw_combobox/vendor/requestjs"
 
 Combobox.Filtering = Base => class extends Base {
-  filterAndSelect(event) {
-    this._filter(event)
+  filterAndSelect({ inputType }) {
+    this._filter(inputType)
 
     if (this._isSync) {
-      this._selectOnQuery(event)
+      this._selectOnQuery(inputType)
     } else {
       // noop, async selection is handled by stimulus callbacks
     }
@@ -18,9 +18,9 @@ Combobox.Filtering = Base => class extends Base {
     this._debouncedFilterAsync = debounce(this._debouncedFilterAsync.bind(this))
   }
 
-  _filter(event) {
+  _filter(inputType) {
     if (this._isAsync) {
-      this._debouncedFilterAsync(event)
+      this._debouncedFilterAsync(inputType)
     } else {
       this._filterSync()
     }
@@ -28,14 +28,14 @@ Combobox.Filtering = Base => class extends Base {
     this._markQueried()
   }
 
-  _debouncedFilterAsync(event) {
-    this._filterAsync(event)
+  _debouncedFilterAsync(inputType) {
+    this._filterAsync(inputType)
   }
 
-  async _filterAsync(event) {
+  async _filterAsync(inputType) {
     const query = {
       q: this._fullQuery,
-      input_type: event.inputType,
+      input_type: inputType,
       for_id: this.element.dataset.asyncId
     }
 
@@ -43,7 +43,12 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _filterSync() {
-    this._allOptionElements.forEach(applyFilter(this._fullQuery, { matching: this.filterableAttributeValue }))
+    this._allFilterableOptionElements.forEach(
+      applyFilter(
+        this._fullQuery,
+        { matching: this.filterableAttributeValue }
+      )
+    )
   }
 
   _clearQuery() {

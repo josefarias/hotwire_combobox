@@ -82,9 +82,11 @@ export default class HwComboboxController extends Concerns(...concerns) {
     const inputType = element.dataset.inputType
     const delay = window.HOTWIRE_COMBOBOX_STREAM_DELAY
 
+    this._resetMultiselectionMarks()
+
     if (inputType && inputType !== "hw:lockInSelection") {
       if (delay) await sleep(delay)
-      this._selectOnQuery({ inputType })
+      this._selectOnQuery(inputType)
     } else {
       this._preselect()
     }

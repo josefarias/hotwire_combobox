@@ -11,8 +11,12 @@ Combobox.Options = Base => class extends Base {
   }
 
   _resetOptions(deselectionStrategy) {
-    this._setFieldName(this.originalNameValue)
+    this._fieldName = this.originalNameValue
     deselectionStrategy()
+  }
+
+  _optionElementWithValue(value) {
+    return this._actingListbox.querySelector(`[${this.filterableAttributeValue}][data-value='${value}']`)
   }
 
   get _allowNew() {
@@ -20,15 +24,15 @@ Combobox.Options = Base => class extends Base {
   }
 
   get _allOptions() {
-    return Array.from(this._allOptionElements)
+    return Array.from(this._allFilterableOptionElements)
   }
 
-  get _allOptionElements() {
-    return this._actingListbox.querySelectorAll(`[${this.filterableAttributeValue}]`)
+  get _allFilterableOptionElements() {
+    return this._actingListbox.querySelectorAll(`[${this.filterableAttributeValue}]:not([data-multiselected])`)
   }
 
   get _visibleOptionElements() {
-    return [ ...this._allOptionElements ].filter(visible)
+    return [ ...this._allFilterableOptionElements ].filter(visible)
   }
 
   get _selectedOptionElement() {
@@ -40,7 +44,7 @@ Combobox.Options = Base => class extends Base {
   }
 
   get _isUnjustifiablyBlank() {
-    const valueIsMissing = !this._fieldValue
+    const valueIsMissing = this._hasEmptyFieldValue
     const noBlankOptionSelected = !this._selectedOptionElement
 
     return valueIsMissing && noBlankOptionSelected
