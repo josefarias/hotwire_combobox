@@ -13,6 +13,7 @@ const concerns = [
   Combobox.Events,
   Combobox.Filtering,
   Combobox.FormField,
+  Combobox.Multiselect,
   Combobox.Navigation,
   Combobox.NewOptions,
   Combobox.Options,
@@ -29,6 +30,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
 
   static targets = [
     "combobox",
+    "chipDismisser",
     "dialog",
     "dialogCombobox",
     "dialogFocusTrap",
@@ -49,6 +51,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
     nameWhenNew: String,
     originalName: String,
     prefilledDisplay: String,
+    selectionChipSrc: String,
     smallViewportMaxWidth: String
   }
 
@@ -85,5 +88,11 @@ export default class HwComboboxController extends Concerns(...concerns) {
     } else {
       this._preselect()
     }
+  }
+
+  // Use +_printStack+ for debugging purposes
+  _printStack() {
+    const err = new Error()
+    console.log(err.stack || err.stacktrace)
   }
 }

@@ -799,7 +799,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     click_on_option "Alabama"
     assert_open_combobox
     assert_no_selector "input[placeholder='State']"
-    find("#AL .hw-combobox__multiple_selection__remove").click
+    find("#AL .hw-combobox__chip__dismisser").click
     assert_selector "input[placeholder='State']"
   end
 
@@ -821,7 +821,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     type_in_combobox "#state-field", :enter
     assert_open_combobox
     assert_selector "div[id='AL'] div", text: "Alabama"
-    find("#AL .hw-combobox__multiple_selection__remove").click
+    find("#AL .hw-combobox__chip__dismisser").click
     assert_no_selector "div[id='AL'] div", text: "Alabama"
 
     click_on_option "Minnesota"
@@ -848,7 +848,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "selections: 1."
     assert_no_text "event: hw-combobox:closed"
 
-    find("#MO .hw-combobox__multiple_selection__remove").click
+    find("#MO .hw-combobox__chip__dismisser").click
     assert_text 'value: ["FL","MN"]'
     assert_text "selections: 2."
     assert_no_text "event: hw-combobox:closed"

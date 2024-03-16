@@ -1,0 +1,8 @@
+<%# locals: (display:, value:, for_id:) -%>
+
+<%= turbo_stream.before for_id do %>
+  <%= tag.div class: "hw-combobox__chip", data: { hw_combobox_chip: "" } do %>
+    <%= tag.span display %>
+    <%= tag.span **combobox_chip_dismisser_attrs(value) %>
+  <% end %>
+<% end %>

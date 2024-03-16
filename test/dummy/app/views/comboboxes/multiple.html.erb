@@ -1,1 +1,4 @@
-<%= combobox_tag "state", @state_options, id: "state-field", multiple: true, value: [], placeholder: 'State' %>
+<%= combobox_tag "state", State.all,
+      id: "state-field",
+      multiselect_chip_src: new_state_chip_path,
+      placeholder: "select states" %>

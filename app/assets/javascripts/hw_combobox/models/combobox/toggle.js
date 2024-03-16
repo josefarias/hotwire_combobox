@@ -6,6 +6,10 @@ Combobox.Toggle = Base => class extends Base {
     this.expandedValue = true
   }
 
+  openByFocusing() {
+    this._actingCombobox.focus()
+  }
+
   close() {
     if (this._isOpen) {
       this._lockInSelection()
@@ -21,7 +25,7 @@ Combobox.Toggle = Base => class extends Base {
     if (this.expandedValue) {
       this.close()
     } else {
-      this._openByFocusing()
+      this.openByFocusing()
     }
   }
 
@@ -60,10 +64,6 @@ Combobox.Toggle = Base => class extends Base {
     const { clientX, clientY } = event
 
     return clientX >= left && clientX <= right && clientY >= top && clientY <= bottom
-  }
-
-  _openByFocusing() {
-    this._actingCombobox.focus()
   }
 
   _isDialogDismisser(target) {

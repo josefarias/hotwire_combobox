@@ -4,11 +4,11 @@ import { cancel } from "hw_combobox/helpers"
 Combobox.Navigation = Base => class extends Base {
   navigate(event) {
     if (this._autocompletesList) {
-      this._keyHandlers[event.key]?.call(this, event)
+      this._navigationKeyHandlers[event.key]?.call(this, event)
     }
   }
 
-  _keyHandlers = {
+  _navigationKeyHandlers = {
     ArrowUp: (event) => {
       this._selectIndex(this._selectedOptionIndex - 1)
       cancel(event)
@@ -34,6 +34,12 @@ Combobox.Navigation = Base => class extends Base {
       this.close()
       this._actingCombobox.blur()
       cancel(event)
+    },
+    Backspace: (event) => {
+      if (this._isMultiselect && !this._fullQuery) {
+        this._focusLastChipDismisser()
+        cancel(event)
+      }
     }
   }
 }

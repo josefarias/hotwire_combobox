@@ -35,6 +35,7 @@ Rails.application.routes.draw do
   post "new_options_form", to: "new_options_forms#create"
 
   resources :states, only: :index
+  resources :state_chips, only: :new, param: :combobox_value
   resources :users, only: :update
 
   root to: "comboboxes#plain"

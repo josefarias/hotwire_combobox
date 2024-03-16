@@ -3,30 +3,30 @@ require "securerandom"
 class HotwireCombobox::Component
   include Customizable
 
-  attr_reader :options, :label, :multiple
+  attr_reader :options, :label
 
   def initialize \
       view, name,
-      association_name: nil,
-      async_src:        nil,
-      autocomplete:     :both,
-      data:             {},
-      dialog_label:     nil,
-      form:             nil,
-      id:               nil,
-      input:            {},
-      label:            nil,
-      mobile_at:        "640px",
-      multiple:         false,
-      name_when_new:    nil,
-      open:             false,
-      options:          [],
-      value:            nil,
+      association_name:     nil,
+      async_src:            nil,
+      autocomplete:         :both,
+      data:                 {},
+      dialog_label:         nil,
+      form:                 nil,
+      id:                   nil,
+      input:                {},
+      label:                nil,
+      mobile_at:            "640px",
+      multiselect_chip_src: nil,
+      name_when_new:        nil,
+      open:                 false,
+      options:              [],
+      value:                nil,
       **rest
     @view, @autocomplete, @id, @name, @value, @form, @async_src, @label,
-    @name_when_new, @open, @data, @mobile_at, @multiple, @options, @dialog_label =
+    @name_when_new, @open, @data, @mobile_at, @multiselect_chip_src, @options, @dialog_label =
       view, autocomplete, id, name.to_s, value, form, async_src, label,
-      name_when_new, open, data, mobile_at, multiple, options, dialog_label
+      name_when_new, open, data, mobile_at, multiselect_chip_src, options, dialog_label
 
     @combobox_attrs = input.reverse_merge(rest).deep_symbolize_keys
     @association_name = association_name || infer_association_name
@@ -40,7 +40,7 @@ class HotwireCombobox::Component
 
   def fieldset_attrs
     apply_customizations_to :fieldset, base: {
-      class: [ "hw-combobox", { "hw-combobox--multiple": multiple } ],
+      class: [ "hw-combobox", { "hw-combobox--multiple": multiple? } ],
       data: fieldset_data
     }
   end
@@ -69,13 +69,6 @@ class HotwireCombobox::Component
     apply_customizations_to :main_wrapper, base: {
       class: "hw-combobox__main__wrapper",
       data: main_wrapper_data
-    }
-  end
-
-
-  def inner_wrapper_attrs
-    apply_customizations_to :inner_wrapper, base: {
-      class: "hw-combobox__inner__wrapper"
     }
   end
 
@@ -183,7 +176,11 @@ class HotwireCombobox::Component
   private
     attr_reader :view, :autocomplete, :id, :name, :value, :form,
       :name_when_new, :open, :data, :combobox_attrs, :mobile_at,
-      :association_name
+      :association_name, :multiselect_chip_src
+
+    def multiple?
+      multiselect_chip_src.present?
+    end
 
     def infer_association_name
       if name.include?("_id")
@@ -195,6 +192,7 @@ class HotwireCombobox::Component
       data.merge \
         async_id: canonical_id,
         controller: view.token_list("hw-combobox", data[:controller]),
+        action: "hw-combobox:closed->hw-combobox#createChip",
         hw_combobox_expanded_value: open,
         hw_combobox_name_when_new_value: name_when_new,
         hw_combobox_original_name_value: hidden_field_name,
@@ -202,6 +200,7 @@ class HotwireCombobox::Component
         hw_combobox_small_viewport_max_width_value: mobile_at,
         hw_combobox_async_src_value: async_src,
         hw_combobox_prefilled_display_value: prefilled_display,
+        hw_combobox_selection_chip_src_value: multiselect_chip_src,
         hw_combobox_filterable_attribute_value: "data-filterable-as",
         hw_combobox_autocompletable_attribute_value: "data-autocompletable-as",
         hw_combobox_selected_class: "hw-combobox__option--selected",
@@ -237,7 +236,10 @@ class HotwireCombobox::Component
 
 
     def main_wrapper_data
-      { hw_combobox_target: "mainWrapper" }
+      {
+        action: ("click->hw-combobox#openByFocusing" if multiple?),
+        hw_combobox_target: "mainWrapper"
+      }
     end
 
 
@@ -312,7 +314,7 @@ class HotwireCombobox::Component
     end
 
     def listbox_aria
-      { multiselectable: multiple }
+      { multiselectable: multiple? }
     end
 
 
@@ -355,7 +357,7 @@ class HotwireCombobox::Component
     end
 
     def dialog_listbox_aria
-      { multiselectable: multiple }
+      { multiselectable: multiple? }
     end
 
     def dialog_focus_trap_data

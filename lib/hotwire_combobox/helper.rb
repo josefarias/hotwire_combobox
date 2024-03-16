@@ -46,6 +46,24 @@ module HotwireCombobox
     alias_method :hw_async_combobox_options, :hw_paginated_combobox_options
     hw_alias :hw_async_combobox_options
 
+    def hw_combobox_selection_chip(display:, value: params[:combobox_value], for_id: params[:for_id])
+      render "hotwire_combobox/selection_chip", display: display, value: value, for_id: for_id
+    end
+    hw_alias :hw_combobox_selection_chip
+
+    def hw_combobox_chip_dismisser_attrs(value)
+      {
+        tabindex: "0",
+        class: "hw-combobox__chip__dismisser",
+        data: {
+          action: "click->hw-combobox#removeChip:stop keydown->hw-combobox#navigateChip",
+          hw_combobox_target: "chipDismisser",
+          hw_combobox_value_param: value
+        }
+      }
+    end
+    hw_alias :hw_combobox_chip_dismisser_attrs
+
     # private library use only
       def hw_listbox_id(id)
         "#{id}-hw-listbox"
