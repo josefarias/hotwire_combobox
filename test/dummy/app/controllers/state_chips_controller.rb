@@ -1,5 +1,5 @@
 class StateChipsController < ApplicationController
   def new
-    @state = State.find params[:combobox_value]
+    @states = State.find params[:combobox_values].split(",")
   end
 end

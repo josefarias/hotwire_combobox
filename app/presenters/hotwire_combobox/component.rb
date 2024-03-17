@@ -40,7 +40,7 @@ class HotwireCombobox::Component
 
   def fieldset_attrs
     apply_customizations_to :fieldset, base: {
-      class: [ "hw-combobox", { "hw-combobox--multiple": multiple? } ],
+      class: [ "hw-combobox", { "hw-combobox--multiple": multiselect? } ],
       data: fieldset_data
     }
   end
@@ -195,12 +195,12 @@ class HotwireCombobox::Component
       :name_when_new, :open, :data, :combobox_attrs, :mobile_at,
       :association_name, :multiselect_chip_src
 
-    def multiple?
+    def multiselect?
       multiselect_chip_src.present?
     end
 
     def infer_association_name
-      if name.include?("_id")
+      if name.end_with?("_id")
         name.sub(/_id\z/, "")
       end
     end
@@ -224,6 +224,8 @@ class HotwireCombobox::Component
     end
 
     def prefilled_display
+      return if multiselect?
+
       if async_src && associated_object
         associated_object.to_combobox_display
       elsif hidden_field_value
@@ -253,7 +255,7 @@ class HotwireCombobox::Component
 
     def main_wrapper_data
       {
-        action: ("click->hw-combobox#openByFocusing:self" if multiple?),
+        action: ("click->hw-combobox#openByFocusing:self" if multiselect?),
         hw_combobox_target: "mainWrapper"
       }
     end
@@ -289,7 +291,9 @@ class HotwireCombobox::Component
       if form&.object&.defined_enums&.try :[], name
         form.object.public_send "#{name}_before_type_cast"
       else
-        form&.object&.try name
+        form&.object&.try(name).then do |value|
+          value.respond_to?(:map) ? value.join(",") : value
+        end
       end
     end
 
@@ -342,7 +346,7 @@ class HotwireCombobox::Component
     end
 
     def listbox_aria
-      { multiselectable: multiple? }
+      { multiselectable: multiselect? }
     end
 
 
@@ -385,7 +389,7 @@ class HotwireCombobox::Component
     end
 
     def dialog_listbox_aria
-      { multiselectable: multiple? }
+      { multiselectable: multiselect? }
     end
 
     def dialog_focus_trap_data

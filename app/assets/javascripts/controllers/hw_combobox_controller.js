@@ -67,6 +67,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
     this._connectSelection()
     this._connectListAutocomplete()
     this._connectDialog()
+    this._connectMultiselect()
   }
 
   disconnect() {
@@ -91,7 +92,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
       if (delay) await sleep(delay)
       this._selectOnQuery(inputType)
     } else {
-      this._preselect()
+      this._preselectSingle()
     }
   }
 

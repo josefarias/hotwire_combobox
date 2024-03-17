@@ -83,7 +83,7 @@ Combobox.Toggle = Base => class extends Base {
 
   _expand() {
     if (this._isSync) {
-      this._preselect()
+      this._preselectSingle()
     }
 
     if (this._autocompletesList && this._isSmallViewport) {

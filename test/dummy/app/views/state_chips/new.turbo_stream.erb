@@ -1,1 +1,3 @@
-<%= combobox_selection_chip display: @state.name %>
+<% @states.each do |state| %>
+  <%= combobox_selection_chip display: state.name, value: state.id %>
+<% end %>

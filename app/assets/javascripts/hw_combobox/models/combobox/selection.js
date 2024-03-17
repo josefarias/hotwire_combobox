@@ -83,15 +83,17 @@ Combobox.Selection = Base => class extends Base {
     this._forceSelectionWithoutFiltering(option)
   }
 
-  _preselect() {
-    // TODO: Implement preselection in multiselect, consider associations in form builders
-
-    if (this._hasValueButNoSelection && this._allOptions.length < 100) {
-      const option = this._allOptions.find(option => {
-        return option.dataset.value === this._fieldValue
-      })
-
+  _preselectSingle() {
+    if (this._isSingleSelect && this._hasValueButNoSelection && this._allOptions.length < 100) {
+      const option = this._optionElementWithValue(this._fieldValue)
       if (option) this._markSelected(option)
+    }
+  }
+
+  _preselectMultiple() {
+    if (this._isMultiselect && this._hasValueButNoSelection) {
+      this._requestChips(this._fieldValueString)
+      this._resetMultiselectionMarks()
     }
   }
 
@@ -139,7 +141,15 @@ Combobox.Selection = Base => class extends Base {
   }
 
   get _hasValueButNoSelection() {
-    return this._hasFieldValue && !this._selectedOptionElement
+    return this._hasFieldValue && !this._hasSelection
+  }
+
+  get _hasSelection() {
+    if (this._isSingleSelect) {
+      this._selectedOptionElement
+    } else {
+      this._multiselectedOptionElements.length > 0
+    }
   }
 
   get _shouldLockInSelection() {

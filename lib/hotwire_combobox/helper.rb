@@ -15,7 +15,7 @@ module HotwireCombobox
     end
 
     def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, **kwargs, &block)
-      options, src = hw_extract_options_and_src(options_or_src, render_in, include_blank)
+      options, src = hw_extract_options_and_src options_or_src, render_in, include_blank
       component = HotwireCombobox::Component.new self, name, options: options, async_src: src, **kwargs
       render component, &block
     end
@@ -40,7 +40,7 @@ module HotwireCombobox
     end
     alias_method :hw_async_combobox_options, :hw_paginated_combobox_options
 
-    def hw_combobox_selection_chip(display:, value: params[:combobox_value], for_id: params[:for_id], remover_attrs: hw_combobox_chip_remover_attrs(display, value))
+    def hw_combobox_selection_chip(display:, value:, for_id: params[:for_id], remover_attrs: hw_combobox_chip_remover_attrs(display, value))
       render "hotwire_combobox/selection_chip",
         display: display,
         value: value,
@@ -48,7 +48,7 @@ module HotwireCombobox
         remover_attrs: remover_attrs
     end
 
-    def hw_dismissing_combobox_selection_chip(display:, value: params[:combobox_value], for_id: params[:for_id])
+    def hw_dismissing_combobox_selection_chip(display:, value:, for_id: params[:for_id])
       hw_combobox_selection_chip \
         display: display,
         value: value,

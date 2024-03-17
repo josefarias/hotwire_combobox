@@ -77,6 +77,7 @@ class ComboboxesController < ApplicationController
   end
 
   def multiselect_prefilled_form
+    @user = User.first || raise("No user found, load fixtures first.")
   end
 
   def multiselect_custom_events

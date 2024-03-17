@@ -44,25 +44,30 @@ Combobox.Multiselect = Base => class extends Base {
     }
   }
 
+  _connectMultiselect() {
+    this._preselectMultiple()
+  }
+
   _createChip() {
     if (!this._isMultiselect) return
 
     this._beforeClearingMultiselectQuery(async (display, value) => {
       this._fullQuery = ""
       this._filter("hw:multiselectSync")
-
-      await get(this.selectionChipSrcValue, {
-        responseKind: "turbo-stream",
-        query: {
-          for_id: this.element.dataset.asyncId,
-          combobox_value: value,
-          display_value: display
-        }
-      })
-
+      this._requestChips(value)
       this._addToFieldValue(value)
       this.openByFocusing()
       this._announceToScreenReader(display, "multi-selected. Press Shift + Tab, then Enter to remove.")
+    })
+  }
+
+  async _requestChips(values) {
+    await get(this.selectionChipSrcValue, {
+      responseKind: "turbo-stream",
+      query: {
+        for_id: this.element.dataset.asyncId,
+        combobox_values: values
+      }
     })
   }
 

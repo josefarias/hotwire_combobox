@@ -1,10 +1,8 @@
-<style>
-  .wide-multiple-field {
-    margin-right: 1rem;
-    width: 30rem;
-  }
-</style>
+<% if flash[:notice] %>
+  <p><%= flash[:notice] %></p>
+<% end %>
 
-<%= combobox_tag "state", @state_options, id: "state-field", multiple: true, value: ['FL', 'MO'] do |combobox| %>
-  <% combobox.customize_main_wrapper class: "wide-multiple-field" %>
+<%= form_with model: @user, html: { style: "display: flex; flex-direction: column; gap: 1rem;" } do |form| %>
+  <%= form.combobox :visited_state_ids, State.all, label: "Visited states", multiselect_chip_src: new_state_chip_path %>
+  <%= form.submit style: "padding: 0.5rem;" %>
 <% end %>

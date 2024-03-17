@@ -2,8 +2,8 @@ class UsersController < ApplicationController
   before_action :set_user
 
   def update
-    if @user.update user_params
-      redirect_to prefilled_async_path, notice: "User updated"
+    if @user.update user_params.merge(visited_state_ids: visited_state_ids)
+      redirect_back_or_to prefilled_async_path, notice: "User updated"
     else
       head :unprocessable_entity
     end
@@ -22,5 +22,9 @@ class UsersController < ApplicationController
           :home_state_id,
           favorite_state_attributes: %i[ name ],
           home_state_attributes: %i[ name ])
+    end
+
+    def visited_state_ids
+      params[:user][:visited_state_ids].split(",")
     end
 end
