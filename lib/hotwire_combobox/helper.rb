@@ -46,21 +46,29 @@ module HotwireCombobox
     alias_method :hw_async_combobox_options, :hw_paginated_combobox_options
     hw_alias :hw_async_combobox_options
 
-    def hw_combobox_selection_chip(display:, value: params[:combobox_value], for_id: params[:for_id], data: {})
-      data = { hw_combobox_chip: "" }.reverse_merge data
-      render "hotwire_combobox/selection_chip", display: display, value: value, for_id: for_id, data: data
+    def hw_combobox_selection_chip(display:, value: params[:combobox_value], for_id: params[:for_id], remover_attrs: hw_combobox_chip_remover_attrs(display, value))
+      render "hotwire_combobox/selection_chip",
+        display: display,
+        value: value,
+        for_id: for_id,
+        remover_attrs: remover_attrs
     end
     hw_alias :hw_combobox_selection_chip
 
-    def hw_dismissing_combobox_selection_chip(*args, **kwargs)
-      hw_combobox_selection_chip(*args, **kwargs, data: { hw_combobox_target: "closer" })
+    def hw_dismissing_combobox_selection_chip(display:, value: params[:combobox_value], for_id: params[:for_id])
+      hw_combobox_selection_chip \
+        display: display,
+        value: value,
+        for_id: for_id,
+        remover_attrs: hw_combobox_dismissing_chip_remover_attrs(display, value)
     end
     hw_alias :hw_dismissing_combobox_selection_chip
 
-    def hw_combobox_chip_dismisser_attrs(value)
+    def hw_combobox_chip_remover_attrs(display, value)
       {
         tabindex: "0",
         class: "hw-combobox__chip__dismisser",
+        aria: { label: "Remove #{display}" },
         data: {
           action: "click->hw-combobox#removeChip:stop keydown->hw-combobox#navigateChip",
           hw_combobox_target: "chipDismisser",
@@ -68,7 +76,14 @@ module HotwireCombobox
         }
       }
     end
-    hw_alias :hw_combobox_chip_dismisser_attrs
+    hw_alias :hw_combobox_chip_remover_attrs
+
+    def hw_combobox_dismissing_chip_remover_attrs(display, value)
+      hw_combobox_chip_remover_attrs(display, value).tap do |attrs|
+        attrs[:data][:hw_combobox_target] = token_list(attrs[:data][:hw_combobox_target], "closer")
+      end
+    end
+    hw_alias :hw_combobox_dismissing_chip_remover_attrs
 
     # private library use only
       def hw_listbox_id(id)
