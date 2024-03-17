@@ -268,7 +268,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit prefilled_form_path
 
     assert_closed_combobox
-    assert_combobox_display_and_value "#user_favorite_state_id", "Michigan", states(:mi).id
+    assert_combobox_display_and_value "#user_favorite_state_id", "Michigan", states(:michigan).id
 
     open_combobox "#user_favorite_state_id"
     assert_selected_option_with text: "Michigan"
@@ -288,7 +288,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit prefilled_async_path
 
     assert_closed_combobox
-    assert_combobox_display_and_value "#user_home_state_id", "Florida", states(:fl).id
+    assert_combobox_display_and_value "#user_home_state_id", "Florida", states(:florida).id
 
     open_combobox "#user_home_state_id"
     assert_selected_option_with text: "Florida"
@@ -346,7 +346,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
       open_combobox "#allow-new"
       type_in_combobox "#allow-new", "Ala"
-      assert_combobox_display_and_value "#allow-new", "Alabama", states(:al).id
+      assert_combobox_display_and_value "#allow-new", "Alabama", states(:alabama).id
       assert_selected_option_with text: "Alabama"
       assert_proper_combobox_name_choice \
         original: "user[favorite_state_id]",
