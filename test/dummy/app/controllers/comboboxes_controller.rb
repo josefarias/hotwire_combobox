@@ -70,13 +70,16 @@ class ComboboxesController < ApplicationController
     @hashes = State.limit(3).map { |state| { display: state.name, value: state.abbreviation } }
   end
 
-  def multiple
+  def multiselect
   end
 
-  def multiple_prefilled
+  def multiselect_async_html
   end
 
-  def multiple_custom_events
+  def multiselect_prefilled_form
+  end
+
+  def multiselect_custom_events
   end
 
   private

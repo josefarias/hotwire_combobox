@@ -21,9 +21,10 @@ Rails.application.routes.draw do
   get "custom_attrs", to: "comboboxes#custom_attrs"
   get "conflicting_order", to: "comboboxes#conflicting_order"
   get "render_in_locals", to: "comboboxes#render_in_locals"
-  get "multiple", to: "comboboxes#multiple"
-  get "multiple_prefilled", to: "comboboxes#multiple_prefilled"
-  get "multiple_custom_events", to: "comboboxes#multiple_custom_events"
+  get "multiselect", to: "comboboxes#multiselect"
+  get "multiselect_async_html", to: "comboboxes#multiselect_async_html"
+  get "multiselect_prefilled_form", to: "comboboxes#multiselect_prefilled_form"
+  get "multiselect_custom_events", to: "comboboxes#multiselect_custom_events"
 
   resources :movies, only: %i[ index update ]
   get "movies_html", to: "movies#index_html"
