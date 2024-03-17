@@ -46,10 +46,16 @@ module HotwireCombobox
     alias_method :hw_async_combobox_options, :hw_paginated_combobox_options
     hw_alias :hw_async_combobox_options
 
-    def hw_combobox_selection_chip(display:, value: params[:combobox_value], for_id: params[:for_id])
-      render "hotwire_combobox/selection_chip", display: display, value: value, for_id: for_id
+    def hw_combobox_selection_chip(display:, value: params[:combobox_value], for_id: params[:for_id], data: {})
+      data = { hw_combobox_chip: "" }.reverse_merge data
+      render "hotwire_combobox/selection_chip", display: display, value: value, for_id: for_id, data: data
     end
     hw_alias :hw_combobox_selection_chip
+
+    def hw_dismissing_combobox_selection_chip(*args, **kwargs)
+      hw_combobox_selection_chip(*args, **kwargs, data: { hw_combobox_target: "closer" })
+    end
+    hw_alias :hw_dismissing_combobox_selection_chip
 
     def hw_combobox_chip_dismisser_attrs(value)
       {

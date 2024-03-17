@@ -24,7 +24,7 @@ Combobox.Toggle = Base => class extends Base {
 
   toggle() {
     if (this.expandedValue) {
-      this.close()
+      this._closeAndBlur()
     } else {
       this.openByFocusing()
     }
@@ -37,14 +37,14 @@ Combobox.Toggle = Base => class extends Base {
     if (this.mainWrapperTarget.contains(target) && !this._isDialogDismisser(target)) return
     if (this._withinElementBounds(event)) return
 
-    this.close()
+    this._closeAndBlur()
   }
 
   closeOnFocusOutside({ target }) {
     if (!this._isOpen) return
     if (this.element.contains(target)) return
 
-    this.close()
+    this._closeAndBlur()
   }
 
   clearOrToggleOnHandleClick() {
@@ -54,6 +54,11 @@ Combobox.Toggle = Base => class extends Base {
     } else {
       this.toggle()
     }
+  }
+
+  _closeAndBlur() {
+    this.close()
+    this._actingCombobox.blur()
   }
 
   // Some browser extensions like 1Password overlay elements on top of the combobox.

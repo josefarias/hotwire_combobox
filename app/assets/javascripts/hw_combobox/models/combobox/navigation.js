@@ -26,13 +26,11 @@ Combobox.Navigation = Base => class extends Base {
       cancel(event)
     },
     Enter: (event) => {
-      this.close()
-      this._actingCombobox.blur()
+      this._closeAndBlur()
       cancel(event)
     },
     Escape: (event) => {
-      this.close()
-      this._actingCombobox.blur()
+      this._closeAndBlur()
       cancel(event)
     },
     Backspace: (event) => {

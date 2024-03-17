@@ -31,6 +31,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
   static targets = [
     "combobox",
     "chipDismisser",
+    "closer",
     "dialog",
     "dialogCombobox",
     "dialogFocusTrap",
@@ -90,6 +91,10 @@ export default class HwComboboxController extends Concerns(...concerns) {
     } else {
       this._preselect()
     }
+  }
+
+  closerTargetConnected() {
+    this._closeAndBlur()
   }
 
   // Use +_printStack+ for debugging purposes

@@ -58,6 +58,7 @@ Combobox.Multiselect = Base => class extends Base {
       })
 
       this._addToFieldValue(value)
+      this.openByFocusing()
     })
   }
 

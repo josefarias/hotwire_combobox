@@ -4,7 +4,7 @@ import { wrapAroundAccess, isDeleteEvent } from "hw_combobox/helpers"
 Combobox.Selection = Base => class extends Base {
   selectOnClick({ currentTarget, inputType }) {
     this._forceSelectionAndFilter(currentTarget, inputType)
-    this.close()
+    this._closeAndBlur()
   }
 
   _connectSelection() {
