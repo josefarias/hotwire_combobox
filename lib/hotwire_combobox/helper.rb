@@ -13,14 +13,12 @@ module HotwireCombobox
     def hw_combobox_style_tag(*args, **kwargs)
       stylesheet_link_tag HotwireCombobox.stylesheet_path, *args, **kwargs
     end
-    hw_alias :hw_combobox_style_tag
 
     def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, **kwargs, &block)
       options, src = hw_extract_options_and_src(options_or_src, render_in, include_blank)
       component = HotwireCombobox::Component.new self, name, options: options, async_src: src, **kwargs
       render component, &block
     end
-    hw_alias :hw_combobox_tag
 
     def hw_combobox_options(options, render_in: {}, include_blank: nil, display: :to_combobox_display, **methods)
       if options.first.is_a? HotwireCombobox::Listbox::Option
@@ -31,7 +29,6 @@ module HotwireCombobox
         opts
       end
     end
-    hw_alias :hw_combobox_options
 
     def hw_paginated_combobox_options(options, for_id: params[:for_id], src: request.path, next_page: nil, render_in: {}, include_blank: {}, **methods)
       include_blank = params[:page] ? nil : include_blank
@@ -41,10 +38,7 @@ module HotwireCombobox
 
       safe_join [ this_page, next_page ]
     end
-    hw_alias :hw_paginated_combobox_options
-
     alias_method :hw_async_combobox_options, :hw_paginated_combobox_options
-    hw_alias :hw_async_combobox_options
 
     def hw_combobox_selection_chip(display:, value: params[:combobox_value], for_id: params[:for_id], remover_attrs: hw_combobox_chip_remover_attrs(display, value))
       render "hotwire_combobox/selection_chip",
@@ -53,7 +47,6 @@ module HotwireCombobox
         for_id: for_id,
         remover_attrs: remover_attrs
     end
-    hw_alias :hw_combobox_selection_chip
 
     def hw_dismissing_combobox_selection_chip(display:, value: params[:combobox_value], for_id: params[:for_id])
       hw_combobox_selection_chip \
@@ -62,7 +55,6 @@ module HotwireCombobox
         for_id: for_id,
         remover_attrs: hw_combobox_dismissing_chip_remover_attrs(display, value)
     end
-    hw_alias :hw_dismissing_combobox_selection_chip
 
     def hw_combobox_chip_remover_attrs(display, value)
       {
@@ -76,13 +68,21 @@ module HotwireCombobox
         }
       }
     end
-    hw_alias :hw_combobox_chip_remover_attrs
 
     def hw_combobox_dismissing_chip_remover_attrs(display, value)
       hw_combobox_chip_remover_attrs(display, value).tap do |attrs|
         attrs[:data][:hw_combobox_target] = token_list(attrs[:data][:hw_combobox_target], "closer")
       end
     end
+
+    hw_alias :hw_combobox_style_tag
+    hw_alias :hw_combobox_tag
+    hw_alias :hw_combobox_options
+    hw_alias :hw_paginated_combobox_options
+    hw_alias :hw_async_combobox_options
+    hw_alias :hw_combobox_selection_chip
+    hw_alias :hw_dismissing_combobox_selection_chip
+    hw_alias :hw_combobox_chip_remover_attrs
     hw_alias :hw_combobox_dismissing_chip_remover_attrs
 
     # private library use only
