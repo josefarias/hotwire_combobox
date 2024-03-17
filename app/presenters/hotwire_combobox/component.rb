@@ -73,6 +73,23 @@ class HotwireCombobox::Component
   end
 
 
+  def announcer_attrs
+    {
+      style: "
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;".squish,
+      aria: announcer_aria,
+      data: announcer_data
+    }
+  end
+
+
   def input_attrs
     nested_attrs = %i[ data aria ]
 
@@ -239,6 +256,18 @@ class HotwireCombobox::Component
         action: ("click->hw-combobox#openByFocusing:self" if multiple?),
         hw_combobox_target: "mainWrapper"
       }
+    end
+
+
+    def announcer_aria
+      {
+        live: :polite,
+        atomic: true
+      }
+    end
+
+    def announcer_data
+      { hw_combobox_target: "announcer" }
     end
 
 

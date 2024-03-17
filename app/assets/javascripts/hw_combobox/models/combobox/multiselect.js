@@ -9,6 +9,7 @@ Combobox.Multiselect = Base => class extends Base {
 
   removeChip({ currentTarget, params }) {
     const option = this._optionElementWithValue(params.value)
+    const display = option.getAttribute(this.autocompletableAttributeValue)
 
     this._markNotSelected(option)
     this._markNotMultiselected(option)
@@ -20,6 +21,8 @@ Combobox.Multiselect = Base => class extends Base {
     if (!this._isSmallViewport) {
       this.openByFocusing()
     }
+
+    this._announceToScreenReader(display, "removed")
   }
 
   _chipKeyHandlers = {
@@ -59,6 +62,7 @@ Combobox.Multiselect = Base => class extends Base {
 
       this._addToFieldValue(value)
       this.openByFocusing()
+      this._announceToScreenReader(display, "multi-selected. Press Shift + Tab, then Enter to remove.")
     })
   }
 

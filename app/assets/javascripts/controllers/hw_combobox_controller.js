@@ -7,6 +7,7 @@ window.HOTWIRE_COMBOBOX_STREAM_DELAY = 0 // ms, for testing purposes
 const concerns = [
   Controller,
   Combobox.Actors,
+  Combobox.Announcements,
   Combobox.AsyncLoading,
   Combobox.Autocomplete,
   Combobox.Dialog,
@@ -29,6 +30,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
   ]
 
   static targets = [
+    "announcer",
     "combobox",
     "chipDismisser",
     "closer",

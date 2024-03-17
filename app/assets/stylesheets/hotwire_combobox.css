@@ -114,7 +114,6 @@
 .hw-combobox__input[data-queried] + .hw-combobox__handle::before {
   background-image: var(--hw-handle-image--queried);
   background-size: var(--hw-handle-width--queried);
-  cursor: pointer;
 }
 
 .hw-combobox__listbox {
@@ -256,7 +255,6 @@
     background-image: var(--hw-handle-image--queried);
     background-size: var(--hw-handle-width--queried);
     background-repeat: no-repeat;
-    cursor: pointer;
     margin-left: var(--hw-padding--slimmer);
     min-height: var(--hw-handle-width--queried);
     min-width: var(--hw-handle-width--queried);

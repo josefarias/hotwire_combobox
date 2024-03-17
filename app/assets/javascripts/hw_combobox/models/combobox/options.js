@@ -36,7 +36,7 @@ Combobox.Options = Base => class extends Base {
   }
 
   get _selectedOptionElement() {
-    return this._actingListbox.querySelector("[role=option][aria-selected=true]")
+    return this._actingListbox.querySelector("[role=option][aria-selected=true]:not([data-multiselected])")
   }
 
   get _selectedOptionIndex() {
