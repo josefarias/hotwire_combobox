@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   get "multiselect_async_html", to: "comboboxes#multiselect_async_html"
   get "multiselect_prefilled_form", to: "comboboxes#multiselect_prefilled_form"
   get "multiselect_custom_events", to: "comboboxes#multiselect_custom_events"
+  get "multiselect_new_values", to: "comboboxes#multiselect_new_values"
 
   resources :movies, only: %i[ index update ]
   get "movies_html", to: "movies#index_html"

@@ -51,7 +51,6 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _selectNew() {
-    // TODO: multiselect
     const previousValue = this._fieldValueString
 
     this._resetOptionsSilently()

@@ -86,6 +86,9 @@ class ComboboxesController < ApplicationController
   def multiselect_custom_events
   end
 
+  def multiselect_new_values
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 
