@@ -73,6 +73,9 @@ class ComboboxesController < ApplicationController
   def multiselect
   end
 
+  def multiselect_dismissing
+  end
+
   def multiselect_async_html
   end
 

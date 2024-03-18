@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   get "conflicting_order", to: "comboboxes#conflicting_order"
   get "render_in_locals", to: "comboboxes#render_in_locals"
   get "multiselect", to: "comboboxes#multiselect"
+  get "multiselect_dismissing", to: "comboboxes#multiselect_dismissing"
   get "multiselect_async_html", to: "comboboxes#multiselect_async_html"
   get "multiselect_prefilled_form", to: "comboboxes#multiselect_prefilled_form"
   get "multiselect_custom_events", to: "comboboxes#multiselect_custom_events"
