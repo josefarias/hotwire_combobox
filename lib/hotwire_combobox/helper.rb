@@ -40,7 +40,11 @@ module HotwireCombobox
     end
     alias_method :hw_async_combobox_options, :hw_paginated_combobox_options
 
-    def hw_combobox_selection_chip(display:, value:, for_id: params[:for_id], remover_attrs: hw_combobox_chip_remover_attrs(display, value))
+    def hw_within_combobox_selection_chip(for_id: params[:for_id], &block)
+      render layout: "hotwire_combobox/layouts/selection_chip", locals: { for_id: for_id }, &block
+    end
+
+    def hw_combobox_selection_chip(display:, value:, for_id: params[:for_id], remover_attrs: hw_combobox_chip_remover_attrs(display: display, value: value))
       render "hotwire_combobox/selection_chip",
         display: display,
         value: value,
@@ -56,10 +60,10 @@ module HotwireCombobox
         remover_attrs: hw_combobox_dismissing_chip_remover_attrs(display, value)
     end
 
-    def hw_combobox_chip_remover_attrs(display, value)
+    def hw_combobox_chip_remover_attrs(display:, value:, **kwargs)
       {
         tabindex: "0",
-        class: "hw-combobox__chip__dismisser",
+        class: token_list("hw-combobox__chip__remover", kwargs[:class]),
         aria: { label: "Remove #{display}" },
         data: {
           action: "click->hw-combobox#removeChip:stop keydown->hw-combobox#navigateChip",
@@ -70,7 +74,7 @@ module HotwireCombobox
     end
 
     def hw_combobox_dismissing_chip_remover_attrs(display, value)
-      hw_combobox_chip_remover_attrs(display, value).tap do |attrs|
+      hw_combobox_chip_remover_attrs(display: display, value: value).tap do |attrs|
         attrs[:data][:hw_combobox_target] = token_list(attrs[:data][:hw_combobox_target], "closer")
       end
     end
@@ -80,6 +84,7 @@ module HotwireCombobox
     hw_alias :hw_combobox_options
     hw_alias :hw_paginated_combobox_options
     hw_alias :hw_async_combobox_options
+    hw_alias :hw_within_combobox_selection_chip
     hw_alias :hw_combobox_selection_chip
     hw_alias :hw_dismissing_combobox_selection_chip
     hw_alias :hw_combobox_chip_remover_attrs
