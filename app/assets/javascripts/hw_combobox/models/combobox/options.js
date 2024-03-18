@@ -19,6 +19,10 @@ Combobox.Options = Base => class extends Base {
     return this._actingListbox.querySelector(`[${this.filterableAttributeValue}][data-value='${value}']`)
   }
 
+  _displayForOptionElement(element) {
+    return element.getAttribute(this.autocompletableAttributeValue)
+  }
+
   get _allowNew() {
     return !!this.nameWhenNewValue
   }

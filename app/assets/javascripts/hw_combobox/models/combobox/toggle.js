@@ -20,9 +20,8 @@ Combobox.Toggle = Base => class extends Base {
       this._dispatchClosedEvent()
       this._createChip()
 
-      if (this._isSingleSelect) {
-        const display = this._selectedOptionElement.getAttribute(this.autocompletableAttributeValue)
-        this._announceToScreenReader(display, "selected")
+      if (this._isSingleSelect && this._selectedOptionElement) {
+        this._announceToScreenReader(this._displayForOptionElement(this._selectedOptionElement), "selected")
       }
     }
   }
