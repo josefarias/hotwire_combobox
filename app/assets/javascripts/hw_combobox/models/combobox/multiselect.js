@@ -56,7 +56,7 @@ Combobox.Multiselect = Base => class extends Base {
       this._filter("hw:multiselectSync")
       this._requestChips(value)
       this._addToFieldValue(value)
-      this.openByFocusing()
+      if (this._isSync) this.openByFocusing()
       this._announceToScreenReader(display, "multi-selected. Press Shift + Tab, then Enter to remove.")
     })
   }
@@ -88,8 +88,11 @@ Combobox.Multiselect = Base => class extends Base {
 
     this._fieldValueArray.forEach(value => {
       const option = this._optionElementWithValue(value)
-      option.setAttribute("data-multiselected", "")
-      option.hidden = true
+
+      if (option) {
+        option.setAttribute("data-multiselected", "")
+        option.hidden = true
+      }
     })
   }
 
