@@ -791,17 +791,24 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_option_with text: "display: Alabama\nvalue: AL"
   end
 
-  test "allows multiple selections (stays open, swaps out placeholder when selected)" do
-    skip
-    visit multiple_path
+  test "multiselect" do
+    visit multiselect_path
 
-    assert_selector "input[placeholder='State']"
-    open_combobox "#state-field"
+    open_combobox "#states-field"
+
     click_on_option "Alabama"
-    assert_open_combobox
-    assert_no_selector "input[placeholder='State']"
-    find("#AL .hw-combobox__chip__remover").click
-    assert_selector "input[placeholder='State']"
+    click_on_option "California"
+    click_on_option "Arizona"
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama California Arizona ],
+      states(:alabama, :california, :arizona).pluck(:id)
+
+    find("[aria-label='Remove California']").click
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama Arizona ],
+      states(:alabama, :arizona).pluck(:id)
   end
 
   test "prefills multiple selections and hides already-selected options" do
@@ -930,8 +937,17 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     end
 
     def assert_combobox_display_and_value(selector, text, value)
-      assert_combobox_display selector, text
-      assert_combobox_value selector, value
+      if text.is_a? Array
+        assert_selection_chips(*text)
+      else
+        assert_combobox_display selector, text
+      end
+
+      if value.is_a? Array
+        assert_combobox_value selector, value.join(",")
+      else
+        assert_combobox_value selector, value
+      end
     end
 
     def assert_selected_option_with(selector: "", **kwargs)
@@ -959,6 +975,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       else
         assert_no_selector "input[name='#{original}']", visible: :hidden
         assert_selector "input[name='#{new}']", visible: :hidden
+      end
+    end
+
+    def assert_selection_chips(*texts)
+      texts.each do |text|
+        assert_selector "[data-hw-combobox-chip]", text: text
       end
     end
 
