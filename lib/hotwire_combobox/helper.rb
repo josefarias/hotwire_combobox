@@ -52,12 +52,30 @@ module HotwireCombobox
         remover_attrs: remover_attrs
     end
 
+    def hw_combobox_selection_chips_for(objects, display:, value:, for_id: params[:for_id])
+      objects.map do |object|
+        hw_combobox_selection_chip \
+          display: hw_call_method(object, display),
+          value: hw_call_method(object, value),
+          for_id: for_id
+      end.then { |chips| safe_join chips }
+    end
+
     def hw_dismissing_combobox_selection_chip(display:, value:, for_id: params[:for_id])
       hw_combobox_selection_chip \
         display: display,
         value: value,
         for_id: for_id,
         remover_attrs: hw_combobox_dismissing_chip_remover_attrs(display, value)
+    end
+
+    def hw_dismissing_combobox_selection_chips_for(objects, display:, value:, for_id: params[:for_id])
+      objects.map do |object|
+        hw_dismissing_combobox_selection_chip \
+          display: hw_call_method(object, display),
+          value: hw_call_method(object, value),
+          for_id: for_id
+      end.then { |chips| safe_join chips }
     end
 
     def hw_combobox_chip_remover_attrs(display:, value:, **kwargs)
@@ -86,7 +104,9 @@ module HotwireCombobox
     hw_alias :hw_async_combobox_options
     hw_alias :hw_within_combobox_selection_chip
     hw_alias :hw_combobox_selection_chip
+    hw_alias :hw_combobox_selection_chips_for
     hw_alias :hw_dismissing_combobox_selection_chip
+    hw_alias :hw_dismissing_combobox_selection_chips_for
     hw_alias :hw_combobox_chip_remover_attrs
     hw_alias :hw_combobox_dismissing_chip_remover_attrs
 
