@@ -797,8 +797,11 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox "#states-field"
 
     click_on_option "Alabama"
+    assert_chip_with text: "Alabama" # wait for async chip creation
     click_on_option "California"
+    assert_chip_with text: "California"
     click_on_option "Arizona"
+    assert_chip_with text: "Arizona"
     assert_no_visible_options_with text: "Alabama"
     assert_no_visible_options_with text: "California"
     assert_no_visible_options_with text: "Arizona"
@@ -816,6 +819,32 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     open_combobox "#states-field"
     assert_option_with text: "California"
+  end
+
+  test "multiselect idiosyncrasies" do
+    visit multiselect_path
+
+    open_combobox "#states-field"
+    assert_focused_combobox "#states-field"
+
+    click_on_option "Alabama"
+    assert_focused_combobox "#states-field"
+    assert_chip_with text: "Alabama" # wait for async chip creation
+    assert_no_visible_options_with text: "Alabama"
+    type_in_combobox "#states-field", "ala"
+    type_in_combobox "#states-field", :backspace # clear autocompleted portion
+    assert_no_visible_options_with text: "Alabama"
+    remove_chip "Alabama"
+    assert_option_with text: "Alabama"
+
+    click_on_option "Alabama"
+    assert_chip_with text: "Alabama" # wait for async chip creation
+    type_in_combobox "#states-field", "michi"
+    assert_selected_option_with text: "Michigan"
+    type_in_combobox "#states-field", :backspace # clear autocompleted portion
+    assert_option_with text: "Michigan"
+    remove_chip "Alabama"
+    assert_no_visible_options_with text: "Alabama"
   end
 
   test "prefilled multiselect" do
@@ -1058,6 +1087,10 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       texts.each do |text|
         assert_selector "[data-hw-combobox-chip]", text: text
       end
+    end
+
+    def assert_focused_combobox(selector)
+      page.evaluate_script("document.activeElement.id") == locator_for(selector)
     end
 
     def remove_chip(text)

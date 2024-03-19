@@ -1,5 +1,5 @@
 import Combobox from "hw_combobox/models/combobox/base"
-import { cancel } from "hw_combobox/helpers"
+import { cancel, nextRepaint } from "hw_combobox/helpers"
 import { get } from "hw_combobox/vendor/requestjs"
 
 Combobox.Multiselect = Base => class extends Base {
@@ -55,7 +55,7 @@ Combobox.Multiselect = Base => class extends Base {
     }
   }
 
-  _createChip() {
+  async _createChip() {
     if (!this._isMultiselect) return
 
     this._beforeClearingMultiselectQuery(async (display, value) => {
@@ -63,7 +63,10 @@ Combobox.Multiselect = Base => class extends Base {
       this._filter("hw:multiselectSync")
       this._requestChips(value)
       this._addToFieldValue(value)
-      if (this._isSync) this.openByFocusing()
+      if (this._isSync) {
+        await nextRepaint()
+        this.openByFocusing()
+      }
       this._announceToScreenReader(display, "multi-selected. Press Shift + Tab, then Enter to remove.")
     })
   }
