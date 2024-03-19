@@ -799,43 +799,115 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     click_on_option "Alabama"
     click_on_option "California"
     click_on_option "Arizona"
+    assert_no_visible_options_with text: "Alabama"
+    assert_no_visible_options_with text: "California"
+    assert_no_visible_options_with text: "Arizona"
     assert_combobox_display_and_value \
       "#states-field",
       %w[ Alabama California Arizona ],
       states(:alabama, :california, :arizona).pluck(:id)
 
-    find("[aria-label='Remove California']").click
+    remove_chip "California"
+
     assert_combobox_display_and_value \
       "#states-field",
       %w[ Alabama Arizona ],
       states(:alabama, :arizona).pluck(:id)
+
+    open_combobox "#states-field"
+    assert_option_with text: "California"
   end
 
-  test "prefills multiple selections and hides already-selected options" do
-    skip
-    visit multiple_prefilled_path
+  test "prefilled multiselect" do
+    visit multiselect_async_html_path
 
-    assert_selector "div[id='FL'] div", text: "Florida"
-    open_combobox "#state-field"
-    assert_no_selector "li[role=option]", text: "Florida"
+    assert_closed_combobox
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama Alaska ],
+      states(:alabama, :alaska).pluck(:id)
+  end
 
-    type_in_combobox "#state-field", "mi"
-    assert_no_selector "li[role=option]", text: "Alabama"
-    delete_from_combobox "#state-field", "mi", original: "mi"
-    assert_selector "li[role=option]", text: "Alabama"
-    assert_no_selector "li[role=option]", text: "Florida"
+  test "async multiselect" do
+    visit multiselect_async_html_path
 
-    type_in_combobox "#state-field", :down
-    assert_current_option_with text: "Alabama"
-    type_in_combobox "#state-field", :enter
-    assert_open_combobox
-    assert_selector "div[id='AL'] div", text: "Alabama"
-    find("#AL .hw-combobox__chip__remover").click
-    assert_no_selector "div[id='AL'] div", text: "Alabama"
+    open_combobox "#states-field"
 
-    click_on_option "Minnesota"
-    assert_open_combobox
-    assert_selector "div[id='MN'] div", text: "Minnesota"
+    assert_text "Arizona"
+    type_in_combobox "#states-field", "mi"
+    assert_selected_option_with text: "Michigan"
+    assert_options_with count: 4
+    click_away
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama Alaska Michigan ],
+      states(:alabama, :alaska, :michigan).pluck(:id)
+
+    # pagination
+    assert_options_with count: 8 # AL, AK, and MI are served but hidden
+    find("#states-field-hw-listbox").scroll_to :bottom
+    assert_options_with count: 13
+  end
+
+  test "html multiselect options and chips" do
+    visit multiselect_async_html_path
+
+    open_combobox "#states-field"
+
+    assert_option_with html_markup: "div > p", text: "Arizona"
+    assert_chip_with html_markup: "div > p", text: "Alabama"
+
+    remove_chip "Alabama"
+
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alaska ],
+      [ states(:alaska).id ]
+  end
+
+  test "multiselect form" do
+    visit multiselect_prefilled_form_path
+
+    assert_closed_combobox
+    assert_combobox_display_and_value \
+      "#user_visited_state_ids",
+      %w[ Florida Illinois ],
+      states(:florida, :illinois).pluck(:id)
+
+    open_combobox "#user_visited_state_ids"
+    type_in_combobox "#user_visited_state_ids", "Lou"
+    click_on_option "Louisiana"
+    assert_text "Alabama" # combobox is reset and still open
+
+    assert_combobox_display_and_value \
+      "#user_visited_state_ids",
+      %w[ Florida Illinois Louisiana ],
+      states(:florida, :illinois, :louisiana).pluck(:id)
+
+    click_away
+    find("input[type=submit]").click
+    assert_text "User updated"
+
+    assert_combobox_display_and_value \
+      "#user_visited_state_ids",
+      %w[ Florida Illinois Louisiana ],
+      states(:florida, :illinois, :louisiana).pluck(:id)
+
+    remove_chip "Florida"
+
+    assert_combobox_display_and_value \
+      "#user_visited_state_ids",
+      %w[ Illinois Louisiana ],
+      states(:illinois, :louisiana).pluck(:id)
+
+    click_away
+    find("input[type=submit]").click
+    assert_text "User updated"
+
+    assert_combobox_display_and_value \
+      "#user_visited_state_ids",
+      %w[ Illinois Louisiana ],
+      states(:illinois, :louisiana).pluck(:id)
   end
 
   test "multiple selection with custom events" do
@@ -928,6 +1000,10 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     end
     alias_method :assert_options_with, :assert_option_with
 
+    def assert_chip_with(html_markup: "", **kwargs)
+      assert_selector "[data-hw-combobox-chip] #{html_markup}".squish, **kwargs
+    end
+
     def assert_combobox_display(selector, text)
       assert_field locator_for(selector), with: text
     end
@@ -982,6 +1058,10 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       texts.each do |text|
         assert_selector "[data-hw-combobox-chip]", text: text
       end
+    end
+
+    def remove_chip(text)
+      find("[aria-label='Remove #{text}']").click
     end
 
     def locator_for(selector)

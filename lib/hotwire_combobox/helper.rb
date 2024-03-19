@@ -31,7 +31,7 @@ module HotwireCombobox
     end
 
     def hw_paginated_combobox_options(options, for_id: params[:for_id], src: request.path, next_page: nil, render_in: {}, include_blank: {}, **methods)
-      include_blank = params[:page] ? nil : include_blank
+      include_blank = params[:page].to_i > 0 ? nil : include_blank
       options = hw_combobox_options options, render_in: render_in, include_blank: include_blank, **methods
       this_page = render "hotwire_combobox/paginated_options", for_id: for_id, options: options
       next_page = render "hotwire_combobox/next_page", for_id: for_id, src: src, next_page: next_page
@@ -114,7 +114,7 @@ module HotwireCombobox
       end
 
       def hw_combobox_page_stream_action
-        params[:page] ? :append : :update
+        params[:page].to_i > 0 ? :append : :update
       end
 
       def hw_blank_option(include_blank)

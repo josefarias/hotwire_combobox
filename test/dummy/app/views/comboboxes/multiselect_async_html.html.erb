@@ -6,7 +6,7 @@
     display: flex;
     font-size: var(--hw-selection-chip-font-size);
     line-height: var(--hw-line-height);
-    padding: 0.5rem 1rem;
+    padding: 0 1rem;
   }
 
   .custom-remover {
@@ -43,8 +43,8 @@
   .state--missouri::before { background-image: url(<%= asset_path('missouri.png') %>); }
 </style>
 
-<%= combobox_tag "state", states_path,
-      id: "state-field",
+<%= combobox_tag "state", states_path(page: 0),
+      id: "states-field",
       label: "States",
       multiselect_chip_src: new_html_state_chip_path,
       value: State.limit(2).ids.join(","),
