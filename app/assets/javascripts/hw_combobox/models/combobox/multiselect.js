@@ -25,6 +25,10 @@ Combobox.Multiselect = Base => class extends Base {
     this._announceToScreenReader(display, "removed")
   }
 
+  hideChipsForCache() {
+    this.element.querySelectorAll("[data-hw-combobox-chip]").forEach(chip => chip.hidden = true)
+  }
+
   _chipKeyHandlers = {
     Backspace: (event) => {
       this.removeChip(event)
@@ -44,8 +48,11 @@ Combobox.Multiselect = Base => class extends Base {
     }
   }
 
-  _connectMultiselect() {
-    this._preselectMultiple()
+  _initializeMultiselect() {
+    if (!this._isMultiPreselected) {
+      this._preselectMultiple()
+      this._markMultiPreselected()
+    }
   }
 
   _createChip() {
@@ -125,11 +132,19 @@ Combobox.Multiselect = Base => class extends Base {
     this.chipDismisserTargets[this.chipDismisserTargets.length - 1].focus()
   }
 
+  _markMultiPreselected() {
+    this.element.dataset.multiPreselected = ""
+  }
+
   get _isMultiselect() {
     return this.hasSelectionChipSrcValue
   }
 
   get _isSingleSelect() {
     return !this._isMultiselect
+  }
+
+  get _isMultiPreselected() {
+    return this.element.hasAttribute("data-multi-preselected")
   }
 }
