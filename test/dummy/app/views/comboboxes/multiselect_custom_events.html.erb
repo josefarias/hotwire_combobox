@@ -1,8 +1,5 @@
 <style>
-  .wide-multiple-field {
-    margin-right: 1rem;
-    width: 30rem;
-  }
+  #required { width: 12.5rem; }
 </style>
 
 <div data-controller="combobox--events" style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
@@ -17,13 +14,12 @@
   </div>
 
   <div style="display: flex; align-items: start; gap: 1rem;">
-    <%= combobox_tag :state,
-                     @state_options,
-                     id: "state-field",
-                     data: { action: "hw-combobox:selection->combobox--events#showSelection hw-combobox:closed->combobox--events#showClosed" },
-                     multiple: true,
-                     value: ['FL', 'MO'] do |combobox| %>
-      <% combobox.customize_main_wrapper class: "wide-multiple-field" %>
-    <% end %>
+    <%= combobox_tag "state", State.all,
+          id: "states-field",
+          label: "States",
+          multiselect_chip_src: new_state_chip_path,
+          placeholder: "Select states",
+          data: { action: "hw-combobox:selection->combobox--events#showSelection hw-combobox:closed->combobox--events#showClosed" } %>
   </div>
 </div>
+

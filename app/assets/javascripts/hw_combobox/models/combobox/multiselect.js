@@ -111,7 +111,7 @@ Combobox.Multiselect = Base => class extends Base {
   }
 
   _addToFieldValue(value) {
-    let newValue = this._fieldValue
+    const newValue = this._fieldValue
 
     newValue.add(String(value))
     this.hiddenFieldTarget.value = Array.from(newValue).join(",")
@@ -120,7 +120,7 @@ Combobox.Multiselect = Base => class extends Base {
   }
 
   _removeFromFieldValue(value) {
-    let newValue = this._fieldValue
+    const newValue = this._fieldValue
 
     newValue.delete(String(value))
     this.hiddenFieldTarget.value = Array.from(newValue).join(",")

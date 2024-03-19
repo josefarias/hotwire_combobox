@@ -20,6 +20,17 @@ Combobox.FormField = Base => class extends Base {
     }
   }
 
+  get _incomingFieldValueString() {
+    if (this._isMultiselect) {
+      const array = this._fieldValueArray
+      array.push(this.hiddenFieldTarget.dataset.valueForMultiselect)
+
+      return array.join(",")
+    } else {
+      return this.hiddenFieldTarget.value
+    }
+  }
+
   get _fieldValueArray() {
     if (this._isMultiselect) {
       return Array.from(this._fieldValue)

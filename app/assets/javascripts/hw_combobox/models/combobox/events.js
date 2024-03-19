@@ -3,7 +3,7 @@ import { dispatch } from "hw_combobox/helpers"
 
 Combobox.Events = Base => class extends Base {
   _dispatchSelectionEvent({ isNewAndAllowed, previousValue }) {
-    if (previousValue === this._fieldValueString) return
+    if (previousValue === this._incomingFieldValueString) return
 
     dispatch("hw-combobox:selection", {
       target: this.element,
@@ -20,7 +20,7 @@ Combobox.Events = Base => class extends Base {
 
   get _eventableDetails() {
     return {
-      value: this._fieldValueString,
+      value: this._incomingFieldValueString,
       display: this._fullQuery,
       query: this._typedQuery,
       fieldName: this._fieldName,
