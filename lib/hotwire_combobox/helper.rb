@@ -178,9 +178,22 @@ module HotwireCombobox
       end
 
       def hw_parse_combobox_options(options, render_in_proc: nil, **methods)
-        options.map do |option|
-          HotwireCombobox::Listbox::Option.new \
-            **hw_option_attrs_for(option, render_in_proc: render_in_proc, **methods)
+        are_groups = options.is_a?(Hash) && options.values.all?(Array)
+
+        if are_groups
+          options.map do |group_name, group_options|
+            group_options = group_options.map do |option|
+              HotwireCombobox::Listbox::Option.new \
+                **hw_option_attrs_for(option, render_in_proc: render_in_proc, **methods)
+            end
+
+            HotwireCombobox::Listbox::Group.new group_name, options: group_options
+          end
+        else
+          options.map do |option|
+            HotwireCombobox::Listbox::Option.new \
+              **hw_option_attrs_for(option, render_in_proc: render_in_proc, **methods)
+          end
         end
       end
 

@@ -1068,6 +1068,18 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_equal %w[ Alabama Newplace ], User.first.visited_states.map(&:name)
   end
 
+  test "grouped options" do
+    visit grouped_options_path
+
+    open_combobox "#state-field"
+
+    assert_group_with text: "South"
+    assert_option_with text: "Alabama"
+
+    type_in_combobox "#state-field", :down
+    assert_selected_option_with text: "Alabama"
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
@@ -1181,6 +1193,10 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     def assert_focused_combobox(selector)
       page.evaluate_script("document.activeElement.id") == locator_for(selector)
+    end
+
+    def assert_group_with(**kwargs)
+      assert_selector "ul[role=group] li[role=presentation]", **kwargs
     end
 
     def remove_chip(text)
