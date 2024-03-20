@@ -23,6 +23,7 @@ Combobox.Multiselect = Base => class extends Base {
     }
 
     this._announceToScreenReader(display, "removed")
+    this._dispatchRemovalEvent({ removedDisplay: display, removedValue: params.value })
   }
 
   hideChipsForCache() {
@@ -55,7 +56,7 @@ Combobox.Multiselect = Base => class extends Base {
     }
   }
 
-  async _createChip() {
+  async _createChip(shouldReopen) {
     if (!this._isMultiselect) return
 
     this._beforeClearingMultiselectQuery(async (display, value) => {
@@ -63,7 +64,7 @@ Combobox.Multiselect = Base => class extends Base {
       this._filter("hw:multiselectSync")
       this._requestChips(value)
       this._addToFieldValue(value)
-      if (this._isSync) {
+      if (shouldReopen) {
         await nextRepaint()
         this.openByFocusing()
       }
@@ -132,7 +133,7 @@ Combobox.Multiselect = Base => class extends Base {
   }
 
   _focusLastChipDismisser() {
-    this.chipDismisserTargets[this.chipDismisserTargets.length - 1].focus()
+    this.chipDismisserTargets[this.chipDismisserTargets.length - 1]?.focus()
   }
 
   _markMultiPreselected() {

@@ -939,39 +939,79 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       states(:illinois, :louisiana).pluck(:id)
   end
 
-  test "multiple selection with custom events" do
-    skip
-    visit multiple_custom_events_path
+  test "multiselect custom events" do
+    visit multiselect_custom_events_path
 
     assert_text "Ready to listen for hw-combobox events!"
-
-    open_combobox "#state-field"
-    type_in_combobox "#state-field", "mi"
-
     assert_no_text "event: hw-combobox:selection"
     assert_no_text "event: hw-combobox:closed"
     assert_no_text "selections:"
 
-    click_on_option "Minnesota"
+    open_combobox "#states-field"
+    type_in_combobox "#states-field", "mi"
 
     assert_text "event: hw-combobox:selection"
-    assert_text 'value: ["FL","MO","MN"]'
-    assert_text "selections: 1."
+    assert_text "value: #{states(:michigan).id}."
+    assert_text "display: Michigan"
+    assert_text "query: Mi"
+    assert_text "fieldName: states"
+    assert_text "isNewAndAllowed: false"
+    assert_text "isValid: true"
+    assert_text "previousValue: <empty>"
+    assert_text "selections: 2." # `m`, then `mi`
     assert_no_text "event: hw-combobox:closed"
 
-    find("#MO .hw-combobox__chip__remover").click
-    assert_text 'value: ["FL","MN"]'
-    assert_text "selections: 2."
-    assert_no_text "event: hw-combobox:closed"
-    assert_no_text "closings:"
+    click_away
+    assert_closed_combobox
+
+    assert_text "event: hw-combobox:closed"
+    assert_text "value: #{states(:michigan).id}."
+    assert_text "display: Michigan"
+    assert_text "query: Michigan"
+    assert_text "fieldName: states"
+    assert_text "isNewAndAllowed: <empty>"
+    assert_text "isValid: true"
+    assert_text "previousValue: <empty>"
+    assert_text "closings: 1."
+
+    assert_text "selections: 3."
+
+    remove_chip "Michigan"
+    assert_open_combobox
+
+    assert_text "removedDisplay: Michigan."
+    assert_text "removedValue: #{states(:michigan).id}."
+    assert_text "removals: 1."
+
+    click_on_option "Arkansas"
+    click_on_option "Colorado"
+
+    assert_text "event: hw-combobox:selection"
+    assert_text "value: #{states(:arkansas, :colorado).pluck(:id).join(",")}."
+    assert_text "display: Colorado."
+    assert_text "query: Colorado."
+    assert_text "fieldName: states."
+    assert_text "isNewAndAllowed: false."
+    assert_text "isValid: true."
+    assert_text "previousValue: 1011954550."
+    assert_text "removedDisplay: <empty>."
+    assert_text "removedValue: <empty>."
+
+    assert_text "event: hw-combobox:closed"
+    assert_text "value: #{states(:arkansas, :colorado).pluck(:id).join(",")}."
+    assert_text "display: Colorado."
+    assert_text "query: Colorado."
+    assert_text "fieldName: states."
+    assert_text "isNewAndAllowed: <empty>."
+    assert_text "isValid: true."
+    assert_text "previousValue: <empty>."
+    assert_text "removedDisplay: <empty>."
+    assert_text "removedValue: <empty>."
 
     click_away
 
-    assert_text "event: hw-combobox:selection"
-    assert_text 'value: ["FL","MN"]'
-
-    assert_text "event: hw-combobox:closed"
-    assert_text "closings: 1."
+    assert_text "selections: 7." # TODO: lockInSelection causes duplicate selection events; shouldn't lock-in unnecessarily
+    assert_text "closings: 4."
   end
 
   private

@@ -99,7 +99,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
   }
 
   closerTargetConnected() {
-    this._closeAndBlur()
+    this._closeAndBlur("hw:asyncCloser")
   }
 
   // Use +_printStack+ for debugging purposes

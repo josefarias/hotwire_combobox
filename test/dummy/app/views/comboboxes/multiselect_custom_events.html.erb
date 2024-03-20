@@ -6,20 +6,22 @@
   <div style="display: flex; align-items: start; gap: 1rem;">
     <span data-combobox--events-target="selectionScratchpad"></span>
     <span data-combobox--events-target="closedScratchpad"></span>
+    <span data-combobox--events-target="removalScratchpad"></span>
   </div>
 
   <div style="display: flex; align-items: start; gap: 1rem;">
     <div data-combobox--events-target="selectionCount"></div>
     <div data-combobox--events-target="closedCount"></div>
+    <div data-combobox--events-target="removalCount"></div>
   </div>
 
   <div style="display: flex; align-items: start; gap: 1rem;">
-    <%= combobox_tag "state", State.all,
+    <%= combobox_tag "states", State.all,
           id: "states-field",
           label: "States",
           multiselect_chip_src: new_state_chip_path,
           placeholder: "Select states",
-          data: { action: "hw-combobox:selection->combobox--events#showSelection hw-combobox:closed->combobox--events#showClosed" } %>
+          data: { action: "hw-combobox:selection->combobox--events#showSelection hw-combobox:closed->combobox--events#showClosed hw-combobox:removal->combobox--events#showRemoval" } %>
   </div>
 </div>
 

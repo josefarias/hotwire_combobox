@@ -10,15 +10,24 @@ Combobox.Toggle = Base => class extends Base {
     this._actingCombobox.focus()
   }
 
-  close() {
+  close(inputType) {
     if (this._isOpen) {
+      const shouldReopen = this._isMultiselect &&
+        this._isSync &&
+        !this._isSmallViewport &&
+        inputType != "hw:clickOutside" &&
+        inputType != "hw:focusOutside"
+
       this._lockInSelection()
       this._clearInvalidQuery()
 
       this.expandedValue = false
 
       this._dispatchClosedEvent()
-      this._createChip()
+
+      if (inputType != "hw:keyHandler:escape") {
+        this._createChip(shouldReopen)
+      }
 
       if (this._isSingleSelect && this._selectedOptionElement) {
         this._announceToScreenReader(this._displayForOptionElement(this._selectedOptionElement), "selected")
@@ -28,7 +37,7 @@ Combobox.Toggle = Base => class extends Base {
 
   toggle() {
     if (this.expandedValue) {
-      this._closeAndBlur()
+      this._closeAndBlur("hw:toggle")
     } else {
       this.openByFocusing()
     }
@@ -41,14 +50,14 @@ Combobox.Toggle = Base => class extends Base {
     if (this.mainWrapperTarget.contains(target) && !this._isDialogDismisser(target)) return
     if (this._withinElementBounds(event)) return
 
-    this._closeAndBlur()
+    this._closeAndBlur("hw:clickOutside")
   }
 
   closeOnFocusOutside({ target }) {
     if (!this._isOpen) return
     if (this.element.contains(target)) return
 
-    this._closeAndBlur()
+    this._closeAndBlur("hw:focusOutside")
   }
 
   clearOrToggleOnHandleClick() {
@@ -60,8 +69,8 @@ Combobox.Toggle = Base => class extends Base {
     }
   }
 
-  _closeAndBlur() {
-    this.close()
+  _closeAndBlur(inputType) {
+    this.close(inputType)
     this._actingCombobox.blur()
   }
 

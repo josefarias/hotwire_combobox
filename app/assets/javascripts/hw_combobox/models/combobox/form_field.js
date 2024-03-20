@@ -23,7 +23,10 @@ Combobox.FormField = Base => class extends Base {
   get _incomingFieldValueString() {
     if (this._isMultiselect) {
       const array = this._fieldValueArray
-      array.push(this.hiddenFieldTarget.dataset.valueForMultiselect)
+
+      if (this.hiddenFieldTarget.dataset.valueForMultiselect) {
+        array.push(this.hiddenFieldTarget.dataset.valueForMultiselect)
+      }
 
       return array.join(",")
     } else {

@@ -26,11 +26,11 @@ Combobox.Navigation = Base => class extends Base {
       cancel(event)
     },
     Enter: (event) => {
-      this._closeAndBlur()
+      this._closeAndBlur("hw:keyHandler:enter")
       cancel(event)
     },
     Escape: (event) => {
-      this._closeAndBlur()
+      this._closeAndBlur("hw:keyHandler:escape")
       cancel(event)
     },
     Backspace: (event) => {

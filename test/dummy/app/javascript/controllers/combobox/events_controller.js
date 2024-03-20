@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "selectionScratchpad", "selectionCount", "closedScratchpad", "closedCount" ]
+  static targets = [ "selectionScratchpad", "selectionCount", "closedScratchpad", "closedCount", "removalScratchpad", "removalCount" ]
 
   connect() {
     this.selectionScratchpadTarget.innerText = "Ready to listen for hw-combobox events!"
@@ -21,6 +21,13 @@ export default class extends Controller {
     this.closedCountTarget.innerText = `closings: ${this.closedCount}.`
   }
 
+  showRemoval(event) {
+    this.removalCount ??= 0
+    this.removalCount++
+    this.removalScratchpadTarget.innerText = this.#template(event)
+    this.removalCountTarget.innerText = `removals: ${this.removalCount}.`
+  }
+
   #template(event) {
     const cast = (string) => {
       let _string = String(string)
@@ -28,14 +35,16 @@ export default class extends Controller {
       return _string || "<empty>"
     }
 
-    return `event: ${cast(event.type) || "<empty>"}
-      value: ${cast(event.detail.value) || "<empty>"}
-      display: ${cast(event.detail.display) || "<empty>"}
-      query: ${cast(event.detail.query) || "<empty>"}
-      fieldName: ${cast(event.detail.fieldName) || "<empty>"}
-      isNewAndAllowed: ${cast(event.detail.isNewAndAllowed) || "<empty>"}
-      isValid: ${cast(event.detail.isValid) || "<empty>"}
-      previousValue: ${cast(event.detail.previousValue) || "<empty>"}
+    return `event: ${cast(event.type)}
+      value: ${cast(event.detail.value)}.
+      display: ${cast(event.detail.display)}.
+      query: ${cast(event.detail.query)}.
+      fieldName: ${cast(event.detail.fieldName)}.
+      isNewAndAllowed: ${cast(event.detail.isNewAndAllowed)}.
+      isValid: ${cast(event.detail.isValid)}.
+      previousValue: ${cast(event.detail.previousValue)}.
+      removedDisplay: ${cast(event.detail.removedDisplay)}.
+      removedValue: ${cast(event.detail.removedValue)}.
     `
   }
 }

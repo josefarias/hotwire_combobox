@@ -5,16 +5,23 @@ Combobox.Events = Base => class extends Base {
   _dispatchSelectionEvent({ isNewAndAllowed, previousValue }) {
     if (previousValue === this._incomingFieldValueString) return
 
-    dispatch("hw-combobox:selection", {
+    dispatch("hw-combobox:selection", { // TODO: rename to preselection
       target: this.element,
       detail: { ...this._eventableDetails, isNewAndAllowed, previousValue }
     })
   }
 
   _dispatchClosedEvent() {
-    dispatch("hw-combobox:closed", {
+    dispatch("hw-combobox:closed", { // TODO: rename to selection
       target: this.element,
       detail: this._eventableDetails
+    })
+  }
+
+  _dispatchRemovalEvent({ removedDisplay, removedValue }) {
+    dispatch("hw-combobox:removal", {
+      target: this.element,
+      detail: { ...this._eventableDetails, removedDisplay, removedValue }
     })
   }
 
