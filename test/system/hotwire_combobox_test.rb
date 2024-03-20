@@ -1014,6 +1014,22 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "closings: 4."
   end
 
+  test "navigating chips with keyboard" do
+    visit multiselect_prefilled_form_path
+
+    open_combobox "#user_visited_state_ids"
+    assert_combobox_display "#user_visited_state_ids", %w[ Florida Illinois ]
+    type_in_combobox "#user_visited_state_ids", :backspace, :enter
+    assert_combobox_display "#user_visited_state_ids", %w[ Florida ]
+
+    visit multiselect_prefilled_form_path
+
+    open_combobox "#user_visited_state_ids"
+    assert_combobox_display "#user_visited_state_ids", %w[ Florida Illinois ]
+    type_in_combobox "#user_visited_state_ids", %i[shift tab], %i[shift tab], :enter
+    assert_combobox_display "#user_visited_state_ids", %w[ Illinois ]
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
@@ -1074,25 +1090,21 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     end
 
     def assert_combobox_display(selector, text)
-      assert_field locator_for(selector), with: text
+      if text.is_a? Array
+        assert_selection_chips(*text)
+      else
+        assert_field locator_for(selector), with: text
+      end
     end
 
     def assert_combobox_value(selector, value)
+      value = value.join(",") if value.is_a? Array
       assert_field "#{locator_for(selector)}-hw-hidden-field", type: "hidden", with: value
     end
 
     def assert_combobox_display_and_value(selector, text, value)
-      if text.is_a? Array
-        assert_selection_chips(*text)
-      else
-        assert_combobox_display selector, text
-      end
-
-      if value.is_a? Array
-        assert_combobox_value selector, value.join(",")
-      else
-        assert_combobox_value selector, value
-      end
+      assert_combobox_display selector, text
+      assert_combobox_value selector, value
     end
 
     def assert_selected_option_with(selector: "", **kwargs)
