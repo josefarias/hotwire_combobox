@@ -1,7 +1,3 @@
-<%= hw_async_combobox_options State.all,
+<%= hw_async_combobox_options @states,
       render_in: { partial: "states/state", formats: [:html] },
-      for_id: "user_favorite_state_id" %>
-
-<%= hw_async_combobox_options State.all,
-      render_in: { partial: "states/state", formats: [:html] },
-      for_id: "user_home_state_id" %>
+      next_page: @next_page %>

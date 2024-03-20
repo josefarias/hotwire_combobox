@@ -1,0 +1,7 @@
+<%# locals: (for_id:) -%>
+
+<%= turbo_stream.before for_id do %>
+  <%= tag.div data: { hw_combobox_chip: "" } do %>
+    <%= yield %>
+  <% end %>
+<% end %>

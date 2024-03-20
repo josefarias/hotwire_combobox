@@ -110,4 +110,14 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     assert_instance_of String, hw_listbox_id(:bar)
     assert_equal hw_listbox_id(:bar), HotwireCombobox::Component.new(self, :foo, id: :bar).listbox_attrs[:id]
   end
+
+  test "name_when_new must match original name on multiselects" do
+    assert_raises ActiveModel::ValidationError do
+      combobox_tag :foo, multiselect_chip_src: "some_path", name_when_new: :bar
+    end
+
+    assert_nothing_raised do
+      combobox_tag :foo, multiselect_chip_src: "some_path", name_when_new: :foo
+    end
+  end
 end

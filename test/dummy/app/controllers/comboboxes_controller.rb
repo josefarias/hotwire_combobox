@@ -70,6 +70,26 @@ class ComboboxesController < ApplicationController
     @hashes = State.limit(3).map { |state| { display: state.name, value: state.abbreviation } }
   end
 
+  def multiselect
+  end
+
+  def multiselect_dismissing
+  end
+
+  def multiselect_async_html
+  end
+
+  def multiselect_prefilled_form
+    @user = User.first || raise("No user found, load fixtures first.")
+  end
+
+  def multiselect_custom_events
+  end
+
+  def multiselect_new_values
+    @user = User.first || raise("No user found, load fixtures first.")
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 

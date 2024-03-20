@@ -6,22 +6,40 @@ Combobox.Toggle = Base => class extends Base {
     this.expandedValue = true
   }
 
-  close() {
+  openByFocusing() {
+    this._actingCombobox.focus()
+  }
+
+  close(inputType) {
     if (this._isOpen) {
+      const shouldReopen = this._isMultiselect &&
+        this._isSync &&
+        !this._isSmallViewport &&
+        inputType != "hw:clickOutside" &&
+        inputType != "hw:focusOutside"
+
       this._lockInSelection()
       this._clearInvalidQuery()
 
       this.expandedValue = false
 
       this._dispatchClosedEvent()
+
+      if (inputType != "hw:keyHandler:escape") {
+        this._createChip(shouldReopen)
+      }
+
+      if (this._isSingleSelect && this._selectedOptionElement) {
+        this._announceToScreenReader(this._displayForOptionElement(this._selectedOptionElement), "selected")
+      }
     }
   }
 
   toggle() {
     if (this.expandedValue) {
-      this.close()
+      this._closeAndBlur("hw:toggle")
     } else {
-      this._openByFocusing()
+      this.openByFocusing()
     }
   }
 
@@ -32,14 +50,14 @@ Combobox.Toggle = Base => class extends Base {
     if (this.mainWrapperTarget.contains(target) && !this._isDialogDismisser(target)) return
     if (this._withinElementBounds(event)) return
 
-    this.close()
+    this._closeAndBlur("hw:clickOutside")
   }
 
   closeOnFocusOutside({ target }) {
     if (!this._isOpen) return
     if (this.element.contains(target)) return
 
-    this.close()
+    this._closeAndBlur("hw:focusOutside")
   }
 
   clearOrToggleOnHandleClick() {
@@ -49,6 +67,11 @@ Combobox.Toggle = Base => class extends Base {
     } else {
       this.toggle()
     }
+  }
+
+  _closeAndBlur(inputType) {
+    this.close(inputType)
+    this._actingCombobox.blur()
   }
 
   // Some browser extensions like 1Password overlay elements on top of the combobox.
@@ -62,16 +85,14 @@ Combobox.Toggle = Base => class extends Base {
     return clientX >= left && clientX <= right && clientY >= top && clientY <= bottom
   }
 
-  _openByFocusing() {
-    this._actingCombobox.focus()
-  }
-
   _isDialogDismisser(target) {
     return target.closest("dialog") && target.role != "combobox"
   }
 
   _expand() {
-    if (this._preselectOnExpansion) this._preselect()
+    if (this._isSync) {
+      this._preselectSingle()
+    }
 
     if (this._autocompletesList && this._isSmallViewport) {
       this._openInDialog()
@@ -133,9 +154,5 @@ Combobox.Toggle = Base => class extends Base {
 
   get _isOpen() {
     return this.expandedValue
-  }
-
-  get _preselectOnExpansion() {
-    return !this._isAsync // async comboboxes preselect based on callbacks
   }
 }

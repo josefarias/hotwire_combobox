@@ -1,23 +1,249 @@
-al:
-  abbreviation: AL
+alabama:
   name: Alabama
+  abbreviation: AL
+  location: South
 
-fl:
-  abbreviation: FL
+alaska:
+  name: Alaska
+  abbreviation: AK
+  location: West
+
+arizona:
+  name: Arizona
+  abbreviation: AZ
+  location: West
+
+arkansas:
+  name: Arkansas
+  abbreviation: AR
+  location: South
+
+california:
+  name: California
+  abbreviation: CA
+  location: West
+
+colorado:
+  name: Colorado
+  abbreviation: CO
+  location: West
+
+connecticut:
+  name: Connecticut
+  abbreviation: CT
+  location: Northeast
+
+delaware:
+  name: Delaware
+  abbreviation: DE
+  location: South
+
+florida:
   name: Florida
+  abbreviation: FL
+  location: South
 
-mi:
-  abbreviation: MI
+georgia:
+  name: Georgia
+  abbreviation: GA
+  location: South
+
+hawaii:
+  name: Hawaii
+  abbreviation: HI
+  location: West
+
+idaho:
+  name: Idaho
+  abbreviation: ID
+  location: West
+
+illinois:
+  name: Illinois
+  abbreviation: IL
+  location: Midwest
+
+indiana:
+  name: Indiana
+  abbreviation: IN
+  location: Midwest
+
+iowa:
+  name: Iowa
+  abbreviation: IA
+  location: Midwest
+
+kansas:
+  name: Kansas
+  abbreviation: KS
+  location: Midwest
+
+kentucky:
+  name: Kentucky
+  abbreviation: KY
+  location: South
+
+louisiana:
+  name: Louisiana
+  abbreviation: LA
+  location: South
+
+maine:
+  name: Maine
+  abbreviation: ME
+  location: Northeast
+
+maryland:
+  name: Maryland
+  abbreviation: MD
+  location: South
+
+massachusetts:
+  name: Massachusetts
+  abbreviation: MA
+  location: Northeast
+
+michigan:
   name: Michigan
+  abbreviation: MI
+  location: Midwest
 
-mn:
-  abbreviation: MN
+minnesota:
   name: Minnesota
+  abbreviation: MN
+  location: Midwest
 
-ms:
-  abbreviation: MS
+mississippi:
   name: Mississippi
+  abbreviation: MS
+  location: South
 
-mo:
-  abbreviation: MO
+missouri:
   name: Missouri
+  abbreviation: MO
+  location: Midwest
+
+montana:
+  name: Montana
+  abbreviation: MT
+  location: West
+
+nebraska:
+  name: Nebraska
+  abbreviation: NE
+  location: Midwest
+
+nevada:
+  name: Nevada
+  abbreviation: NV
+  location: West
+
+new_hampshire:
+  name: New Hampshire
+  abbreviation: NH
+  location: Northeast
+
+new_jersey:
+  name: New Jersey
+  abbreviation: NJ
+  location: Northeast
+
+new_mexico:
+  name: New Mexico
+  abbreviation: NM
+  location: West
+
+new_york:
+  name: New York
+  abbreviation: NY
+  location: Northeast
+
+north_carolina:
+  name: North Carolina
+  abbreviation: NC
+  location: South
+
+north_dakota:
+  name: North Dakota
+  abbreviation: ND
+  location: Midwest
+
+ohio:
+  name: Ohio
+  abbreviation: OH
+  location: Midwest
+
+oklahoma:
+  name: Oklahoma
+  abbreviation: OK
+  location: South
+
+oregon:
+  name: Oregon
+  abbreviation: OR
+  location: West
+
+pennsylvania:
+  name: Pennsylvania
+  abbreviation: PA
+  location: Northeast
+
+rhode_island:
+  name: Rhode Island
+  abbreviation: RI
+  location: Northeast
+
+south_carolina:
+  name: South Carolina
+  abbreviation: SC
+  location: South
+
+south_dakota:
+  name: South Dakota
+  abbreviation: SD
+  location: Midwest
+
+tennessee:
+  name: Tennessee
+  abbreviation: TN
+  location: South
+
+texas:
+  name: Texas
+  abbreviation: TX
+  location: South
+
+utah:
+  name: Utah
+  abbreviation: UT
+  location: West
+
+vermont:
+  name: Vermont
+  abbreviation: VT
+  location: Northeast
+
+virginia:
+  name: Virginia
+  abbreviation: VA
+  location: South
+
+washington:
+  name: Washington
+  abbreviation: WA
+  location: West
+
+west_virginia:
+  name: West Virginia
+  abbreviation: WV
+  location: South
+
+wisconsin:
+  name: Wisconsin
+  abbreviation: WI
+  location: Midwest
+
+wyoming:
+  name: Wyoming
+  abbreviation: WY
+  location: West

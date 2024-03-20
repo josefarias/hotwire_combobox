@@ -7,12 +7,14 @@ window.HOTWIRE_COMBOBOX_STREAM_DELAY = 0 // ms, for testing purposes
 const concerns = [
   Controller,
   Combobox.Actors,
+  Combobox.Announcements,
   Combobox.AsyncLoading,
   Combobox.Autocomplete,
   Combobox.Dialog,
   Combobox.Events,
   Combobox.Filtering,
   Combobox.FormField,
+  Combobox.Multiselect,
   Combobox.Navigation,
   Combobox.NewOptions,
   Combobox.Options,
@@ -28,7 +30,10 @@ export default class HwComboboxController extends Concerns(...concerns) {
   ]
 
   static targets = [
+    "announcer",
     "combobox",
+    "chipDismisser",
+    "closer",
     "dialog",
     "dialogCombobox",
     "dialogFocusTrap",
@@ -49,12 +54,14 @@ export default class HwComboboxController extends Concerns(...concerns) {
     nameWhenNew: String,
     originalName: String,
     prefilledDisplay: String,
+    selectionChipSrc: String,
     smallViewportMaxWidth: String
   }
 
   initialize() {
     this._initializeActors()
     this._initializeFiltering()
+    this._initializeMultiselect()
   }
 
   connect() {
@@ -79,11 +86,25 @@ export default class HwComboboxController extends Concerns(...concerns) {
     const inputType = element.dataset.inputType
     const delay = window.HOTWIRE_COMBOBOX_STREAM_DELAY
 
-    if (inputType && inputType !== "hw:lockInSelection") {
+    this._resetMultiselectionMarks()
+
+    if (inputType === "hw:multiselectSync") {
+      this.openByFocusing()
+    } else if (inputType && inputType !== "hw:lockInSelection") {
       if (delay) await sleep(delay)
-      this._selectOnQuery({ inputType })
+      this._selectOnQuery(inputType)
     } else {
-      this._preselect()
+      this._preselectSingle()
     }
+  }
+
+  closerTargetConnected() {
+    this._closeAndBlur("hw:asyncCloser")
+  }
+
+  // Use +_printStack+ for debugging purposes
+  _printStack() {
+    const err = new Error()
+    console.log(err.stack || err.stacktrace)
   }
 }

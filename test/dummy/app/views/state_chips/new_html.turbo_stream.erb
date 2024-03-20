@@ -1,0 +1,9 @@
+<% @states.each do |state| %>
+  <%= within_combobox_selection_chip do %>
+    <%= tag.div class: "custom-chip" do %>
+      <%= tag.span class: "state state--#{state.name.downcase.parameterize}" %>
+      <%= tag.p state.name %>
+      <%= tag.span **combobox_chip_remover_attrs(display: state.name, value: state.id, class: "custom-remover") %>
+    <% end %>
+  <% end %>
+<% end %>
