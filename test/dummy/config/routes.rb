@@ -41,7 +41,11 @@ Rails.application.routes.draw do
   resources :state_chips, only: :new, param: :combobox_value
   get "new_html_state_chip", to: "state_chips#new_html"
   get "new_dismissing_state_chip", to: "state_chips#new_dismissing"
-  resources :users, only: :update
+  get "new_possibly_new_state_chip", to: "state_chips#new_possibly_new"
+
+  resources :users, only: :update do
+    resources :visits, only: :create
+  end
 
   root to: "comboboxes#plain"
 end

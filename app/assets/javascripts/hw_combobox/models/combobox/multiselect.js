@@ -8,11 +8,17 @@ Combobox.Multiselect = Base => class extends Base {
   }
 
   removeChip({ currentTarget, params }) {
+    let display
     const option = this._optionElementWithValue(params.value)
-    const display = option.getAttribute(this.autocompletableAttributeValue)
 
-    this._markNotSelected(option)
-    this._markNotMultiselected(option)
+    if (option) {
+      display = option.getAttribute(this.autocompletableAttributeValue)
+      this._markNotSelected(option)
+      this._markNotMultiselected(option)
+    } else {
+      display = params.value // for new options
+    }
+
     this._removeFromFieldValue(params.value)
     this._filter("hw:multiselectSync")
 

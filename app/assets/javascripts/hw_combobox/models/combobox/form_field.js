@@ -44,7 +44,7 @@ Combobox.FormField = Base => class extends Base {
 
   set _fieldValue(value) {
     if (this._isMultiselect) {
-      this.hiddenFieldTarget.dataset.valueForMultiselect = value
+      this.hiddenFieldTarget.dataset.valueForMultiselect = value?.replace(/,/g, "")
       this.hiddenFieldTarget.dataset.displayForMultiselect = this._fullQuery
     } else {
       this.hiddenFieldTarget.value = value
@@ -53,7 +53,8 @@ Combobox.FormField = Base => class extends Base {
 
   get _hasEmptyFieldValue() {
     if (this._isMultiselect) {
-      return this.hiddenFieldTarget.dataset.valueForMultiselect === ""
+      return this.hiddenFieldTarget.dataset.valueForMultiselect == "" ||
+        this.hiddenFieldTarget.dataset.valueForMultiselect == "undefined"
     } else {
       return this.hiddenFieldTarget.value === ""
     }

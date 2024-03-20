@@ -87,6 +87,7 @@ class ComboboxesController < ApplicationController
   end
 
   def multiselect_new_values
+    @user = User.first || raise("No user found, load fixtures first.")
   end
 
   private

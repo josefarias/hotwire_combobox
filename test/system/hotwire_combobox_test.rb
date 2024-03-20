@@ -1030,6 +1030,44 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_combobox_display "#user_visited_state_ids", %w[ Illinois ]
   end
 
+  test "multiselect with new options" do
+    visit multiselect_new_values_path
+
+    open_combobox "#states-field"
+
+    click_on_option "Alabama"
+    assert_chip_with text: "Alabama"
+    type_in_combobox "#states-field", "Newplace", :enter
+    assert_chip_with text: "Newplace"
+
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama Newplace ],
+      [ states(:alabama).id, "Newplace" ]
+
+    remove_chip "Newplace"
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama ],
+      [ states(:alabama).id ]
+
+    type_in_combobox "#states-field", "New,place", :enter # comma is stripped away
+    click_away
+
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama Newplace ],
+      [ states(:alabama).id, "Newplace" ]
+
+    assert_difference -> { State.count }, +1 do
+      find("input[type=submit]").click
+      assert_text "Visits created"
+    end
+
+    assert_equal "Newplace", State.unscoped.last.name
+    assert_equal %w[ Alabama Newplace ], User.first.visited_states.map(&:name)
+  end
+
   private
     def open_combobox(selector)
       find(selector).click

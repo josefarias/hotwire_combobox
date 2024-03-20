@@ -2,8 +2,11 @@ require "securerandom"
 
 class HotwireCombobox::Component
   include Customizable
+  include ActiveModel::Validations
 
   attr_reader :options, :label
+
+  validate :name_when_new_on_multiselect_must_match_original_name
 
   def initialize \
       view, name,
@@ -30,6 +33,8 @@ class HotwireCombobox::Component
 
     @combobox_attrs = input.reverse_merge(rest).deep_symbolize_keys
     @association_name = association_name || infer_association_name
+
+    validate!
   end
 
   def render_in(view_context, &block)
@@ -194,6 +199,15 @@ class HotwireCombobox::Component
     attr_reader :view, :autocomplete, :id, :name, :value, :form,
       :name_when_new, :open, :data, :combobox_attrs, :mobile_at,
       :association_name, :multiselect_chip_src
+
+    def name_when_new_on_multiselect_must_match_original_name
+      return unless multiselect? && name_when_new.present?
+
+      unless name_when_new.to_s == name
+        errors.add :name_when_new, :must_match_original_name,
+          message: "must match the regular name ('#{name}', in this case) on multiselect comboboxes."
+      end
+    end
 
     def multiselect?
       multiselect_chip_src.present?
