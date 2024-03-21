@@ -14,17 +14,21 @@ class HotwireCombobox::Listbox::Item
   end
 
   def items
-    if grouped?
-      create_listbox_group options
-    else
-      items = create_listbox_options options
-      items.unshift(blank_option) if include_blank.present?
-      items
-    end
+    items = groups_or_options
+    items.unshift(blank_option) if include_blank.present?
+    items
   end
 
   private
     attr_reader :view, :options, :render_in, :include_blank, :custom_methods
+
+    def groups_or_options
+      if grouped?
+        create_listbox_group options
+      else
+        create_listbox_options options
+      end
+    end
 
     def grouped?
       key, value = options.to_a.first

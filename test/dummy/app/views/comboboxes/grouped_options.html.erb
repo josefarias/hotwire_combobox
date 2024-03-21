@@ -13,3 +13,4 @@
 
 <%= combobox_tag "state", State.all.group_by(&:location), id: "state-field" %>
 <%= combobox_tag "state_but_weird", weird_options, id: "weird-state-field" %>
+<%= combobox_tag "state_with_blank", State.all.group_by(&:location), id: "state-field-with-blank", include_blank: "All" %>

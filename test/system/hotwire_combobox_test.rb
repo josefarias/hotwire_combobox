@@ -1085,6 +1085,16 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     type_in_combobox "#weird-state-field", :down
     assert_selected_option_with text: "United States"
+
+    open_combobox "#state-field-with-blank"
+    assert_option_with class: ".hw-combobox__option--blank", text: "All"
+    assert_group_with text: "South"
+    assert_option_with text: "Alabama"
+
+    type_in_combobox "#state-field-with-blank", :down
+    assert_selected_option_with text: "All"
+    type_in_combobox "#state-field-with-blank", :down
+    assert_selected_option_with text: "Alabama"
   end
 
   private
