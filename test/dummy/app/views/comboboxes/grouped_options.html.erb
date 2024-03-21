@@ -1,1 +1,15 @@
+<%
+  weird_options = [
+    [
+      "North America",
+      [ [ "United States", "US" ], "Canada" ]
+    ],
+    [
+      "Europe",
+      [ "Denmark", "Germany", "France" ]
+    ]
+  ]
+%>
+
 <%= combobox_tag "state", State.all.group_by(&:location), id: "state-field" %>
+<%= combobox_tag "state_but_weird", weird_options, id: "weird-state-field" %>
