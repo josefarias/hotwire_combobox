@@ -646,7 +646,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "isValid: true"
     assert_text "previousValue: <empty>"
 
-    assert_no_text "event: hw-combobox:closed"
+    assert_no_text "event: hw-combobox:selection"
 
     type_in_combobox "#allow-new", "t"
 
@@ -660,13 +660,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "isValid: true"
     assert_text "previousValue: #{movies(:a_beautiful_mind).id}"
 
-    assert_no_text "closings:"
-    assert_no_text "event: hw-combobox:closed"
+    assert_no_text "event: hw-combobox:selection"
 
     click_away
 
-    assert_text "closings: 1."
-    assert_text "event: hw-combobox:closed"
+    assert_text "selections: 1."
+    assert_text "event: hw-combobox:selection"
     assert_text "value: A Beat"
     assert_text "display: A Beat"
     assert_text "query: A Beat"
@@ -701,8 +700,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     click_away
 
-    assert_text "closings: 2."
-    assert_text "event: hw-combobox:closed"
+    assert_text "selections: 2."
+    assert_text "event: hw-combobox:selection"
     assert_text "value: <empty>"
     assert_text "display: A Beat"
     assert_text "query: A Beat"
@@ -718,7 +717,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     assert_text "previousValue: #{movies(:the_godfather_part_ii).id}"
     assert_text "preselections: 6."
-    assert_text "closings: 4."
+    assert_text "selections: 4."
   end
 
   test "customized elements" do
@@ -953,7 +952,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     assert_text "Ready to listen for hw-combobox events!"
     assert_no_text "event: hw-combobox:preselection"
-    assert_no_text "event: hw-combobox:closed"
+    assert_no_text "event: hw-combobox:selection"
     assert_no_text "preselections:"
 
     open_combobox "#states-field"
@@ -968,12 +967,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "isValid: true"
     assert_text "previousValue: <empty>"
     assert_text "preselections: 2." # `m`, then `mi`
-    assert_no_text "event: hw-combobox:closed"
+    assert_no_text "event: hw-combobox:selection"
 
     click_away
     assert_closed_combobox
 
-    assert_text "event: hw-combobox:closed"
+    assert_text "event: hw-combobox:selection"
     assert_text "value: #{states(:michigan).id}."
     assert_text "display: Michigan"
     assert_text "query: Michigan"
@@ -981,7 +980,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "isNewAndAllowed: <empty>"
     assert_text "isValid: true"
     assert_text "previousValue: <empty>"
-    assert_text "closings: 1."
+    assert_text "selections: 1."
 
     assert_text "preselections: 3."
 
@@ -1006,7 +1005,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "removedDisplay: <empty>."
     assert_text "removedValue: <empty>."
 
-    assert_text "event: hw-combobox:closed"
+    assert_text "event: hw-combobox:selection"
     assert_text "value: #{states(:arkansas, :colorado).pluck(:id).join(",")}."
     assert_text "display: Colorado."
     assert_text "query: Colorado."
@@ -1020,7 +1019,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     click_away
 
     assert_text "preselections: 7." # TODO: lockInSelection causes duplicate selection events; shouldn't lock-in unnecessarily
-    assert_text "closings: 4."
+    assert_text "selections: 4."
   end
 
   test "navigating chips with keyboard" do

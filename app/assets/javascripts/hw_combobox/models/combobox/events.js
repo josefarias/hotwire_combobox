@@ -11,8 +11,8 @@ Combobox.Events = Base => class extends Base {
     })
   }
 
-  _dispatchClosedEvent() {
-    dispatch("hw-combobox:closed", { // TODO: rename to selection
+  _dispatchSelectionEvent() {
+    dispatch("hw-combobox:selection", {
       target: this.element,
       detail: this._eventableDetails
     })

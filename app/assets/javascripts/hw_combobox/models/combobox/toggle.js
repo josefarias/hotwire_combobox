@@ -23,7 +23,7 @@ Combobox.Toggle = Base => class extends Base {
 
       this.expandedValue = false
 
-      this._dispatchClosedEvent()
+      this._dispatchSelectionEvent()
 
       if (inputType != "hw:keyHandler:escape") {
         this._createChip(shouldReopen)
