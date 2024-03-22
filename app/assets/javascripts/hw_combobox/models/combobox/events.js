@@ -2,10 +2,10 @@ import Combobox from "hw_combobox/models/combobox/base"
 import { dispatch } from "hw_combobox/helpers"
 
 Combobox.Events = Base => class extends Base {
-  _dispatchSelectionEvent({ isNewAndAllowed, previousValue }) {
+  _dispatchPreselectionEvent({ isNewAndAllowed, previousValue }) {
     if (previousValue === this._incomingFieldValueString) return
 
-    dispatch("hw-combobox:selection", { // TODO: rename to preselection
+    dispatch("hw-combobox:preselection", {
       target: this.element,
       detail: { ...this._eventableDetails, isNewAndAllowed, previousValue }
     })

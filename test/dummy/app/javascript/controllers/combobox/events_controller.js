@@ -1,17 +1,17 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "selectionScratchpad", "selectionCount", "closedScratchpad", "closedCount", "removalScratchpad", "removalCount" ]
+  static targets = [ "preselectionScratchpad", "preselectionCount", "closedScratchpad", "closedCount", "removalScratchpad", "removalCount" ]
 
   connect() {
-    this.selectionScratchpadTarget.innerText = "Ready to listen for hw-combobox events!"
+    this.preselectionScratchpadTarget.innerText = "Ready to listen for hw-combobox events!"
   }
 
-  showSelection(event) {
-    this.selectionCount ??= 0
-    this.selectionCount++
-    this.selectionScratchpadTarget.innerText = this.#template(event)
-    this.selectionCountTarget.innerText = `selections: ${this.selectionCount}.`
+  showPreselection(event) {
+    this.preselectionCount ??= 0
+    this.preselectionCount++
+    this.preselectionScratchpadTarget.innerText = this.#template(event)
+    this.preselectionCountTarget.innerText = `preselections: ${this.preselectionCount}.`
   }
 
   showClosed(event) {

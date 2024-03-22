@@ -631,13 +631,13 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     assert_text "Ready to listen for hw-combobox events!"
 
-    assert_no_text "selections:"
+    assert_no_text "preselections:"
 
     open_combobox "#allow-new"
     type_in_combobox "#allow-new", "A Bea"
 
-    assert_text "selections: 1."
-    assert_text "event: hw-combobox:selection"
+    assert_text "preselections: 1."
+    assert_text "event: hw-combobox:preselection"
     assert_text "value: #{movies(:a_beautiful_mind).id}"
     assert_text "display: A Beautiful Mind"
     assert_text "query: A Bea"
@@ -650,8 +650,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     type_in_combobox "#allow-new", "t"
 
-    assert_text "selections: 2."
-    assert_text "event: hw-combobox:selection"
+    assert_text "preselections: 2."
+    assert_text "event: hw-combobox:preselection"
     assert_text "value: A Beat"
     assert_text "display: A Beat"
     assert_text "query: A Beat"
@@ -677,8 +677,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox "#required"
     type_in_combobox "#required", "A Bea"
 
-    assert_text "selections: 3."
-    assert_text "event: hw-combobox:selection"
+    assert_text "preselections: 3."
+    assert_text "event: hw-combobox:preselection"
     assert_text "value: #{movies(:a_beautiful_mind).id}"
     assert_text "display: A Beautiful Mind"
     assert_text "query: A Bea"
@@ -689,8 +689,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     type_in_combobox "#required", "t"
 
-    assert_text "selections: 4."
-    assert_text "event: hw-combobox:selection"
+    assert_text "preselections: 4."
+    assert_text "event: hw-combobox:preselection"
     assert_text "value: <empty>"
     assert_text "display: A Beat"
     assert_text "query: A Beat"
@@ -717,7 +717,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     click_on_option "The Godfather Part III"
 
     assert_text "previousValue: #{movies(:the_godfather_part_ii).id}"
-    assert_text "selections: 6."
+    assert_text "preselections: 6."
     assert_text "closings: 4."
   end
 
@@ -952,14 +952,14 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit multiselect_custom_events_path
 
     assert_text "Ready to listen for hw-combobox events!"
-    assert_no_text "event: hw-combobox:selection"
+    assert_no_text "event: hw-combobox:preselection"
     assert_no_text "event: hw-combobox:closed"
-    assert_no_text "selections:"
+    assert_no_text "preselections:"
 
     open_combobox "#states-field"
     type_in_combobox "#states-field", "mi"
 
-    assert_text "event: hw-combobox:selection"
+    assert_text "event: hw-combobox:preselection"
     assert_text "value: #{states(:michigan).id}."
     assert_text "display: Michigan"
     assert_text "query: Mi"
@@ -967,7 +967,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "isNewAndAllowed: false"
     assert_text "isValid: true"
     assert_text "previousValue: <empty>"
-    assert_text "selections: 2." # `m`, then `mi`
+    assert_text "preselections: 2." # `m`, then `mi`
     assert_no_text "event: hw-combobox:closed"
 
     click_away
@@ -983,7 +983,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_text "previousValue: <empty>"
     assert_text "closings: 1."
 
-    assert_text "selections: 3."
+    assert_text "preselections: 3."
 
     remove_chip "Michigan"
     assert_open_combobox
@@ -995,7 +995,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     click_on_option "Arkansas"
     click_on_option "Colorado"
 
-    assert_text "event: hw-combobox:selection"
+    assert_text "event: hw-combobox:preselection"
     assert_text "value: #{states(:arkansas, :colorado).pluck(:id).join(",")}."
     assert_text "display: Colorado."
     assert_text "query: Colorado."
@@ -1019,7 +1019,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     click_away
 
-    assert_text "selections: 7." # TODO: lockInSelection causes duplicate selection events; shouldn't lock-in unnecessarily
+    assert_text "preselections: 7." # TODO: lockInSelection causes duplicate selection events; shouldn't lock-in unnecessarily
     assert_text "closings: 4."
   end
 
