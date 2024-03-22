@@ -1,11 +1,11 @@
 class HotwireCombobox::Listbox::Item
   class << self
-    def collection_for(options, render_in, view:, include_blank:, **custom_methods)
-      new(view, options, render_in, include_blank: include_blank, **custom_methods).items
+    def collection_for(view, options, render_in:, include_blank:, **custom_methods)
+      new(view, options, render_in: render_in, include_blank: include_blank, **custom_methods).items
     end
   end
 
-  def initialize(view, options, render_in, include_blank:, **custom_methods)
+  def initialize(view, options, render_in:, include_blank:, **custom_methods)
     @view = view
     @options = options
     @render_in = render_in
@@ -52,19 +52,19 @@ class HotwireCombobox::Listbox::Item
       case option
       when Hash
         option.tap do |attrs|
-          attrs[:content] = call_render_in_proc(render_in_proc(render_in), attrs[:display], attrs) if render_in.present?
+          attrs[:content] = render_content(object: attrs[:display], attrs: attrs) if render_in.present?
         end
       when String
         {}.tap do |attrs|
           attrs[:display] = option
           attrs[:value] = option
-          attrs[:content] = call_render_in_proc(render_in_proc(render_in), attrs[:display], attrs) if render_in.present?
+          attrs[:content] = render_content(object: attrs[:display], attrs: attrs) if render_in.present?
         end
       when Array
         {}.tap do |attrs|
           attrs[:display] = option.first
           attrs[:value] = option.last
-          attrs[:content] = call_render_in_proc(render_in_proc(render_in), attrs[:display], attrs) if render_in.present?
+          attrs[:content] = render_content(object: attrs[:display], attrs: attrs) if render_in.present?
         end
       else
         {}.tap do |attrs|
@@ -73,7 +73,7 @@ class HotwireCombobox::Listbox::Item
           attrs[:value] = view.hw_call_method_or_proc(option, custom_methods[:value] || :id)
 
           if render_in.present?
-            attrs[:content] = call_render_in_proc(render_in_proc(render_in), option, attrs)
+            attrs[:content] = render_content(object: option, attrs: attrs)
           elsif custom_methods[:content]
             attrs[:content] = view.hw_call_method_or_proc(option, custom_methods[:content])
           end
@@ -81,8 +81,10 @@ class HotwireCombobox::Listbox::Item
       end
     end
 
-    def call_render_in_proc(proc, object, attrs)
-      proc.(object, combobox_display: attrs[:display], combobox_value: attrs[:value])
+    def render_content(render_opts: render_in, object:, attrs:)
+      view.render **render_opts.reverse_merge(
+        object: object,
+        locals: { combobox_display: attrs[:display], combobox_value: attrs[:value] })
     end
 
     def blank_option
@@ -94,15 +96,9 @@ class HotwireCombobox::Listbox::Item
       if include_blank.is_a? Hash
         text = include_blank.delete(:text)
 
-        [ text, call_render_in_proc(render_in_proc(include_blank), text, display: text, value: "") ]
+        [ text, render_content(render_opts: include_blank, object: text, attrs: { display: text, value: "" }) ]
       else
         [ include_blank, include_blank ]
-      end
-    end
-
-    def render_in_proc(render_in_opts)
-      if render_in_opts.present?
-        ->(object, locals) { view.render(**render_in_opts.reverse_merge(object: object, locals: locals)) }
       end
     end
 end
