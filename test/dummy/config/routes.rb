@@ -27,7 +27,6 @@ Rails.application.routes.draw do
   get "multiselect_prefilled_form", to: "comboboxes#multiselect_prefilled_form"
   get "multiselect_custom_events", to: "comboboxes#multiselect_custom_events"
   get "multiselect_new_values", to: "comboboxes#multiselect_new_values"
-  get "grouped_options", to: "comboboxes#grouped_options"
 
   resources :movies, only: %i[ index update ]
   get "movies_html", to: "movies#index_html"
