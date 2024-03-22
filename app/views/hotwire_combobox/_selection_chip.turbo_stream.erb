@@ -1,0 +1,8 @@
+<%# locals: (display:, value:, for_id:, remover_attrs:) -%>
+
+<%= within_combobox_selection_chip(for_id: for_id) do %>
+  <%= tag.div class: "hw-combobox__chip" do %>
+    <%= tag.span display %>
+    <%= tag.span **remover_attrs %>
+  <% end %>
+<% end %>

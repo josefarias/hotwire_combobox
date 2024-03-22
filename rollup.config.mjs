@@ -1,8 +1,10 @@
 import * as url from "url"
 import alias from "@rollup/plugin-alias"
 import resolve from "@rollup/plugin-node-resolve"
+import config from "./package.json" assert { type: "json" }
 
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url))
+const banner = `/*!\nHotwireCombobox ${config.version}\n*/`
 
 export default [
   {
@@ -14,7 +16,8 @@ export default [
         format: "umd",
         globals: {
           "@hotwired/stimulus": "Stimulus"
-        }
+        },
+        banner
       },
       {
         name: "HotwireCombobox",
@@ -22,7 +25,8 @@ export default [
         format: "es",
         globals: {
           "@hotwired/stimulus": "Stimulus"
-        }
+        },
+        banner
       }
     ],
     plugins: [

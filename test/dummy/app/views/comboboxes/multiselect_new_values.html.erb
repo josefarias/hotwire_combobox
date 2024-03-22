@@ -1,0 +1,13 @@
+<% if flash[:notice] %>
+  <p><%= flash[:notice] %></p>
+<% end %>
+
+<%= form_with model: @user, url: user_visits_url(@user), method: :post, html: { style: "display: flex; flex-direction: column; gap: 1rem;" } do |form| %>
+  <%= combobox_tag "user[visited_states]",
+        State.all,
+        id: "states-field",
+        label: "Visited states (new allowed)",
+        multiselect_chip_src: new_possibly_new_state_chip_path,
+        name_when_new: "user[visited_states]" %>
+  <%= form.submit style: "padding: 0.5rem;" %>
+<% end %>

@@ -104,8 +104,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     open_combobox "#state-field"
     type_in_combobox "#state-field", "lor"
-    assert_combobox_display_and_value "#state-field", "lor", "FL"
-    assert_selected_option_with selector: ".hw-combobox__option--selected", text: "Florida"
+    assert_combobox_display_and_value "#state-field", "lor", "CO"
+    assert_selected_option_with selector: ".hw-combobox__option--selected", text: "Colorado"
   end
 
   test "selecting with the keyboard" do
@@ -161,12 +161,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox "#state-field"
     type_in_combobox "#state-field", "is", :enter
     assert_closed_combobox
-    assert_combobox_display_and_value "#state-field", "Mississippi", "MS"
+    assert_combobox_display_and_value "#state-field", "Illinois", "IL"
     assert_no_visible_selected_option # because the list is closed
 
     type_in_combobox "#state-field", :backspace
     assert_open_combobox
-    assert_combobox_display_and_value "#state-field", "Mississipp", nil
+    assert_combobox_display_and_value "#state-field", "Illinoi", nil
     assert_no_visible_selected_option
   end
 
@@ -177,7 +177,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     type_in_combobox "#state-field", "is"
     click_away
     assert_closed_combobox
-    assert_combobox_display_and_value "#state-field", "Mississippi", "MS"
+    assert_combobox_display_and_value "#state-field", "Illinois", "IL"
 
     open_combobox "#state-field"
     assert_options_with count: 1
@@ -190,7 +190,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     type_in_combobox "#state-field", "is"
     tab_away
     assert_closed_combobox
-    assert_combobox_display_and_value "#state-field", "Mississippi", "MS"
+    assert_combobox_display_and_value "#state-field", "Illinois", "IL"
 
     open_combobox "#state-field"
     assert_options_with count: 1
@@ -205,27 +205,27 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selected_option_with text: "Alabama"
 
     type_in_combobox "#state-field", :down
-    assert_selected_option_with text: "Florida"
+    assert_selected_option_with text: "Alaska"
 
     type_in_combobox "#state-field", :down
-    assert_selected_option_with text: "Michigan"
+    assert_selected_option_with text: "Arizona"
 
     type_in_combobox "#state-field", :up
-    assert_selected_option_with text: "Florida"
+    assert_selected_option_with text: "Alaska"
 
     type_in_combobox "#state-field", :up
     assert_selected_option_with text: "Alabama"
 
     # wrap around
     type_in_combobox "#state-field", :up
-    assert_selected_option_with text: "Missouri"
+    assert_selected_option_with text: "Wyoming"
 
     type_in_combobox "#state-field", :down
     assert_selected_option_with text: "Alabama"
 
     # home and end keys
     type_in_combobox "#state-field", :end
-    assert_selected_option_with text: "Missouri"
+    assert_selected_option_with text: "Wyoming"
 
     type_in_combobox "#state-field", :home
     assert_selected_option_with text: "Alabama"
@@ -237,21 +237,21 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox "#state-field"
     assert_combobox_display_and_value "#state-field", nil, nil
 
-    click_on_option "Florida"
+    click_on_option "Alaska"
     assert_closed_combobox
-    assert_combobox_display_and_value "#state-field", "Florida", "FL"
+    assert_combobox_display_and_value "#state-field", "Alaska", "AK"
 
     open_combobox "#state-field"
     assert_options_with count: 1
 
-    delete_from_combobox "#state-field", "Florida", original: "Florida"
+    delete_from_combobox "#state-field", "Alaska", original: "Alaska"
     assert_options_with count: State.count
 
     type_in_combobox "#state-field", :down, :down, :down
-    assert_selected_option_with text: "Michigan"
-    click_on_option "Florida"
+    assert_selected_option_with text: "Arizona"
+    click_on_option "Alabama"
     assert_closed_combobox
-    assert_combobox_display_and_value "#state-field", "Florida", "FL"
+    assert_combobox_display_and_value "#state-field", "Alabama", "AL"
   end
 
   test "combobox with prefilled value and working clear widget" do
@@ -277,7 +277,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit prefilled_form_path
 
     assert_closed_combobox
-    assert_combobox_display_and_value "#user_favorite_state_id", "Michigan", states(:mi).id
+    assert_combobox_display_and_value "#user_favorite_state_id", "Michigan", states(:michigan).id
 
     open_combobox "#user_favorite_state_id"
     assert_selected_option_with text: "Michigan"
@@ -297,7 +297,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit prefilled_async_path
 
     assert_closed_combobox
-    assert_combobox_display_and_value "#user_home_state_id", "Florida", states(:fl).id
+    assert_combobox_display_and_value "#user_home_state_id", "Florida", states(:florida).id
 
     open_combobox "#user_home_state_id"
     assert_selected_option_with text: "Florida"
@@ -334,7 +334,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       visit new_options_path
 
       open_combobox "#allow-new"
-      type_in_combobox "#allow-new", "Alaska", :enter
+      type_in_combobox "#allow-new", "Newplace", :enter
 
       open_combobox "#disallow-new"
       type_in_combobox "#disallow-new", "Alabama", :enter
@@ -345,7 +345,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     end
 
     new_user = User.last
-    assert_equal "Alaska", new_user.favorite_state.name
+    assert_equal "Newplace", new_user.favorite_state.name
     assert_equal "Alabama", new_user.home_state.name
   end
 
@@ -355,7 +355,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
       open_combobox "#allow-new"
       type_in_combobox "#allow-new", "Ala"
-      assert_combobox_display_and_value "#allow-new", "Alabama", states(:al).id
+      assert_combobox_display_and_value "#allow-new", "Alabama", states(:alabama).id
       assert_selected_option_with text: "Alabama"
       assert_proper_combobox_name_choice \
         original: "user[favorite_state_id]",
@@ -384,7 +384,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       visit new_options_path
 
       open_combobox "#disallow-new"
-      type_in_combobox "#disallow-new", "Alaska", :enter
+      type_in_combobox "#disallow-new", "Newplace", :enter
 
       find("input[type=submit]").click
 
@@ -800,6 +800,317 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_option_with text: "display: Alabama\nvalue: AL"
   end
 
+  test "multiselect" do
+    visit multiselect_path
+
+    open_combobox "#states-field"
+
+    click_on_option "Alabama"
+    assert_chip_with text: "Alabama" # wait for async chip creation
+    click_on_option "California"
+    assert_chip_with text: "California"
+    click_on_option "Arizona"
+    assert_chip_with text: "Arizona"
+    assert_no_visible_options_with text: "Alabama"
+    assert_no_visible_options_with text: "California"
+    assert_no_visible_options_with text: "Arizona"
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama California Arizona ],
+      states(:alabama, :california, :arizona).pluck(:id)
+
+    remove_chip "California"
+
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama Arizona ],
+      states(:alabama, :arizona).pluck(:id)
+
+    open_combobox "#states-field"
+    assert_option_with text: "California"
+  end
+
+  test "multiselect idiosyncrasies" do
+    visit multiselect_path
+
+    open_combobox "#states-field"
+    assert_focused_combobox "#states-field"
+
+    click_on_option "Alabama"
+    assert_focused_combobox "#states-field"
+    assert_chip_with text: "Alabama" # wait for async chip creation
+    assert_no_visible_options_with text: "Alabama"
+    type_in_combobox "#states-field", "ala"
+    type_in_combobox "#states-field", :backspace # clear autocompleted portion
+    assert_no_visible_options_with text: "Alabama"
+    remove_chip "Alabama"
+    assert_option_with text: "Alabama"
+
+    click_on_option "Alabama"
+    assert_chip_with text: "Alabama" # wait for async chip creation
+    type_in_combobox "#states-field", "michi"
+    assert_selected_option_with text: "Michigan"
+    type_in_combobox "#states-field", :backspace # clear autocompleted portion
+    assert_option_with text: "Michigan"
+    remove_chip "Alabama"
+    assert_no_visible_options_with text: "Alabama"
+  end
+
+  test "prefilled multiselect" do
+    visit multiselect_async_html_path
+
+    assert_closed_combobox
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama Alaska ],
+      states(:alabama, :alaska).pluck(:id)
+  end
+
+  test "async multiselect" do
+    visit multiselect_async_html_path
+
+    open_combobox "#states-field"
+
+    assert_text "Arizona"
+    type_in_combobox "#states-field", "mi"
+    assert_selected_option_with text: "Michigan"
+    assert_options_with count: 4
+    click_away
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama Alaska Michigan ],
+      states(:alabama, :alaska, :michigan).pluck(:id)
+
+    # pagination
+    assert_options_with count: 8 # AL, AK, and MI are served but hidden
+    find("#states-field-hw-listbox").scroll_to :bottom
+    assert_options_with count: 13
+  end
+
+  test "html multiselect options and chips" do
+    visit multiselect_async_html_path
+
+    open_combobox "#states-field"
+
+    assert_option_with html_markup: "div > p", text: "Arizona"
+    assert_chip_with html_markup: "div > p", text: "Alabama"
+
+    remove_chip "Alabama"
+
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alaska ],
+      [ states(:alaska).id ]
+  end
+
+  test "multiselect form" do
+    visit multiselect_prefilled_form_path
+
+    assert_closed_combobox
+    assert_combobox_display_and_value \
+      "#user_visited_state_ids",
+      %w[ Florida Illinois ],
+      states(:florida, :illinois).pluck(:id)
+
+    open_combobox "#user_visited_state_ids"
+    type_in_combobox "#user_visited_state_ids", "Lou"
+    click_on_option "Louisiana"
+    assert_text "Alabama" # combobox is reset and still open
+
+    assert_combobox_display_and_value \
+      "#user_visited_state_ids",
+      %w[ Florida Illinois Louisiana ],
+      states(:florida, :illinois, :louisiana).pluck(:id)
+
+    click_away
+    find("input[type=submit]").click
+    assert_text "User updated"
+
+    assert_combobox_display_and_value \
+      "#user_visited_state_ids",
+      %w[ Florida Illinois Louisiana ],
+      states(:florida, :illinois, :louisiana).pluck(:id)
+
+    remove_chip "Florida"
+
+    assert_combobox_display_and_value \
+      "#user_visited_state_ids",
+      %w[ Illinois Louisiana ],
+      states(:illinois, :louisiana).pluck(:id)
+
+    click_away
+    find("input[type=submit]").click
+    assert_text "User updated"
+
+    assert_combobox_display_and_value \
+      "#user_visited_state_ids",
+      %w[ Illinois Louisiana ],
+      states(:illinois, :louisiana).pluck(:id)
+  end
+
+  test "multiselect custom events" do
+    visit multiselect_custom_events_path
+
+    assert_text "Ready to listen for hw-combobox events!"
+    assert_no_text "event: hw-combobox:selection"
+    assert_no_text "event: hw-combobox:closed"
+    assert_no_text "selections:"
+
+    open_combobox "#states-field"
+    type_in_combobox "#states-field", "mi"
+
+    assert_text "event: hw-combobox:selection"
+    assert_text "value: #{states(:michigan).id}."
+    assert_text "display: Michigan"
+    assert_text "query: Mi"
+    assert_text "fieldName: states"
+    assert_text "isNewAndAllowed: false"
+    assert_text "isValid: true"
+    assert_text "previousValue: <empty>"
+    assert_text "selections: 2." # `m`, then `mi`
+    assert_no_text "event: hw-combobox:closed"
+
+    click_away
+    assert_closed_combobox
+
+    assert_text "event: hw-combobox:closed"
+    assert_text "value: #{states(:michigan).id}."
+    assert_text "display: Michigan"
+    assert_text "query: Michigan"
+    assert_text "fieldName: states"
+    assert_text "isNewAndAllowed: <empty>"
+    assert_text "isValid: true"
+    assert_text "previousValue: <empty>"
+    assert_text "closings: 1."
+
+    assert_text "selections: 3."
+
+    remove_chip "Michigan"
+    assert_open_combobox
+
+    assert_text "removedDisplay: Michigan."
+    assert_text "removedValue: #{states(:michigan).id}."
+    assert_text "removals: 1."
+
+    click_on_option "Arkansas"
+    click_on_option "Colorado"
+
+    assert_text "event: hw-combobox:selection"
+    assert_text "value: #{states(:arkansas, :colorado).pluck(:id).join(",")}."
+    assert_text "display: Colorado."
+    assert_text "query: Colorado."
+    assert_text "fieldName: states."
+    assert_text "isNewAndAllowed: false."
+    assert_text "isValid: true."
+    assert_text "previousValue: 1011954550."
+    assert_text "removedDisplay: <empty>."
+    assert_text "removedValue: <empty>."
+
+    assert_text "event: hw-combobox:closed"
+    assert_text "value: #{states(:arkansas, :colorado).pluck(:id).join(",")}."
+    assert_text "display: Colorado."
+    assert_text "query: Colorado."
+    assert_text "fieldName: states."
+    assert_text "isNewAndAllowed: <empty>."
+    assert_text "isValid: true."
+    assert_text "previousValue: <empty>."
+    assert_text "removedDisplay: <empty>."
+    assert_text "removedValue: <empty>."
+
+    click_away
+
+    assert_text "selections: 7." # TODO: lockInSelection causes duplicate selection events; shouldn't lock-in unnecessarily
+    assert_text "closings: 4."
+  end
+
+  test "navigating chips with keyboard" do
+    visit multiselect_prefilled_form_path
+
+    open_combobox "#user_visited_state_ids"
+    assert_combobox_display "#user_visited_state_ids", %w[ Florida Illinois ]
+    type_in_combobox "#user_visited_state_ids", :backspace, :enter
+    assert_combobox_display "#user_visited_state_ids", %w[ Florida ]
+
+    visit multiselect_prefilled_form_path
+
+    open_combobox "#user_visited_state_ids"
+    assert_combobox_display "#user_visited_state_ids", %w[ Florida Illinois ]
+    type_in_combobox "#user_visited_state_ids", %i[shift tab], %i[shift tab], :enter
+    assert_combobox_display "#user_visited_state_ids", %w[ Illinois ]
+  end
+
+  test "multiselect with new options" do
+    visit multiselect_new_values_path
+
+    open_combobox "#states-field"
+
+    click_on_option "Alabama"
+    assert_chip_with text: "Alabama"
+    type_in_combobox "#states-field", "Newplace", :enter
+    assert_chip_with text: "Newplace"
+
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama Newplace ],
+      [ states(:alabama).id, "Newplace" ]
+
+    remove_chip "Newplace"
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama ],
+      [ states(:alabama).id ]
+
+    type_in_combobox "#states-field", "New,place", :enter # comma is stripped away
+    click_away
+
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama Newplace ],
+      [ states(:alabama).id, "Newplace" ]
+
+    assert_difference -> { State.count }, +1 do
+      find("input[type=submit]").click
+      assert_text "Visits created"
+    end
+
+    assert_equal "Newplace", State.unscoped.last.name
+    assert_equal %w[ Alabama Newplace ], User.first.visited_states.map(&:name)
+  end
+
+  test "grouped options" do
+    visit grouped_options_path
+
+    open_combobox "#state-field"
+
+    assert_group_with text: "South"
+    assert_option_with text: "Alabama"
+
+    type_in_combobox "#state-field", :down
+    assert_selected_option_with text: "Alabama"
+
+    open_combobox "#weird-state-field"
+    assert_group_with text: "North America"
+    assert_option_with text: "United States"
+
+    type_in_combobox "#weird-state-field", :down
+    assert_selected_option_with text: "United States"
+    assert_combobox_display_and_value "#weird-state-field", "United States", "US"
+
+    type_in_combobox "#weird-state-field", :down
+    assert_selected_option_with text: "Canada"
+    assert_combobox_display_and_value "#weird-state-field", "Canada", "Canada"
+
+    open_combobox "#state-field-with-blank"
+    assert_option_with class: ".hw-combobox__option--blank", text: "All"
+    assert_group_with text: "South"
+    assert_option_with text: "Alabama"
+
+    type_in_combobox "#state-field-with-blank", :down
+    assert_selected_option_with text: "All"
+    type_in_combobox "#state-field-with-blank", :down
+    assert_selected_option_with text: "Alabama"
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
@@ -855,11 +1166,20 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     end
     alias_method :assert_options_with, :assert_option_with
 
+    def assert_chip_with(html_markup: "", **kwargs)
+      assert_selector "[data-hw-combobox-chip] #{html_markup}".squish, **kwargs
+    end
+
     def assert_combobox_display(selector, text)
-      assert_field locator_for(selector), with: text
+      if text.is_a? Array
+        assert_selection_chips(*text)
+      else
+        assert_field locator_for(selector), with: text
+      end
     end
 
     def assert_combobox_value(selector, value)
+      value = value.join(",") if value.is_a? Array
       assert_field "#{locator_for(selector)}-hw-hidden-field", type: "hidden", with: value
     end
 
@@ -894,6 +1214,24 @@ class HotwireComboboxTest < ApplicationSystemTestCase
         assert_no_selector "input[name='#{original}']", visible: :hidden
         assert_selector "input[name='#{new}']", visible: :hidden
       end
+    end
+
+    def assert_selection_chips(*texts)
+      texts.each do |text|
+        assert_selector "[data-hw-combobox-chip]", text: text
+      end
+    end
+
+    def assert_focused_combobox(selector)
+      page.evaluate_script("document.activeElement.id") == locator_for(selector)
+    end
+
+    def assert_group_with(**kwargs)
+      assert_selector "ul[role=group] li[role=presentation]", **kwargs
+    end
+
+    def remove_chip(text)
+      find("[aria-label='Remove #{text}']").click
     end
 
     def locator_for(selector)

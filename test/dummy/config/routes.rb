@@ -21,6 +21,13 @@ Rails.application.routes.draw do
   get "custom_attrs", to: "comboboxes#custom_attrs"
   get "conflicting_order", to: "comboboxes#conflicting_order"
   get "render_in_locals", to: "comboboxes#render_in_locals"
+  get "multiselect", to: "comboboxes#multiselect"
+  get "multiselect_dismissing", to: "comboboxes#multiselect_dismissing"
+  get "multiselect_async_html", to: "comboboxes#multiselect_async_html"
+  get "multiselect_prefilled_form", to: "comboboxes#multiselect_prefilled_form"
+  get "multiselect_custom_events", to: "comboboxes#multiselect_custom_events"
+  get "multiselect_new_values", to: "comboboxes#multiselect_new_values"
+  get "grouped_options", to: "comboboxes#grouped_options"
 
   resources :movies, only: %i[ index update ]
   get "movies_html", to: "movies#index_html"
@@ -32,7 +39,14 @@ Rails.application.routes.draw do
   post "new_options_form", to: "new_options_forms#create"
 
   resources :states, only: :index
-  resources :users, only: :update
+  resources :state_chips, only: :new, param: :combobox_value
+  get "new_html_state_chip", to: "state_chips#new_html"
+  get "new_dismissing_state_chip", to: "state_chips#new_dismissing"
+  get "new_possibly_new_state_chip", to: "state_chips#new_possibly_new"
+
+  resources :users, only: :update do
+    resources :visits, only: :create
+  end
 
   root to: "comboboxes#plain"
 end

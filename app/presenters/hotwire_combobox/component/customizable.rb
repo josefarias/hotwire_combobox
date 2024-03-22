@@ -44,7 +44,15 @@ module HotwireCombobox::Component::Customizable
 
     def apply_customizations_to(element, base: {})
       custom = custom_attrs[element]
-      coalesce = ->(k, v) { v.is_a?(String) ? view.token_list(v, custom.delete(k)) : v }
+
+      coalesce = ->(key, value) do
+        if value.is_a?(String) || value.is_a?(Array)
+          view.token_list(value, custom.delete(key))
+        else
+          value
+        end
+      end
+
       default = base.map { |k, v| [ k, coalesce.(k, v) ] }.to_h
 
       custom.deep_merge default

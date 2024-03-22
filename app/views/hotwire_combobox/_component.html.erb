@@ -4,6 +4,7 @@
   <%= render "hotwire_combobox/combobox/hidden_field", component: component %>
 
   <%= tag.div **component.main_wrapper_attrs do %>
+    <%= tag.div **component.announcer_attrs %>
     <%= render "hotwire_combobox/combobox/input", component: component %>
     <%= render "hotwire_combobox/combobox/paginated_listbox", component: component %>
     <%= render "hotwire_combobox/combobox/dialog", component: component %>
