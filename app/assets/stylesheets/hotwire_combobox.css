@@ -71,6 +71,10 @@
   &:focus-within {
     box-shadow: 0 0 0 var(--hw-border-width--thick) var(--hw-focus-color);
   }
+
+  &:has(.hw-combobox__input--invalid) {
+    box-shadow: 0 0 0 var(--hw-border-width--thick) var(--hw-invalid-color);
+  }
 }
 
 .hw-combobox__input {
@@ -85,10 +89,6 @@
 
 .hw-combobox__input:focus-visible {
   outline: none;
-}
-
-.hw-combobox__input--invalid {
-  border: var(--hw-border-width--slim) solid var(--hw-invalid-color);
 }
 
 .hw-combobox__handle {
