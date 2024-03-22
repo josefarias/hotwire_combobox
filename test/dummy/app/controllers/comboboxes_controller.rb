@@ -1,5 +1,5 @@
 class ComboboxesController < ApplicationController
-  before_action :set_states, except: %i[ new_options grouped_options ]
+  before_action :set_states, except: :new_options
 
   def plain
   end
@@ -88,9 +88,6 @@ class ComboboxesController < ApplicationController
 
   def multiselect_new_values
     @user = User.first || raise("No user found, load fixtures first.")
-  end
-
-  def grouped_options
   end
 
   private

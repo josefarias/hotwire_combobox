@@ -15,11 +15,6 @@ Combobox.Navigation = Base => class extends Base {
     },
     ArrowDown: (event) => {
       this._selectIndex(this._selectedOptionIndex + 1)
-
-      if (this._selectedOptionIndex === 0) {
-        this._actingListbox.scrollTop = 0
-      }
-
       cancel(event)
     },
     Home: (event) => {
