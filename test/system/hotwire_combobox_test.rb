@@ -254,14 +254,23 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_combobox_display_and_value "#state-field", "Alabama", "AL"
   end
 
-  test "combobox with prefilled value" do
+  test "combobox with prefilled value and working clear widget" do
     visit prefilled_path
 
     assert_closed_combobox
     assert_combobox_display_and_value "#state-field", "Michigan", "MI"
+    assert_selector ".hw-combobox__input[data-queried]"
 
     open_combobox "#state-field"
     assert_selected_option_with text: "Michigan"
+
+    click_away
+    find(".hw-combobox__handle").click
+    assert_open_combobox
+    assert_no_visible_selected_option
+
+    click_away
+    assert_no_selector ".hw-combobox__input[data-queried]"
   end
 
   test "combobox in form with prefilled value" do
