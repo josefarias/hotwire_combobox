@@ -1060,6 +1060,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       [ states(:alabama).id ]
 
     type_in_combobox "#states-field", "New,place", :enter # comma is stripped away
+    assert_chip_with text: "Newplace"
     click_away
 
     assert_combobox_display_and_value \
@@ -1259,6 +1260,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     def tab_away
       find("body").send_keys(:tab, :tab)
+      assert_closed_combobox
     end
 
     def click_away
@@ -1267,6 +1269,8 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       else
         find("#clickable").click
       end
+
+      assert_closed_combobox
     end
 
     def click_on_top_left_corner
