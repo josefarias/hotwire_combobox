@@ -4,7 +4,7 @@
 
 # Easy and Accessible Autocomplete for Ruby on Rails
 
-[![CI Tests](https://github.com/josefarias/hotwire_combobox/actions/workflows/ci_tests.yml/badge.svg)](https://github.com/josefarias/hotwire_combobox/actions/workflows/ci_tests.yml) [![Gem Version](https://badge.fury.io/rb/hotwire_combobox.svg)](https://badge.fury.io/rb/hotwire_combobox)
+[![CI](https://github.com/josefarias/hotwire_combobox/actions/workflows/ci.yml/badge.svg)](https://github.com/josefarias/hotwire_combobox/actions/workflows/ci.yml) [![Gem Version](https://badge.fury.io/rb/hotwire_combobox.svg)](https://badge.fury.io/rb/hotwire_combobox)
 
 
 > [!IMPORTANT]
