@@ -2,6 +2,7 @@
   --hw-active-bg-color: #F3F4F6;
   --hw-border-color: #D1D5DB;
   --hw-group-color: #57595C;
+  --hw-group-bg-color: #FFFFFF;
   --hw-invalid-color: #EF4444;
   --hw-dialog-label-color: #1D1D1D;
   --hw-focus-color: #2563EB;
@@ -145,6 +146,7 @@
 }
 
 .hw-combobox__group__label {
+  background-color: var(--hw-group-bg-color);
   color: var(--hw-group-color);
   padding: var(--hw-padding--slim);
 }
