@@ -88,8 +88,11 @@
   width: 100%;
 }
 
-.hw-combobox__input:focus {
+.hw-combobox__input:focus,
+.hw-combobox__input:focus-visible,
+.hw-combobox__input:focus-within {
   box-shadow: none;
+  outline: none;
 }
 
 .hw-combobox__handle {
