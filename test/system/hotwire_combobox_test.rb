@@ -594,6 +594,11 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     visit include_blank_path
 
+    open_combobox "#literally-blank-field"
+    assert_option_with class: ".hw-combobox__option--blank", text: " "
+    type_in_combobox "#literally-blank-field", :down, :enter
+    assert_combobox_display_and_value "#literally-blank-field", "", ""
+
     open_combobox "#movie-field"
     assert_option_with class: ".hw-combobox__option--blank", text: "All"
     type_in_combobox "#movie-field", "All"
