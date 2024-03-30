@@ -1,6 +1,8 @@
 require "securerandom"
 
 class HotwireCombobox::Listbox::Group
+  attr_reader :options
+
   def initialize(name, options:)
     @name = name
     @options = options
@@ -17,7 +19,7 @@ class HotwireCombobox::Listbox::Group
   end
 
   private
-    attr_reader :name, :options
+    attr_reader :name
 
     def id
       @id ||= SecureRandom.uuid

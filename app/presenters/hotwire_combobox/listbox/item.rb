@@ -16,7 +16,7 @@ class HotwireCombobox::Listbox::Item
   def items
     items = groups_or_options
     items.unshift(blank_option) if include_blank.present?
-    items
+    Collection.new items
   end
 
   private
