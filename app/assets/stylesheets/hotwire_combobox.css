@@ -79,7 +79,7 @@
 }
 
 .hw-combobox__input {
-  border: 0;
+  border: none;
   font-size: inherit;
   line-height: var(--hw-line-height);
   min-width: 0;
@@ -88,8 +88,8 @@
   width: 100%;
 }
 
-.hw-combobox__input:focus-visible {
-  outline: none;
+.hw-combobox__input:focus {
+  box-shadow: none;
 }
 
 .hw-combobox__handle {
