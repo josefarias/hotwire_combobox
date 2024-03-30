@@ -93,6 +93,10 @@ class ComboboxesController < ApplicationController
   def grouped_options
   end
 
+  def morph
+    @user = User.where.not(home_state: nil).first || raise("No user found with home state, load fixtures first.")
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 
