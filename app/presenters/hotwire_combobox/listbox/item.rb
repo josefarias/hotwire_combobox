@@ -93,12 +93,15 @@ class HotwireCombobox::Listbox::Item
     end
 
     def extract_blank_display_and_content
-      if include_blank.is_a? Hash
+      case include_blank
+      when Hash
         text = include_blank.delete(:text)
 
         [ text, render_content(render_opts: include_blank, object: text, attrs: { display: text, value: "" }) ]
-      else
+      when String
         [ include_blank, include_blank ]
+      else
+        [ "", "&nbsp;".html_safe ]
       end
     end
 end

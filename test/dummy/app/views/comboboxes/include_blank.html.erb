@@ -9,5 +9,6 @@
   <%= form.submit %>
 <% end %>
 
+<%= combobox_tag "literally-blank", State.all, id: "literally-blank-field", include_blank: true %>
 <%= combobox_tag "movie", movies_with_blank_path, id: "movie-field" %>
 <%= combobox_tag "movie", movies_with_blank_html_path, id: "html-movie-field" %>
