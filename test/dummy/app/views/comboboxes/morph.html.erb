@@ -1,0 +1,12 @@
+<%= content_for :head do %>
+  <meta name="turbo-refresh-method" content="morph">
+<% end %>
+
+<% if flash[:notice] %>
+  <p><%= flash[:notice] %></p>
+<% end %>
+
+<%= form_with model: @user do |f| %>
+  <%= f.combobox :home_state_id, State.all %>
+  <%= f.submit %>
+<% end %>

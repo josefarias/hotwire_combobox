@@ -329,7 +329,8 @@ class HotwireCombobox::Component
           click@window->hw-combobox#closeOnClickOutside
           focusin@window->hw-combobox#closeOnFocusOutside
           turbo:before-stream-render@document->hw-combobox#rerouteListboxStreamToDialog
-          turbo:before-cache@document->hw-combobox#hideChipsForCache".squish,
+          turbo:before-cache@document->hw-combobox#hideChipsForCache
+          turbo:morph-element->hw-combobox#idempotentConnect".squish,
         hw_combobox_target: "combobox",
         async_id: canonical_id
     end

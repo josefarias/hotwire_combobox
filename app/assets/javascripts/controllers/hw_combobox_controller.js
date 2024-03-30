@@ -65,6 +65,10 @@ export default class HwComboboxController extends Concerns(...concerns) {
   }
 
   connect() {
+    this.idempotentConnect()
+  }
+
+  idempotentConnect() {
     this._connectSelection()
     this._connectListAutocomplete()
     this._connectDialog()

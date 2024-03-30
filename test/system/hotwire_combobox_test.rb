@@ -1116,6 +1116,25 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selected_option_with text: "Alabama"
   end
 
+  test "preselected morph" do
+    visit morph_path
+
+    user = User.where.not(home_state: nil).first
+    new_state = State.all.without(user.home_state).first
+
+    assert_combobox_display_and_value "#user_home_state_id", user.home_state.name, user.home_state.id
+
+    open_combobox "#user_home_state_id"
+    click_on_option new_state.name
+    assert_combobox_display_and_value "#user_home_state_id", new_state.name, new_state.id
+
+    find("input[type=submit]").click
+
+    assert_text "User updated"
+
+    assert_combobox_display_and_value "#user_home_state_id", new_state.name, new_state.id
+  end
+
   private
     def open_combobox(selector)
       find(selector).click

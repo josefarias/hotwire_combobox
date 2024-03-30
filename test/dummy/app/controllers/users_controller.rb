@@ -25,6 +25,6 @@ class UsersController < ApplicationController
     end
 
     def visited_state_ids
-      params[:user][:visited_state_ids].split(",")
+      params[:user][:visited_state_ids]&.split(",") || []
     end
 end
