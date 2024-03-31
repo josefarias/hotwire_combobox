@@ -43,8 +43,12 @@ class HotwireCombobox::Listbox::Item
     end
 
     def create_listbox_options(options)
-      options.map do |option|
-        HotwireCombobox::Listbox::Option.new **option_attrs(option)
+      if options.first.is_a? HotwireCombobox::Listbox::Option
+        options
+      else
+        options.map do |option|
+          HotwireCombobox::Listbox::Option.new **option_attrs(option)
+        end
       end
     end
 

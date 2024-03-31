@@ -1,9 +1,9 @@
 class HotwireCombobox::Listbox::Item::Collection < Array
-  def find(&block)
+  def find_by_value(value)
     if grouped?
-      flat_map { |item| item.options }.find(&block)
+      flat_map { |item| item.options }.find { |option| option.value == value }
     else
-      super(&block)
+      find { |option| option.value == value }
     end
   end
 

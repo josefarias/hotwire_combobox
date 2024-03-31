@@ -243,7 +243,7 @@ class HotwireCombobox::Component
       if async_src && associated_object
         associated_object.to_combobox_display
       elsif hidden_field_value
-        options.find { |option| option.value == hidden_field_value }&.autocompletable_as
+        options.find_by_value(hidden_field_value)&.autocompletable_as
       end
     end
 
