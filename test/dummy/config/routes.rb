@@ -35,6 +35,8 @@ Rails.application.routes.draw do
   get "movies_with_blank", to: "movies#index_with_blank"
   get "movies_with_blank_html", to: "movies#index_with_blank_html"
 
+  resources :movie_ratings, only: :index
+
   get "greeting", to: "greetings#new"
 
   post "new_options_form", to: "new_options_forms#create"
