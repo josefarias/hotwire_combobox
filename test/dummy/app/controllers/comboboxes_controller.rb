@@ -36,6 +36,7 @@ class ComboboxesController < ApplicationController
 
   def prefilled_async
     @user = User.first || raise("No user found, load fixtures first.")
+    @movie = Movie.first || raise("No movie found, load fixtures first.")
   end
 
   def prefilled_form

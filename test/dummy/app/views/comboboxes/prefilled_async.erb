@@ -42,3 +42,7 @@
 
   <%= form.submit %>
 <% end %>
+
+<%= form_with model: @movie do |form| %>
+  <%= form.combobox :rating, movie_ratings_path, label: "Rating" %>
+<% end %>

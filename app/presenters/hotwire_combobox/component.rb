@@ -238,23 +238,29 @@ class HotwireCombobox::Component
     end
 
     def prefilled_display
-      return if multiselect?
+      return if multiselect? || !hidden_field_value
 
       if async_src && associated_object
         associated_object.to_combobox_display
-      elsif hidden_field_value
+      elsif async_src && form_object&.respond_to?(name)
+        form_object.public_send name
+      else
         options.find_by_value(hidden_field_value)&.autocompletable_as
       end
     end
 
     def associated_object
       @associated_object ||= if association_exists?
-        form.object.public_send association_name
+        form_object&.public_send association_name
       end
     end
 
     def association_exists?
-      form&.object&.class&.reflect_on_association(association_name).present?
+      form_object&.class&.reflect_on_association(association_name).present?
+    end
+
+    def form_object
+      form&.object
     end
 
     def async_src
@@ -302,10 +308,10 @@ class HotwireCombobox::Component
     def hidden_field_value
       return value if value
 
-      if form&.object&.defined_enums&.try :[], name
-        form.object.public_send "#{name}_before_type_cast"
+      if form_object&.defined_enums&.try :[], name
+        form_object.public_send "#{name}_before_type_cast"
       else
-        form&.object&.try(name).then do |value|
+        form_object&.try(name).then do |value|
           value.respond_to?(:map) ? value.join(",") : value
         end
       end
