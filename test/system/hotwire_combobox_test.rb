@@ -1114,6 +1114,10 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selected_option_with text: "All"
     type_in_combobox "#state-field-with-blank", :down
     assert_selected_option_with text: "Alabama"
+
+    assert_combobox_display_and_value "#preselected", "Alabama", states(:alabama).id
+    open_combobox "#preselected"
+    assert_selected_option_with text: "Alabama"
   end
 
   test "preselected morph" do
