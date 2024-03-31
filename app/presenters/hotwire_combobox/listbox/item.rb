@@ -1,7 +1,7 @@
 class HotwireCombobox::Listbox::Item
   class << self
     def collection_for(view, options, render_in:, include_blank:, **custom_methods)
-      new(view, options, render_in: render_in, include_blank: include_blank, **custom_methods).items
+      new(view, options, render_in: render_in, include_blank: include_blank, **custom_methods).collection
     end
   end
 
@@ -13,7 +13,7 @@ class HotwireCombobox::Listbox::Item
     @custom_methods = custom_methods
   end
 
-  def items
+  def collection
     items = groups_or_options
     items.unshift(blank_option) if include_blank.present?
     Collection.new items
@@ -31,7 +31,7 @@ class HotwireCombobox::Listbox::Item
     end
 
     def grouped?
-      key, value = options.to_a.first
+      _key, value = options.to_a.first
       value.is_a? Array
     end
 
