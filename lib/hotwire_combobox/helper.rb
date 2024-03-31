@@ -41,7 +41,7 @@ module HotwireCombobox
     def hw_paginated_combobox_options(
           options,
           for_id: params[:for_id],
-          src: request.path,
+          src: request.fullpath,
           next_page: nil,
           render_in: {},
           include_blank: {},
@@ -166,7 +166,7 @@ module HotwireCombobox
 
       def hw_uri_with_params(url_or_path, **params)
         URI.parse(url_or_path).tap do |url_or_path|
-          query = URI.decode_www_form(url_or_path.query || "").to_h.merge(params)
+          query = URI.decode_www_form(url_or_path.query || "").to_h.merge(params.stringify_keys)
           url_or_path.query = URI.encode_www_form query
         end.to_s
       rescue URI::InvalidURIError

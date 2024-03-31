@@ -120,4 +120,17 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
       combobox_tag :foo, multiselect_chip_src: "some_path", name_when_new: :foo
     end
   end
+
+  test "hw_combobox_next_page_uri updates URI with pagination params while preserving other parameters" do
+    uri         = "/foo"
+    complex_uri = "#{uri}?exclude_id=5&page=1&q=&for_id=movie_id&format=turbo_stream"
+    next_page   = 2
+    for_id      = "movie_id"
+
+    expected_next_page_uri = "#{uri}?page=#{next_page}&q&for_id=#{for_id}&format=turbo_stream"
+    assert_equal expected_next_page_uri, hw_combobox_next_page_uri(uri, next_page, for_id)
+
+    expected_next_page_uri = "#{uri}?exclude_id=5&page=#{next_page}&q&for_id=#{for_id}&format=turbo_stream"
+    assert_equal expected_next_page_uri, hw_combobox_next_page_uri(complex_uri, next_page, for_id)
+  end
 end
