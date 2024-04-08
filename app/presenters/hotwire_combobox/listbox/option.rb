@@ -17,10 +17,6 @@ class HotwireCombobox::Listbox::Option
     option.try(:autocompletable_as) || option.try(:display)
   end
 
-  def content
-    option.try(:content) || option.try(:display)
-  end
-
   private
     Data = Struct.new :id, :value, :display, :content, :blank, :filterable_as, :autocompletable_as, keyword_init: true
 
@@ -55,6 +51,10 @@ class HotwireCombobox::Listbox::Option
 
     def filterable_as
       option.try(:filterable_as) || option.try(:display)
+    end
+
+    def content
+      option.try(:content) || option.try(:display)
     end
 
     def blank?

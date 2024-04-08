@@ -301,6 +301,14 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     open_combobox "#user_home_state_id"
     assert_selected_option_with text: "Florida"
+
+    click_away
+
+    assert_combobox_display_and_value "#movie_rating", Movie.first.rating, Movie.first.rating_before_type_cast
+    open_combobox "#movie_rating"
+    assert_selected_option_with text: Movie.first.rating
+    click_away
+    assert_combobox_display_and_value "#movie_rating", Movie.first.rating, Movie.first.rating_before_type_cast
   end
 
   test "combobox is invalid if required and empty" do
@@ -1113,6 +1121,10 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     type_in_combobox "#state-field-with-blank", :down
     assert_selected_option_with text: "All"
     type_in_combobox "#state-field-with-blank", :down
+    assert_selected_option_with text: "Alabama"
+
+    assert_combobox_display_and_value "#preselected", "Alabama", states(:alabama).id
+    open_combobox "#preselected"
     assert_selected_option_with text: "Alabama"
   end
 

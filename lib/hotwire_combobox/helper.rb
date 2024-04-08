@@ -26,16 +26,12 @@ module HotwireCombobox
           include_blank: nil,
           display: :to_combobox_display,
           **custom_methods)
-      if options.first.is_a? HotwireCombobox::Listbox::Option
-        options
-      else
-        HotwireCombobox::Listbox::Item.collection_for \
-          self,
-          options,
-          render_in: render_in,
-          include_blank: include_blank,
-          **custom_methods.merge(display: display)
-      end
+      HotwireCombobox::Listbox::Item.collection_for \
+        self,
+        options,
+        render_in: render_in,
+        include_blank: include_blank,
+        **custom_methods.merge(display: display)
     end
 
     def hw_paginated_combobox_options(
@@ -184,7 +180,7 @@ module HotwireCombobox
 
       def hw_extract_options_and_src(options_or_src, render_in, include_blank)
         if options_or_src.is_a? String
-          [ [], options_or_src ]
+          [ hw_combobox_options([]), options_or_src ]
         else
           [ hw_combobox_options(options_or_src, render_in: render_in, include_blank: include_blank), nil ]
         end
