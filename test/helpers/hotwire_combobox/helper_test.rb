@@ -120,4 +120,12 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
       combobox_tag :foo, multiselect_chip_src: "some_path", name_when_new: :foo
     end
   end
+
+  test "hw_paginated_combobox_options includes existing params in the default next page src" do
+    request.expects(:fullpath).returns "/foo?bar=baz&qux=quux&page=1000"
+
+    html = hw_paginated_combobox_options [], next_page: 2
+
+    assert_attrs html, tag_name: "turbo-frame", src: "/foo?bar=baz&qux=quux&page=2&format=turbo_stream"
+  end
 end

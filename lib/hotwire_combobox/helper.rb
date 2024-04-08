@@ -37,7 +37,7 @@ module HotwireCombobox
     def hw_paginated_combobox_options(
           options,
           for_id: params[:for_id],
-          src: request.path,
+          src: request.fullpath,
           next_page: nil,
           render_in: {},
           include_blank: {},
@@ -45,7 +45,7 @@ module HotwireCombobox
       include_blank = params[:page].to_i > 0 ? nil : include_blank
       options = hw_combobox_options options, render_in: render_in, include_blank: include_blank, **custom_methods
       this_page = render "hotwire_combobox/paginated_options", for_id: for_id, options: options
-      next_page = render "hotwire_combobox/next_page", for_id: for_id, src: src, next_page: next_page
+      next_page = render "hotwire_combobox/next_page", for_id: for_id, src: hw_combobox_next_page_uri(src, next_page, for_id)
 
       safe_join [ this_page, next_page ]
     end
@@ -146,23 +146,13 @@ module HotwireCombobox
         "#{id}__hw_combobox_pagination"
       end
 
-      def hw_combobox_next_page_uri(uri, next_page, for_id)
-        if next_page
-          hw_uri_with_params uri,
-            page: next_page,
-            q: params[:q],
-            for_id: for_id,
-            format: :turbo_stream
-        end
-      end
-
       def hw_combobox_page_stream_action
         params[:page].to_i > 0 ? :append : :update
       end
 
       def hw_uri_with_params(url_or_path, **params)
         URI.parse(url_or_path).tap do |url_or_path|
-          query = URI.decode_www_form(url_or_path.query || "").to_h.merge(params)
+          query = URI.decode_www_form(url_or_path.query || "").to_h.merge(params.compact_blank.stringify_keys)
           url_or_path.query = URI.encode_www_form query
         end.to_s
       rescue URI::InvalidURIError
@@ -178,6 +168,16 @@ module HotwireCombobox
       end
 
     private
+      def hw_combobox_next_page_uri(uri, next_page, for_id)
+        return unless next_page
+
+        hw_uri_with_params uri,
+          page: next_page,
+          q: params[:q],
+          for_id: for_id,
+          format: :turbo_stream
+      end
+
       def hw_extract_options_and_src(options_or_src, render_in, include_blank)
         if options_or_src.is_a? String
           [ hw_combobox_options([]), options_or_src ]
