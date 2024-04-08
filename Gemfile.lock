@@ -139,6 +139,8 @@ GEM
     minitest (5.22.2)
     minitest-focus (1.4.0)
       minitest (>= 4, < 6)
+    mocha (2.1.0)
+      ruby2_keywords (>= 0.0.5)
     mutex_m (0.2.0)
     net-imap (0.4.10)
       date
@@ -302,6 +304,7 @@ DEPENDENCIES
   hotwire_combobox!
   importmap-rails
   minitest-focus
+  mocha (~> 2.1)
   propshaft
   puma
   rubocop-37signals

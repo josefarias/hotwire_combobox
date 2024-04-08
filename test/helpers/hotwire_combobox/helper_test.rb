@@ -121,16 +121,11 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     end
   end
 
-  test "hw_combobox_next_page_uri updates URI with pagination params while preserving other parameters" do
-    uri         = "/foo"
-    complex_uri = "#{uri}?exclude_id=5&page=1&q=&for_id=movie_id&format=turbo_stream"
-    next_page   = 2
-    for_id      = "movie_id"
+  test "hw_paginated_combobox_options includes existing params in the default next page src" do
+    request.expects(:fullpath).returns "/foo?bar=baz&qux=quux&page=1000"
 
-    expected_next_page_uri = "#{uri}?page=#{next_page}&q&for_id=#{for_id}&format=turbo_stream"
-    assert_equal expected_next_page_uri, hw_combobox_next_page_uri(uri, next_page, for_id)
+    html = hw_paginated_combobox_options [], next_page: 2
 
-    expected_next_page_uri = "#{uri}?exclude_id=5&page=#{next_page}&q&for_id=#{for_id}&format=turbo_stream"
-    assert_equal expected_next_page_uri, hw_combobox_next_page_uri(complex_uri, next_page, for_id)
+    assert_attrs html, tag_name: "turbo-frame", src: "/foo?bar=baz&qux=quux&page=2&format=turbo_stream"
   end
 end

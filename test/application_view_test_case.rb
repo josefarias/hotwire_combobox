@@ -14,11 +14,11 @@ class ApplicationViewTestCase < ActionView::TestCase
     def escaped_attrs(attrs)
       attrs.map do |k, v|
         %Q(#{escape_specials(k)}="#{escape_specials(v)}".*)
-      end.join(" ")
+      end.join(" ").gsub("&", "&amp;")
     end
 
     def escape_specials(value)
-      special_characters = Regexp.union "[]".chars
+      special_characters = Regexp.union "[]?".chars
       value.to_s.gsub(special_characters) { |char| "\\#{char}" }
     end
 end
