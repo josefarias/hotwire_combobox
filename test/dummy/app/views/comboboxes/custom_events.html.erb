@@ -1,19 +1,32 @@
-<style>
+<%= tag.style nonce: content_security_policy_nonce do %>
   #required { width: 12.5rem; }
-</style>
 
-<div data-controller="combobox--events" style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
-  <div style="display: flex; align-items: start; gap: 1rem;">
+  .event-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1rem;
+  }
+
+  .event-group {
+    display: flex;
+    align-items: start;
+    gap: 1rem;
+  }
+<% end %>
+
+<div data-controller="combobox--events" class="event-container">
+  <div class="event-group">
     <span data-combobox--events-target="preselectionScratchpad"></span>
     <span data-combobox--events-target="selectionScratchpad"></span>
   </div>
 
-  <div style="display: flex; align-items: start; gap: 1rem;">
+  <div class="event-group">
     <div data-combobox--events-target="preselectionCount"></div>
     <div data-combobox--events-target="selectionCount"></div>
   </div>
 
-  <div style="display: flex; align-items: start; gap: 1rem;">
+  <div class="event-group">
     <%= combobox_tag :movie, movies_path, id: "allow-new", placeholder: "allow-new", name_when_new: :new_movie, data: { action: "hw-combobox:preselection->combobox--events#showPreselection hw-combobox:selection->combobox--events#showSelection" } %>
     <%= combobox_tag :movie, movies_path, id: "required", placeholder: "required", required: true, data: { action: "hw-combobox:preselection->combobox--events#showPreselection hw-combobox:selection->combobox--events#showSelection" } %>
   </div>

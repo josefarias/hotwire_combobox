@@ -1,4 +1,4 @@
-<style>
+<%= tag.style nonce: content_security_policy_nonce do %>
   :root {
     --hw-option-bg-color: #edf1fa;
     --hw-active-bg-color: #aefa98;
@@ -8,7 +8,7 @@
   .hw-combobox__option--selected {
     background-color: #f4ff59;
   }
-</style>
+<% end %>
 
 <%= combobox_tag "movie", Movie.all, id: "movie-field",
       render_in: { partial: "movies/movie", formats: [:turbo_stream] } %>

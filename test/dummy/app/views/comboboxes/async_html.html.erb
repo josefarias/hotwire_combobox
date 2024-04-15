@@ -1,4 +1,4 @@
-<style>
+<%= tag.style nonce: content_security_policy_nonce do %>
   :root {
     --hw-option-bg-color: #edf1fa;
     --hw-active-bg-color: #aefa98;
@@ -8,6 +8,6 @@
   .hw-combobox__option--selected {
     background-color: #f4ff59;
   }
-</style>
+<% end %>
 
 <%= combobox_tag "movie", movies_html_path, id: "movie-field", label: "Choose your movie! and also, this text should be impractically long to test overflows" %>

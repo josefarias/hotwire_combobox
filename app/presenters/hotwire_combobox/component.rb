@@ -80,15 +80,7 @@ class HotwireCombobox::Component
 
   def announcer_attrs
     {
-      style: "
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        margin: -1px;
-        padding: 0;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        border: 0;".squish,
+      class: "hw-combobox__announcer",
       aria: announcer_aria,
       data: announcer_data
     }

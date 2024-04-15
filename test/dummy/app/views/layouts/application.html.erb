@@ -12,10 +12,17 @@
 
     <%= yield :head %>
 
-    <style>
+    <%= tag.style nonce: content_security_policy_nonce do %>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
       body { font-family: 'Inter', sans-serif; }
+
+      #clickable {
+        width: 10px;
+        height: 10px;
+        background-color: red;
+        margin-bottom: 10px;
+      }
 
       .container {
         display: flex;
@@ -28,13 +35,18 @@
       .container aside.empty {
         display: none;
       }
+      .html-option {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
 
       @media (max-width: 600px) {
         .container aside {
           display: none;
         }
       }
-    </style>
+    <% end %>
   </head>
 
   <body>
@@ -43,7 +55,7 @@
         <%= render "#{controller_name}/nav" if aside_nav? %>
       </aside>
       <main>
-        <div id="clickable" style="width: 10px; height: 10px; background-color: red; margin-bottom: 10px;"></div>
+        <div id="clickable"></div>
         <%= yield %>
       </main>
     </section>

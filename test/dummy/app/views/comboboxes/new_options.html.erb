@@ -1,6 +1,6 @@
-<style>
+<%= tag.style nonce: content_security_policy_nonce do %>
   [aria-selected=true] { color: blue; }
-</style>
+<% end %>
 
 <% if flash[:notice] %>
   <p><%= flash[:notice] %></p>

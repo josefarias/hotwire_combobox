@@ -1,4 +1,4 @@
-<style>
+<%= tag.style nonce: content_security_policy_nonce do %>
   .comboboxes-nav header {
     margin: 1rem 1rem 0;
   }
@@ -19,7 +19,8 @@
   .comboboxes-nav a:hover, .comboboxes-nav a:active {
     text-decoration: underline;
   }
-</style>
+<% end %>
+
 <nav class="comboboxes-nav">
   <header>
     Variations:
