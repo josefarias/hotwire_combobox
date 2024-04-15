@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve. This is meant for library malfunctions only. Please use [our GH forum](https://github.com/josefarias/hotwire_combobox/discussions) for questions, suggestions, and other discussions.
+about: Meant for library malfunctions only. Please use [our GH forum](https://github.com/josefarias/hotwire_combobox/discussions) for questions, suggestions, and other discussions. Thanks!
 title: ''
 labels: ''
 assignees: ''
