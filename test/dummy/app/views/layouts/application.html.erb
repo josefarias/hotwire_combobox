@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Dummy</title>
+    <title>HotwireCombobox Playground</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%# stylesheet_link_tag "preflight", "data-turbo-track": "reload" %>
 
+
     <%= combobox_style_tag %>
     <%= javascript_importmap_tags %>
+
+    <%= favicon_link_tag asset_path("favicon.ico") %>
 
     <%= yield :head %>
 
