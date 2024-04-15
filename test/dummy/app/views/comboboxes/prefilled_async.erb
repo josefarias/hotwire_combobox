@@ -1,4 +1,4 @@
-<style>
+<%= tag.style nonce: content_security_policy_nonce do %>
   .state {
     width: 1.75rem;
     height: 1.75rem;
@@ -27,7 +27,7 @@
   .state--minnesota::before { background-image: url(<%= asset_path('minnesota.png') %>); }
   .state--mississippi::before { background-image: url(<%= asset_path('mississippi.png') %>); }
   .state--missouri::before { background-image: url(<%= asset_path('missouri.png') %>); }
-</style>
+<% end %>
 
 <% if flash[:notice] %>
   <p><%= flash[:notice] %></p>

@@ -1,4 +1,4 @@
-<style>
+<%= tag.style nonce: content_security_policy_nonce do %>
   .custom-chip {
     align-items: center;
     border: var(--hw-border-width--slim) solid var(--hw-border-color);
@@ -41,7 +41,7 @@
   .state--minnesota::before { background-image: url(<%= asset_path('minnesota.png') %>); }
   .state--mississippi::before { background-image: url(<%= asset_path('mississippi.png') %>); }
   .state--missouri::before { background-image: url(<%= asset_path('missouri.png') %>); }
-</style>
+<% end %>
 
 <%= combobox_tag "state", states_path(page: 0),
       id: "states-field",
