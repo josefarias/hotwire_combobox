@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Meant for library malfunctions only.
+about: Meant for library malfunctions only. Thanks for helping improve HotwireCombobox!
 title: ''
 labels: ''
 assignees: ''
