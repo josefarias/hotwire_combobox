@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Meant for library malfunctions only. Please use our forum at github.com/josefarias/hotwire_combobox/discussions for questions, suggestions, and other discussions. Thanks!
+about: Meant for library malfunctions only.
 title: ''
 labels: ''
 assignees: ''
