@@ -883,7 +883,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     open_combobox "#states-field"
 
-    assert_text "Arizona"
+    assert_option_with text: "Arizona"
     type_in_combobox "#states-field", "mi"
     assert_selected_option_with text: "Michigan"
     assert_options_with count: 4
@@ -1132,19 +1132,34 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit morph_path
 
     user = User.where.not(home_state: nil).first
-    new_state = State.all.without(user.home_state).first
+    visited_states = user.visited_states
+    new_home_state = State.all.without(user.home_state).first
+    new_visited_state = State.all.without(visited_states).first
 
     assert_combobox_display_and_value "#user_home_state_id", user.home_state.name, user.home_state.id
+    assert_combobox_display_and_value "#user_visited_state_ids", visited_states.map(&:name), visited_states.map(&:id)
 
     open_combobox "#user_home_state_id"
-    click_on_option new_state.name
-    assert_combobox_display_and_value "#user_home_state_id", new_state.name, new_state.id
+    click_on_option new_home_state.name
+    assert_combobox_display_and_value "#user_home_state_id", new_home_state.name, new_home_state.id
 
-    find("input[type=submit]").click
+    click_away
 
-    assert_text "User updated"
+    open_combobox "#user_visited_state_ids"
+    click_on_option new_visited_state.name
+    assert_combobox_display_and_value "#user_visited_state_ids",
+      (visited_states + [ new_visited_state ]).map(&:name),
+      (visited_states + [ new_visited_state ]).map(&:id)
 
-    assert_combobox_display_and_value "#user_home_state_id", new_state.name, new_state.id
+    assert_difference -> { user.visited_states.reload.size }, +1 do
+      find("input[type=submit]").click
+      assert_text "User updated"
+    end
+
+    assert_combobox_display_and_value "#user_home_state_id", new_home_state.name, new_home_state.id
+    assert_combobox_display_and_value "#user_visited_state_ids",
+      user.visited_states.map(&:name),
+      user.visited_states.map(&:id)
   end
 
   private

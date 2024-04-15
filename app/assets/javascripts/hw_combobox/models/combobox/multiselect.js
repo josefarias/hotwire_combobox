@@ -55,7 +55,7 @@ Combobox.Multiselect = Base => class extends Base {
     }
   }
 
-  _initializeMultiselect() {
+  _connectMultiselect() {
     if (!this._isMultiPreselected) {
       this._preselectMultiple()
       this._markMultiPreselected()
