@@ -61,7 +61,6 @@ export default class HwComboboxController extends Concerns(...concerns) {
   initialize() {
     this._initializeActors()
     this._initializeFiltering()
-    this._initializeMultiselect()
   }
 
   connect() {
@@ -70,6 +69,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
 
   idempotentConnect() {
     this._connectSelection()
+    this._connectMultiselect()
     this._connectListAutocomplete()
     this._connectDialog()
   }
