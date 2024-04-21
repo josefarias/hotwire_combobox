@@ -248,7 +248,7 @@ class HotwireCombobox::Component
     end
 
     def association_exists?
-      form_object&.class&.reflect_on_association(association_name).present?
+      association_name && form_object&.respond_to?(association_name)
     end
 
     def form_object
@@ -300,7 +300,7 @@ class HotwireCombobox::Component
     def hidden_field_value
       return value if value
 
-      if form_object&.defined_enums&.try :[], name
+      if form_object&.try(:defined_enums)&.try(:[], name)
         form_object.public_send "#{name}_before_type_cast"
       else
         form_object&.try(name).then do |value|

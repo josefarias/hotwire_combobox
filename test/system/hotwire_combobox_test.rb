@@ -1162,6 +1162,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       user.visited_states.map(&:id)
   end
 
+  test "POROs as form objects" do
+    visit form_object_path
+
+    assert_combobox_display_and_value "#form_state_id", "Alabama", states(:alabama).id
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
