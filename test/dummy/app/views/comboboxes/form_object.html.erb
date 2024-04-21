@@ -1,0 +1,4 @@
+<%= form_with model: @object, url: "#" do |form| %>
+  <%= form.combobox :state_id, states_path %>
+  <%= form.submit %>
+<% end %>

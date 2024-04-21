@@ -98,6 +98,10 @@ class ComboboxesController < ApplicationController
     @user = User.where.not(home_state: nil).first || raise("No user found with home state, load fixtures first.")
   end
 
+  def form_object
+    @object = Form.new
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 
