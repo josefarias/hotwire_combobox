@@ -121,8 +121,9 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     end
   end
 
-  test "hw_paginated_combobox_options includes existing params in the default next page src" do
-    request.expects(:fullpath).returns "/foo?bar=baz&qux=quux&page=1000"
+  test "hw_paginated_combobox_options includes existing params in the default next page src, but excludes transient params" do
+    request.expects(:path).returns("/foo")
+    request.expects(:query_parameters).returns({ bar: "baz", qux: "quux", page: "1000", input_type: "insertText" }.with_indifferent_access)
 
     html = hw_paginated_combobox_options [], next_page: 2
 
