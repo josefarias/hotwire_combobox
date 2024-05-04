@@ -574,6 +574,20 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     click_away
   end
 
+  test "enum combobox with form" do
+    Movie.update_all rating: :PG
+
+    visit enum_path
+
+    assert_combobox_display_and_value "#movie_rating", "PG", Movie.ratings[:PG]
+
+    open_combobox "#rating-enum"
+    click_on_option "R"
+
+    click_on "Update Movie"
+    assert_combobox_display_and_value "#movie_rating", "R", Movie.ratings[:R]
+  end
+
   test "async autocomplete selections don't trample over each other" do
     visit async_path
 
