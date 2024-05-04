@@ -118,7 +118,22 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
 
     assert_nothing_raised do
       combobox_tag :foo, multiselect_chip_src: "some_path", name_when_new: :foo
+      combobox_tag :foo, multiselect_chip_src: "some_path", free_text: true
     end
+  end
+
+  test "free_text is a shortcut for name_when_new" do
+    tag = combobox_tag :foo, free_text: true
+    assert_attrs tag, tag_name: "fieldset", "data-hw-combobox-name-when-new-value": "foo"
+
+    tag = combobox_tag :foo, free_text: true, name_when_new: nil
+    assert_attrs tag, tag_name: "fieldset", "data-hw-combobox-name-when-new-value": "foo"
+
+    tag = combobox_tag :foo, free_text: true, name_when_new: :bar
+    assert_attrs tag, tag_name: "fieldset", "data-hw-combobox-name-when-new-value": "bar"
+
+    tag = combobox_tag :foo, free_text: false, name_when_new: :bar
+    assert_attrs tag, tag_name: "fieldset", "data-hw-combobox-name-when-new-value": "bar"
   end
 
   test "hw_paginated_combobox_options includes existing params in the default next page src, but excludes transient params" do

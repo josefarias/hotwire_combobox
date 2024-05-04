@@ -16,6 +16,7 @@ class HotwireCombobox::Component
         data:                 {},
         dialog_label:         nil,
         form:                 nil,
+        free_text:            false,
         id:                   nil,
         input:                {},
         label:                nil,
@@ -26,9 +27,9 @@ class HotwireCombobox::Component
         options:              [],
         value:                nil,
         **rest
-    @view, @autocomplete, @id, @name, @value, @form, @async_src, @label,
+    @view, @autocomplete, @id, @name, @value, @form, @async_src, @label, @free_text,
     @name_when_new, @open, @data, @mobile_at, @multiselect_chip_src, @options, @dialog_label =
-      view, autocomplete, id, name.to_s, value, form, async_src, label,
+      view, autocomplete, id, name.to_s, value, form, async_src, label, free_text,
       name_when_new, open, data, mobile_at, multiselect_chip_src, options, dialog_label
 
     @combobox_attrs = input.reverse_merge(rest).deep_symbolize_keys
@@ -189,8 +190,16 @@ class HotwireCombobox::Component
 
   private
     attr_reader :view, :autocomplete, :id, :name, :value, :form,
-      :name_when_new, :open, :data, :combobox_attrs, :mobile_at,
+      :free_text, :open, :data, :combobox_attrs, :mobile_at,
       :association_name, :multiselect_chip_src
+
+    def name_when_new
+      if free_text && @name_when_new.blank?
+        hidden_field_name
+      else
+        @name_when_new
+      end
+    end
 
     def name_when_new_on_multiselect_must_match_original_name
       return unless multiselect? && name_when_new.present?
