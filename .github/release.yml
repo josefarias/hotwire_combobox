@@ -8,9 +8,10 @@ changelog:
         - '*'
       exclude:
         labels:
-          - dependencies
-          - cosmetic
           - bug
+          - cosmetic
+          - internal
+          - dependencies
     - title: 🎷🐛 Bug Fixes
       labels:
         - bug
