@@ -4,7 +4,7 @@
   <%= render "hotwire_combobox/combobox/hidden_field", component: component %>
 
   <%= tag.div **component.main_wrapper_attrs do %>
-    <%# Announcer styles defined here because they're not optional %>
+    <%# Essential styles defined here, removing these would break the combobox %>
     <%= tag.style nonce: content_security_policy_nonce do %>
       .hw-combobox__announcer {
         position: absolute;
@@ -15,6 +15,10 @@
         overflow: hidden;
         clip: rect(0, 0, 0, 0);
         border: 0;
+      }
+
+      .hw_combobox__pagination__wrapper {
+        height: 5px;
       }
     <% end %>
     <%= tag.div **component.announcer_attrs %>
