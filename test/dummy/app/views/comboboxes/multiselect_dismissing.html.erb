@@ -3,3 +3,9 @@
       label: "States",
       multiselect_chip_src: dismissing_state_chips_path,
       placeholder: "Select states" %>
+
+<%= combobox_tag "async_state", states_path,
+      id: "async-states-field",
+      label: "Async States",
+      multiselect_chip_src: dismissing_state_chips_path,
+      placeholder: "Select states" %>

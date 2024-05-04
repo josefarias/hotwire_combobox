@@ -16,7 +16,8 @@ Combobox.Toggle = Base => class extends Base {
         this._isSync &&
         !this._isSmallViewport &&
         inputType != "hw:clickOutside" &&
-        inputType != "hw:focusOutside"
+        inputType != "hw:focusOutside" &&
+        inputType != "hw:asyncCloser"
 
       this._lockInSelection()
       this._clearInvalidQuery()
