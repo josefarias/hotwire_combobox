@@ -37,7 +37,7 @@ module HotwireCombobox
     def hw_paginated_combobox_options(
           options,
           for_id: params[:for_id],
-          src: request.fullpath,
+          src: hw_fullpath_for_pagination,
           next_page: nil,
           render_in: {},
           include_blank: {},
@@ -168,6 +168,11 @@ module HotwireCombobox
       end
 
     private
+      def hw_fullpath_for_pagination
+        transient_params = %w[ input_type ]
+        hw_uri_with_params request.path, **request.query_parameters.except(*transient_params)
+      end
+
       def hw_combobox_next_page_uri(uri, next_page, for_id)
         return unless next_page
 

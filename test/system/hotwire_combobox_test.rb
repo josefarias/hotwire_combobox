@@ -537,6 +537,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       assert_options_with count: test_case[:visible_options]
       find("#movie-field-hw-listbox").scroll_to :bottom
       assert_options_with count: test_case[:visible_options] + 5
+
+      type_in_combobox "#movie-field", "a"
+      assert_combobox_display_and_value "#movie-field", "A Beautiful Mind", movies(:a_beautiful_mind).id
+      find("#movie-field-hw-listbox").scroll_to :bottom
+      assert_options_with count: test_case[:visible_options] + 5
+      assert_scrolled "#movie-field-hw-listbox"
     end
   end
 
@@ -1285,6 +1291,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     def assert_group_with(**kwargs)
       assert_selector "ul[role=group] li[role=presentation]", **kwargs
+    end
+
+    def assert_scrolled(selector)
+      sleep 0.5
+      assert page.evaluate_script("document.querySelector('#{selector}').scrollTop") > 0,
+        "Expected #{selector} to be scrolled."
     end
 
     def remove_chip(text)
