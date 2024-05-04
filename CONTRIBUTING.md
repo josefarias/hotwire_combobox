@@ -17,7 +17,7 @@ $ bin/test_system
 ## Running the dummy app
 
 ```bash
-$ bin/rails s
+$ bin/dev
 ```
 
 Make sure you restart the server after making changes to the engine (including JS).
