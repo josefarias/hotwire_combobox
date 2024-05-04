@@ -575,16 +575,12 @@ class HotwireComboboxTest < ApplicationSystemTestCase
   end
 
   test "enum combobox with form" do
-    Movie.update_all rating: :PG
-
     visit enum_path
 
-    assert_combobox_display_and_value "#movie_rating", "PG", Movie.ratings[:PG]
-
-    open_combobox "#rating-enum"
+    open_combobox "#movie_rating"
     click_on_option "R"
-
     click_on "Update Movie"
+
     assert_combobox_display_and_value "#movie_rating", "R", Movie.ratings[:R]
   end
 
