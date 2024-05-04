@@ -1,18 +1,18 @@
 class StateChipsController < ApplicationController
-  before_action :set_states, except: :new_possibly_new
+  before_action :set_states, except: :create_possibly_new
 
-  def new
+  def create
     render turbo_stream: helpers.combobox_selection_chips_for(@states)
   end
 
-  def new_html
+  def create_html
   end
 
-  def new_dismissing
+  def create_dismissing
     render turbo_stream: helpers.dismissing_combobox_selection_chips_for(@states)
   end
 
-  def new_possibly_new
+  def create_possibly_new
     @states = params[:combobox_values].split(",").map do |value|
       State.find_by(id: value) || OpenStruct.new(to_combobox_display: value, id: value)
     end

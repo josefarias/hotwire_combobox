@@ -43,10 +43,10 @@ Rails.application.routes.draw do
   post "new_options_form", to: "new_options_forms#create"
 
   resources :states, only: :index
-  resources :state_chips, only: :new, param: :combobox_value
-  get "new_html_state_chip", to: "state_chips#new_html"
-  get "new_dismissing_state_chip", to: "state_chips#new_dismissing"
-  get "new_possibly_new_state_chip", to: "state_chips#new_possibly_new"
+  resources :state_chips, only: :create, param: :combobox_value
+  post "html_state_chips", to: "state_chips#create_html"
+  post "dismissing_state_chips", to: "state_chips#create_dismissing"
+  post "possibly_new_state_chips", to: "state_chips#create_possibly_new"
 
   resources :users, only: :update do
     resources :visits, only: :create

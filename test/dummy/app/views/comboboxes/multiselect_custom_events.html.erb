@@ -32,7 +32,7 @@
     <%= combobox_tag "states", State.all,
           id: "states-field",
           label: "States",
-          multiselect_chip_src: new_state_chip_path,
+          multiselect_chip_src: state_chips_path,
           placeholder: "Select states",
           data: { action: "hw-combobox:preselection->combobox--events#showPreselection hw-combobox:selection->combobox--events#showSelection hw-combobox:removal->combobox--events#showRemoval" } %>
   </div>

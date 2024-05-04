@@ -1,6 +1,6 @@
 import Combobox from "hw_combobox/models/combobox/base"
 import { cancel, nextRepaint } from "hw_combobox/helpers"
-import { get } from "hw_combobox/vendor/requestjs"
+import { post } from "hw_combobox/vendor/requestjs"
 
 Combobox.Multiselect = Base => class extends Base {
   navigateChip(event) {
@@ -79,7 +79,7 @@ Combobox.Multiselect = Base => class extends Base {
   }
 
   async _requestChips(values) {
-    await get(this.selectionChipSrcValue, {
+    await post(this.selectionChipSrcValue, {
       responseKind: "turbo-stream",
       query: {
         for_id: this.element.dataset.asyncId,

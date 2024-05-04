@@ -46,6 +46,6 @@
 <%= combobox_tag "state", states_path(page: 0),
       id: "states-field",
       label: "States",
-      multiselect_chip_src: new_html_state_chip_path,
+      multiselect_chip_src: html_state_chips_path,
       value: State.limit(2).ids.join(","),
       placeholder: "Select states" %>
