@@ -288,3 +288,7 @@
     width: 1rem;
   }
 }
+
+.hw_combobox__pagination__wrapper {
+  background-color: var(--hw-option-bg-color);
+}
