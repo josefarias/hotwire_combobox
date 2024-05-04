@@ -1,6 +1,6 @@
 changelog:
   categories:
-    - title: Breaking Changes 🛠
+    - title: 💥 Breaking Changes
       labels:
         - breaking
     - title: 📦 Features
@@ -17,6 +17,9 @@ changelog:
     - title: 💅 Cosmetic Changes
       labels:
         - cosmetic
+    - title: 🥷 Internal Changes
+      labels:
+        - internal
     - title: 🗄️ Dependencies
       labels:
         - dependencies
