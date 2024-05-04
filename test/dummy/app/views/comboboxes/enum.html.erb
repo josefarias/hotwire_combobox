@@ -1,4 +1,5 @@
 <%= form_with model: Movie.first do |form| %>
+  <%#= form.combobox :rating, Movie.ratings.keys %>
   <%= form.combobox :rating, Movie.ratings %>
   <%= form.submit %>
 <% end %>

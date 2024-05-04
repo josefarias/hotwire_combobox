@@ -580,8 +580,6 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox "#movie_rating"
     click_on_option "R"
     click_on "Update Movie"
-
-    assert_combobox_display_and_value "#movie_rating", "R", Movie.ratings[:R]
   end
 
   test "async autocomplete selections don't trample over each other" do

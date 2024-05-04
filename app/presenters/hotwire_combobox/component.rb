@@ -301,8 +301,7 @@ class HotwireCombobox::Component
       return value if value
 
       if form_object&.try(:defined_enums)&.try(:[], name)
-        # form_object.public_send "#{name}_before_type_cast"
-        form_object.public_send name
+        form_object.public_send "#{name}_before_type_cast"
       else
         form_object&.try(name).then do |value|
           value.respond_to?(:map) ? value.join(",") : value
