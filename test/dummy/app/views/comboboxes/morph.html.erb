@@ -8,6 +8,6 @@
 
 <%= form_with model: @user do |f| %>
   <%= f.combobox :home_state_id, State.all %>
-  <%= f.combobox :visited_state_ids, State.all, multiselect_chip_src: new_state_chip_path %>
+  <%= f.combobox :visited_state_ids, State.all, multiselect_chip_src: state_chips_path %>
   <%= f.submit %>
 <% end %>

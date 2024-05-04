@@ -933,6 +933,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox "#user_visited_state_ids"
     type_in_combobox "#user_visited_state_ids", "Lou"
     click_on_option "Louisiana"
+    assert_open_combobox
     assert_text "Alabama" # combobox is reset and still open
 
     assert_combobox_display_and_value \
@@ -964,6 +965,24 @@ class HotwireComboboxTest < ApplicationSystemTestCase
       "#user_visited_state_ids",
       %w[ Illinois Louisiana ],
       states(:illinois, :louisiana).pluck(:id)
+  end
+
+  test "multiselect with dismissing streams" do
+    visit multiselect_dismissing_path
+
+    assert_closed_combobox
+
+    open_combobox "#states-field"
+    type_in_combobox "#states-field", "Lou"
+    click_on_option "Louisiana"
+    sleep 1
+    assert_closed_combobox
+
+    open_combobox "#async-states-field"
+    type_in_combobox "#async-states-field", "Lou"
+    click_on_option "Louisiana"
+    sleep 1
+    assert_closed_combobox
   end
 
   test "multiselect custom events" do
