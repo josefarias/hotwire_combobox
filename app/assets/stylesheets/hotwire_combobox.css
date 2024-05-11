@@ -26,6 +26,10 @@
 
   --hw-font-size: 1rem;
 
+  --hw-icon-image: url("");
+  --hw-icon-offset-right: 0.375rem;
+  --hw-icon-width: 1.5rem;
+
   --hw-handle-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
   --hw-handle-image--queried: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 18 18 6M6 6l12 12'/%3E%3C/svg%3E");
   --hw-handle-offset-right: 0.375rem;
@@ -76,6 +80,27 @@
   &:has(.hw-combobox__input--invalid) {
     box-shadow: 0 0 0 var(--hw-border-width--thick) var(--hw-invalid-color);
   }
+}
+
+.hw-combobox__icon {
+  height: 100%;
+  position: absolute;
+  left: var(--hw-icon-offset-right);
+  top: 0;
+  width: var(--hw-icon-width);
+}
+
+.hw-combobox__icon::before {
+  background-image: var(--hw-icon-image);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--hw-icon-width);
+  bottom: 0;
+  content: '';
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .hw-combobox__input {

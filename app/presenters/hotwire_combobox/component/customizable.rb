@@ -4,6 +4,7 @@ module HotwireCombobox::Component::Customizable
     label
     hidden_field
     main_wrapper
+    icon
     input
     handle
     listbox

@@ -88,6 +88,14 @@ class HotwireCombobox::Component
   end
 
 
+  def icon_attrs
+    apply_customizations_to :icon, base: {
+      class: "hw-combobox__icon",
+      data: icon_data
+    }
+  end
+
+
   def input_attrs
     nested_attrs = %i[ data aria ]
 
@@ -349,6 +357,13 @@ class HotwireCombobox::Component
         haspopup: "listbox",
         autocomplete: autocomplete,
         activedescendant: ""
+    end
+
+    def icon_data
+      {
+        action: "click->hw-combobox#clearOrToggleOnHandleClick",
+        hw_combobox_target: "icon"
+      }
     end
 
 

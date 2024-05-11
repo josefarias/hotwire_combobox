@@ -746,6 +746,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector ".custom-class--fieldset"
     assert_selector ".custom-class--label"
     assert_selector ".custom-class--main_wrapper"
+    assert_selector ".custom-class--icon"
     assert_selector ".custom-class--input"
     assert_selector ".custom-class--handle"
     assert_selector ".custom-class--hidden_field", visible: :hidden
@@ -759,6 +760,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector ".hw-combobox", count: 2
     assert_selector ".hw-combobox__label", count: 2
     assert_selector ".hw-combobox__main__wrapper", count: 2
+    assert_selector ".hw-combobox__icon", count: 2
     assert_selector ".hw-combobox__input", count: 2
     assert_selector ".hw-combobox__handle", count: 2
     assert_selector ".hw-combobox__listbox", visible: :hidden, count: 2
@@ -773,6 +775,7 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selector "[data-customized-fieldset]"
     assert_selector "[data-customized-label]"
     assert_selector "[data-customized-main-wrapper]"
+    assert_selector "[data-customized-icon]"
     assert_selector "[data-customized-input]"
     assert_selector "[data-customized-handle]"
     assert_selector "[data-customized-hidden-field]", visible: :hidden
