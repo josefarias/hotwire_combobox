@@ -5,6 +5,7 @@ Combobox.Selection = Base => class extends Base {
   selectOnClick({ currentTarget, inputType }) {
     this._forceSelectionAndFilter(currentTarget, inputType)
     this._closeAndBlur("hw:optionRoleClick")
+    this._fireOnChangeEvent()
   }
 
   _connectSelection() {
@@ -139,6 +140,10 @@ Combobox.Selection = Base => class extends Base {
 
   _removeActiveDescendant() {
     this._setActiveDescendant("")
+  }
+
+  _fireOnChangeEvent() {
+    this._actingCombobox.dispatchEvent(new Event("change", { bubbles: true }))
   }
 
   get _hasValueButNoSelection() {
