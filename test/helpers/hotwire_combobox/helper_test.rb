@@ -116,9 +116,20 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
       combobox_tag :foo, multiselect_chip_src: "some_path", name_when_new: :bar
     end
 
+    assert_raises ActiveModel::ValidationError do
+      form_with scope: :foo, url: "some_path" do |form|
+        form.combobox :bar, multiselect_chip_src: "some_path", name_when_new: "foo[baz]"
+      end
+    end
+
     assert_nothing_raised do
       combobox_tag :foo, multiselect_chip_src: "some_path", name_when_new: :foo
       combobox_tag :foo, multiselect_chip_src: "some_path", free_text: true
+
+      form_with scope: :foo, url: "some_path" do |form|
+        form.combobox :bar, multiselect_chip_src: "some_path", name_when_new: "foo[bar]"
+        form.combobox :bar, multiselect_chip_src: "some_path", free_text: true
+      end
     end
   end
 
