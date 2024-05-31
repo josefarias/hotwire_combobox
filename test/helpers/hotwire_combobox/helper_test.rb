@@ -158,4 +158,12 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
 
     assert_attrs html, tag_name: "turbo-frame", src: "/foo?bar=baz&qux=quux&page=2&format=turbo_stream"
   end
+
+  test "single repeating character values" do
+    form = form_with model: OpenStruct.new(run_at: "* * * * *", persisted?: true, model_name: OpenStruct.new(param_key: :foo)), url: "#" do |form|
+      form.combobox :run_at, [ "@hourly", "@daily", "@weekly", "@monthly", "@every 4h", "0 12 * * *" ], free_text: true
+    end
+
+    assert_equal "* * * * *", Nokogiri::HTML(form).css("input[name='foo[run_at]']").first.attr("value")
+  end
 end
