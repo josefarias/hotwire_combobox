@@ -46,7 +46,7 @@ module HotwireCombobox::Component::Customizable
       custom = custom_attrs[element]
 
       coalesce = ->(key, value) do
-        if value.is_a?(String) || value.is_a?(Array)
+        if custom.has_key?(key) && (value.is_a?(String) || value.is_a?(Array))
           view.token_list(value, custom.delete(key))
         else
           value
