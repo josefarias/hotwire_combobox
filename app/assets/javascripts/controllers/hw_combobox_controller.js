@@ -91,13 +91,13 @@ export default class HwComboboxController extends Concerns(...concerns) {
 
   async endOfOptionsStreamTargetConnected(element) {
     if (element.dataset.callbackId) {
-      this._runCallbackAfterEndOfOptionsStream(element)
+      this._runCallback(element)
     } else {
       this._preselectSingle()
     }
   }
 
-  async _runCallbackAfterEndOfOptionsStream(element) {
+  async _runCallback(element) {
     const callbackId = element.dataset.callbackId
 
     if (this._callbackAttemptsExceeded(callbackId)) {
@@ -111,18 +111,18 @@ export default class HwComboboxController extends Concerns(...concerns) {
       const inputType = element.dataset.inputType
       const delay = window.HOTWIRE_COMBOBOX_STREAM_DELAY
 
+      if (delay) await sleep(delay)
       this._dequeueCallback(callbackId)
       this._resetMultiselectionMarks()
 
       if (inputType === "hw:multiselectSync") {
         this.openByFocusing()
-      } else if (inputType && inputType !== "hw:lockInSelection") {
-        if (delay) await sleep(delay)
+      } else if (inputType !== "hw:lockInSelection") {
         this._selectOnQuery(inputType)
       }
     } else {
       await nextRepaint()
-      this._runCallbackAfterEndOfOptionsStream(element, callbackId)
+      this._runCallback(element)
     }
   }
 
