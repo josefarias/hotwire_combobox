@@ -58,7 +58,7 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _markQueried() {
-    this._actingCombobox.toggleAttribute("data-queried", this._isQueried)
+    this._forAllComboboxes(el => el.toggleAttribute("data-queried", this._isQueried))
   }
 
   get _isQueried() {
