@@ -1,5 +1,6 @@
 import Combobox from "hw_combobox/models/combobox"
 import { Concerns, sleep } from "hw_combobox/helpers"
+import { nextRepaint } from "hw_combobox/helpers"
 import { Controller } from "@hotwired/stimulus"
 
 window.HOTWIRE_COMBOBOX_STREAM_DELAY = 0 // ms, for testing purposes
@@ -10,6 +11,7 @@ const concerns = [
   Combobox.Announcements,
   Combobox.AsyncLoading,
   Combobox.Autocomplete,
+  Combobox.Callbacks,
   Combobox.Dialog,
   Combobox.Events,
   Combobox.Filtering,
@@ -61,6 +63,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
   initialize() {
     this._initializeActors()
     this._initializeFiltering()
+    this._initializeCallbacks()
   }
 
   connect() {
@@ -87,18 +90,39 @@ export default class HwComboboxController extends Concerns(...concerns) {
   }
 
   async endOfOptionsStreamTargetConnected(element) {
-    const inputType = element.dataset.inputType
-    const delay = window.HOTWIRE_COMBOBOX_STREAM_DELAY
-
-    this._resetMultiselectionMarks()
-
-    if (inputType === "hw:multiselectSync") {
-      this.openByFocusing()
-    } else if (inputType && inputType !== "hw:lockInSelection") {
-      if (delay) await sleep(delay)
-      this._selectOnQuery(inputType)
+    if (element.dataset.callbackId) {
+      this._runCallback(element)
     } else {
       this._preselectSingle()
+    }
+  }
+
+  async _runCallback(element) {
+    const callbackId = element.dataset.callbackId
+
+    if (this._callbackAttemptsExceeded(callbackId)) {
+      this._dequeueCallback(callbackId)
+      return
+    } else {
+      this._recordCallbackAttempt(callbackId)
+    }
+
+    if (this._isNextCallback(callbackId)) {
+      const inputType = element.dataset.inputType
+      const delay = window.HOTWIRE_COMBOBOX_STREAM_DELAY
+
+      if (delay) await sleep(delay)
+      this._dequeueCallback(callbackId)
+      this._resetMultiselectionMarks()
+
+      if (inputType === "hw:multiselectSync") {
+        this.openByFocusing()
+      } else if (inputType !== "hw:lockInSelection") {
+        this._selectOnQuery(inputType)
+      }
+    } else {
+      await nextRepaint()
+      this._runCallback(element)
     }
   }
 

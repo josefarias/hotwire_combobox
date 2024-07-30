@@ -36,7 +36,8 @@ Combobox.Filtering = Base => class extends Base {
     const query = {
       q: this._fullQuery,
       input_type: inputType,
-      for_id: this.element.dataset.asyncId
+      for_id: this.element.dataset.asyncId,
+      callback_id: this._enqueueCallback()
     }
 
     await get(this.asyncSrcValue, { responseKind: "turbo-stream", query })
