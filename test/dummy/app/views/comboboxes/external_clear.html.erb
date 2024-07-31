@@ -1,0 +1,16 @@
+<%= tag.style nonce: content_security_policy_nonce do %>
+  #external_clear:focus {
+    outline: 1px solid blue;
+  }
+<% end %>
+
+<%= button_tag "clear", id: :external_clear, data: {
+      controller: "custom-clear",
+      action: "custom-clear#clear",
+      custom_clear_hw_combobox_outlet: "[data-clearable]" } %>
+
+<%= combobox_tag "state", @state_options, value: "MI", id: "state-field", data: { clearable: "" } %>
+
+<%= form_with model: @user do |form| %>
+  <%= form.combobox :visited_state_ids, State.all, label: "Visited states", multiselect_chip_src: state_chips_path, data: { clearable: "" } %>
+<% end %>

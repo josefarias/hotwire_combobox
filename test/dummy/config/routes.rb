@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   get "grouped_options", to: "comboboxes#grouped_options"
   get "morph", to: "comboboxes#morph"
   get "form_object", to: "comboboxes#form_object"
+  get "external_clear", to: "comboboxes#external_clear"
 
   resources :movies, only: %i[ index update ]
   get "movies_html", to: "movies#index_html"
