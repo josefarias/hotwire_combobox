@@ -1306,6 +1306,21 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_combobox_display_and_value "#form_state_id", "Alabama", states(:alabama).id
   end
 
+  test "clearing programmatically" do
+    visit external_clear_path
+
+    assert_combobox_display_and_value "#state-field", "Michigan", "MI"
+    assert_combobox_display_and_value "#user_visited_state_ids",
+      %w[ Florida Illinois ], states(:florida, :illinois).pluck(:id)
+
+    find("#external_clear").click
+
+    assert_combobox_display_and_value "#state-field", "", nil
+    assert_combobox_display_and_value "#user_visited_state_ids", [], nil
+
+    page.evaluate_script("document.activeElement.id") == "external_clear"
+  end
+
   private
     def open_combobox(selector)
       find(selector).click

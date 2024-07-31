@@ -102,6 +102,10 @@ class ComboboxesController < ApplicationController
     @object = Form.new
   end
 
+  def external_clear
+    @user = User.first || raise("No user found, load fixtures first.")
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 

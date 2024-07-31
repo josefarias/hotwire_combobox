@@ -14,6 +14,12 @@ Combobox.Filtering = Base => class extends Base {
     }
   }
 
+  clear(event) {
+    this._clearQuery()
+    this.chipDismisserTargets.forEach(el => el.click())
+    if (event && !event.defaultPrevented) event.target.focus()
+  }
+
   _initializeFiltering() {
     this._debouncedFilterAsync = debounce(this._debouncedFilterAsync.bind(this))
   }
