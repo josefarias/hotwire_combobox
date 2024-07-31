@@ -141,6 +141,10 @@
   &:has([role="option"]:not([hidden])) {
     border-color: var(--hw-border-color);
   }
+
+  &:not(:has(.hw-combobox__option)) {
+    display: none;
+  }
 }
 
 .hw-combobox__group {
