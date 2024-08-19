@@ -28,7 +28,8 @@ class HotwireCombobox::Listbox::Option
         role: :option,
         class: [ "hw-combobox__option", { "hw-combobox__option--blank": blank? } ],
         data: data,
-        aria: aria
+        aria: aria,
+        tabindex: -1
       }
     end
 
