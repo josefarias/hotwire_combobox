@@ -396,6 +396,17 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     assert_selected_option_with text: "Michigan"
   end
 
+  test "combobox with prefilled free text value" do
+    visit prefilled_free_text_path
+
+    assert_closed_combobox
+    assert_combobox_display_and_value "#state-field", "East Oregon", "East Oregon"
+
+    open_combobox "#state-field"
+    assert_no_visible_selected_option
+    assert_option_with text: "Oregon"
+  end
+
   test "html combobox with prefilled value" do
     visit prefilled_html_path
 

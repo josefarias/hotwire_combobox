@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get "freetext_async", to: "comboboxes#freetext_async"
   get "prefilled_async", to: "comboboxes#prefilled_async"
   get "prefilled_form", to: "comboboxes#prefilled_form"
+  get "prefilled_free_text", to: "comboboxes#prefilled_free_text"
   get "async_html", to: "comboboxes#async_html"
   get "render_in", to: "comboboxes#render_in"
   get "enum", to: "comboboxes#enum"
