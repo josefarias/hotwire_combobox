@@ -246,7 +246,7 @@ class HotwireCombobox::Component
       elsif async_src && form_object&.respond_to?(name)
         form_object.public_send name
       else
-        options.find_by_value(hidden_field_value)&.autocompletable_as
+        options.find_by_value(hidden_field_value)&.autocompletable_as || hidden_field_value
       end
     end
 
