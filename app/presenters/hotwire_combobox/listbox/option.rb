@@ -26,10 +26,10 @@ class HotwireCombobox::Listbox::Option
       {
         id: id,
         role: :option,
+        tabindex: "-1",
         class: [ "hw-combobox__option", { "hw-combobox__option--blank": blank? } ],
         data: data,
-        aria: aria,
-        tabindex: -1
+        aria: aria
       }
     end
 

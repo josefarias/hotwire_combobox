@@ -1321,6 +1321,16 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     page.evaluate_script("document.activeElement.id") == "external_clear"
   end
 
+  test "selecting options within a dialog" do
+    visit dialog_path
+
+    click_on "Show modal"
+
+    open_combobox "#movie_rating"
+    click_on_option "R"
+    assert_combobox_display_and_value "#movie_rating", "R", Movie.ratings[:R]
+  end
+
   private
     def open_combobox(selector)
       find(selector).click
