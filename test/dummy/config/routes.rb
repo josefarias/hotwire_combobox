@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   get "morph", to: "comboboxes#morph"
   get "form_object", to: "comboboxes#form_object"
   get "external_clear", to: "comboboxes#external_clear"
+  get "dialog", to: "comboboxes#dialog"
 
   resources :movies, only: %i[ index update ]
   get "movies_html", to: "movies#index_html"

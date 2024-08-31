@@ -109,6 +109,9 @@ class ComboboxesController < ApplicationController
     @user = User.first || raise("No user found, load fixtures first.")
   end
 
+  def dialog
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 

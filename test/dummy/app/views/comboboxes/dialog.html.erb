@@ -1,0 +1,16 @@
+<%= tag.style nonce: content_security_policy_nonce do %>
+  dialog {
+    height: 80vh;
+    width: 80vw;
+  }
+<% end %>
+
+<article data-controller="dialog">
+  <dialog data-dialog-target="dialog">
+    <%= form_with model: Movie.new do |form| %>
+      <%= form.combobox :rating, Movie.ratings %>
+    <% end %>
+  </dialog>
+
+  <button data-action="dialog#open">Show modal</button>
+</article>
