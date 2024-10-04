@@ -24,39 +24,23 @@ Finally, configure your assets:
 
 ### Configuring JS
 
-Before continuing, you should know whether your app is using importmaps or JS bundling in your asset pipeline.
+Before continuing, you should know whether your app is using importmaps or JS bundling.
 
 #### Importmaps
 
-Most apps using importmaps won't need any configuration. If things aren't working for you, read on.
-
-In `app/javascript/controllers/index.js` you should have one of the following:
-
-Either,
+Register the library's stimulus controller in `app/javascript/controllers/application.js` as follows:
 
 ```js
-import { application } from "controllers/application" // or equivalent
-import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
+// You should already have something like this:
+import { Application } from "@hotwired/stimulus"
+const application = Application.start()
 
-eagerLoadControllersFrom("controllers", application)
-```
-
-Or,
-
-```js
-import { application } from "controllers/application" // or equivalent
-import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
-
-lazyLoadControllersFrom("controllers", application)
-```
-
-Or,
-
-```js
-import { application } from "controllers/application" // or equivalent
-
-import HwComboboxController from "controllers/hw_combobox_controller"
+// Add the following two lines:
+import HwComboboxController from "@josefarias/hotwire_combobox"
 application.register("hw-combobox", HwComboboxController)
+
+// Again, you should already have something like this:
+export { application }
 ```
 
 #### JS bundling (esbuild, rollup, etc)
@@ -71,21 +55,14 @@ yarn add @josefarias/hotwire_combobox
 npm install @josefarias/hotwire_combobox
 ```
 
-Then, register the library's stimulus controller in `app/javascript/controllers/index.js` as follows:
-
-```js
-import { application } from "./application" // or equivalent
-
-import HwComboboxController from "@josefarias/hotwire_combobox"
-application.register("hw-combobox", HwComboboxController)
-```
+Then, follow the same instructions as in the [Importmaps](#importmaps) section above.
 
 > [!WARNING]
 > Keep in mind you need to update both the npm package and the gem every time there's a new version of HotwireCombobox. You should always run the same version number on both sides.
 
 ### Configuring CSS
 
-This library comes with optional default styles. Follow the instructions below to include them in your app.
+This library comes with customizable default styles. Follow the instructions below to include them in your app.
 
 Read the [docs section](#Docs) for instructions on styling the combobox yourself.
 
@@ -121,7 +98,7 @@ These are the exceptions:
 1. Users cannot manipulate the combobox while it's closed. As long as the combobox is focused, the listbox is shown.
 2. The escape key closes the listbox and blurs the combobox. It does not clear the combobox.
 3. The listbox has wrap-around selection. That is, pressing `Up Arrow` when the user is on the first option will select the last option. And pressing `Down Arrow` when on the last option will select the first option. In paginated comboboxes, the first and last options refer to the currently available options. More options may be loaded after navigating to the last currently available option.
-4. It is possible to have an unlabled combobox, as that responsibility is delegated to the implementing user.
+4. It is possible to have an unlabeled combobox, as that responsibility is delegated to the implementing user.
 5. There are currently [no APG guidelines](https://github.com/w3c/aria-practices/issues/1512) for a multiselect combobox. We've introduced some mechanisms to make the experience accessible, like announcing multi-selections via a live region. But we'd welcome feedback on how to make it better until official guidelines are available.
 
 It should be noted none of the maintainers use assistive technologies in their daily lives. If you do, and you feel these exceptions are detrimental to your ability to use the component, or if you find an undocumented exception, please [open a GitHub issue](https://github.com/josefarias/hotwire_combobox/issues). We'll get it sorted.

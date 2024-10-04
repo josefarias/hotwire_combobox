@@ -12,6 +12,7 @@ FileUtils.chdir APP_ROOT do
   puts "== Installing dependencies =="
   system! "gem install bundler --conservative"
   system("bundle check") || system!("bundle install")
+  system! "yarn install --check-files"
 
   puts "\n== Homebrew =="
   system! "brew bundle --no-lock --no-upgrade"

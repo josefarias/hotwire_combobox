@@ -6,5 +6,4 @@
 !app/assets/
 !app/assets/javascripts/
 !app/assets/javascripts/hotwire_combobox.esm.js
-!app/assets/javascripts/hotwire_combobox.umd.js
 !README.md
