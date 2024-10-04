@@ -1,3 +1,5 @@
+require "ostruct"
+
 class StateChipsController < ApplicationController
   before_action :set_states, except: :create_possibly_new
 
