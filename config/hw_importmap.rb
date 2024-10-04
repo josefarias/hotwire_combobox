@@ -1,1 +1,1 @@
-pin_all_from File.expand_path("../app/assets/javascripts", __dir__)
+pin "controllers/hw_combobox_controller", to: "hotwire_combobox.esm.js"

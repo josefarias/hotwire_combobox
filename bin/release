@@ -12,11 +12,12 @@ class Release
   end
 
   def perform
+    ensure_no_uncommitted_changes
     write_version
     update_copyright
     bundle
     commit
-    build_and_push_npm_package
+    push_npm_package
     build_and_push_gem
     cleanup
 
@@ -28,6 +29,12 @@ class Release
 
     def dry?
       dry
+    end
+
+    def ensure_no_uncommitted_changes
+      puts "== Checking for uncommitted changes =="
+
+      abort "❌ Uncommitted changes" unless `git status --porcelain`.empty?
     end
 
     def write_version
@@ -75,8 +82,10 @@ class Release
 
     def bundle
       puts "== Bundling Gemfile =="
-
       abort "❌ Failed to bundle" unless system "bundle"
+
+      puts "== Bundling JS =="
+      abort "❌ Failed to bundle JS" unless system "yarn build"
     end
 
     def commit
@@ -87,15 +96,14 @@ class Release
       end
 
       abort("❌ Failed to commit") unless \
-        system("git add lib/hotwire_combobox/version.rb Gemfile.lock MIT-LICENSE package.json") &&
+        system("git add .") &&
         (dry? ? true : system("git commit -m 'Bump version for #{version}'")) &&
         (dry? ? true : system("git push"))
     end
 
-    def build_and_push_npm_package
-      puts "== Building and pushing npm package =="
+    def push_npm_package
+      puts "== Pushing npm package =="
 
-      abort "❌ Failed to build npm package" unless system "yarn build"
       abort "❌ Must be logged in to npm" unless system "npm whoami"
       abort "❌ npm publish failed" unless system "npm publish"
 

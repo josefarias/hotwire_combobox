@@ -24,7 +24,7 @@ Finally, configure your assets:
 
 ### Configuring JS
 
-Before continuing, you should know whether your app is using importmaps or JS bundling in your asset pipeline.
+Before continuing, you should know whether your app is using importmaps or JS bundling.
 
 #### Importmaps
 
@@ -35,29 +35,20 @@ In `app/javascript/controllers/index.js` you should have one of the following:
 Either,
 
 ```js
-import { application } from "controllers/application" // or equivalent
+import { application } from "controllers/application"
 import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
-
 eagerLoadControllersFrom("controllers", application)
 ```
 
 Or,
 
 ```js
-import { application } from "controllers/application" // or equivalent
+import { application } from "controllers/application"
 import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
-
 lazyLoadControllersFrom("controllers", application)
 ```
 
-Or,
-
-```js
-import { application } from "controllers/application" // or equivalent
-
-import HwComboboxController from "controllers/hw_combobox_controller"
-application.register("hw-combobox", HwComboboxController)
-```
+Alternatively, modify `app/javascript/controllers/application.js` as suggested in the [JS bundling](#js-bundling-esbuild-rollup-etc) section below.
 
 #### JS bundling (esbuild, rollup, etc)
 
@@ -71,13 +62,17 @@ yarn add @josefarias/hotwire_combobox
 npm install @josefarias/hotwire_combobox
 ```
 
-Then, register the library's stimulus controller in `app/javascript/controllers/index.js` as follows:
+Then, register the library's stimulus controller in `app/javascript/controllers/application.js` as follows:
 
 ```js
-import { application } from "./application" // or equivalent
+import { Application } from "@hotwired/stimulus"
+const application = Application.start()
 
+// Add the following two lines:
 import HwComboboxController from "@josefarias/hotwire_combobox"
 application.register("hw-combobox", HwComboboxController)
+
+export { application }
 ```
 
 > [!WARNING]
@@ -85,7 +80,7 @@ application.register("hw-combobox", HwComboboxController)
 
 ### Configuring CSS
 
-This library comes with optional default styles. Follow the instructions below to include them in your app.
+This library comes with customizable default styles. Follow the instructions below to include them in your app.
 
 Read the [docs section](#Docs) for instructions on styling the combobox yourself.
 
@@ -121,7 +116,7 @@ These are the exceptions:
 1. Users cannot manipulate the combobox while it's closed. As long as the combobox is focused, the listbox is shown.
 2. The escape key closes the listbox and blurs the combobox. It does not clear the combobox.
 3. The listbox has wrap-around selection. That is, pressing `Up Arrow` when the user is on the first option will select the last option. And pressing `Down Arrow` when on the last option will select the first option. In paginated comboboxes, the first and last options refer to the currently available options. More options may be loaded after navigating to the last currently available option.
-4. It is possible to have an unlabled combobox, as that responsibility is delegated to the implementing user.
+4. It is possible to have an unlabeled combobox, as that responsibility is delegated to the implementing user.
 5. There are currently [no APG guidelines](https://github.com/w3c/aria-practices/issues/1512) for a multiselect combobox. We've introduced some mechanisms to make the experience accessible, like announcing multi-selections via a live region. But we'd welcome feedback on how to make it better until official guidelines are available.
 
 It should be noted none of the maintainers use assistive technologies in their daily lives. If you do, and you feel these exceptions are detrimental to your ability to use the component, or if you find an undocumented exception, please [open a GitHub issue](https://github.com/josefarias/hotwire_combobox/issues). We'll get it sorted.

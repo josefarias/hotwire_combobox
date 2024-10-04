@@ -1,7 +1,7 @@
 import * as url from "url"
 import alias from "@rollup/plugin-alias"
 import resolve from "@rollup/plugin-node-resolve"
-import config from "./package.json" assert { type: "json" }
+import config from "./package.json" with { type: "json" }
 
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url))
 const banner = `/*!\nHotwireCombobox ${config.version}\n*/`
@@ -10,15 +10,6 @@ export default [
   {
     input: "app/assets/javascripts/controllers/hw_combobox_controller.js",
     output: [
-      {
-        name: "HotwireCombobox",
-        file: "app/assets/javascripts/hotwire_combobox.umd.js",
-        format: "umd",
-        globals: {
-          "@hotwired/stimulus": "Stimulus"
-        },
-        banner
-      },
       {
         name: "HotwireCombobox",
         file: "app/assets/javascripts/hotwire_combobox.esm.js",

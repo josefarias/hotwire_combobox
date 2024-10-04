@@ -1,2 +1,2 @@
 //= link_directory ../stylesheets .css
-//= link_tree ../javascripts .js
+//= link hotwire_combobox.esm.js
