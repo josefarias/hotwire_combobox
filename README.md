@@ -28,19 +28,32 @@ Before continuing, you should know whether your app is using importmaps or JS bu
 
 #### Importmaps
 
-Register the library's stimulus controller in `app/javascript/controllers/application.js` as follows:
+Most apps using importmaps won't need any configuration. If things aren't working for you, read on.
+
+In `app/javascript/controllers/index.js` you should have one of the following:
+
+Either,
 
 ```js
-// You should already have something like this:
-import { Application } from "@hotwired/stimulus"
-const application = Application.start()
+import { application } from "controllers/application"
+import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
+eagerLoadControllersFrom("controllers", application)
+```
 
-// Add the following two lines:
-import HwComboboxController from "@josefarias/hotwire_combobox"
+Or,
+
+```js
+import { application } from "controllers/application"
+import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
+lazyLoadControllersFrom("controllers", application)
+```
+
+Or,
+
+```js
+import { application } from "controllers/application"
+import HwComboboxController from "controllers/hw_combobox_controller"
 application.register("hw-combobox", HwComboboxController)
-
-// Again, you should already have something like this:
-export { application }
 ```
 
 #### JS bundling (esbuild, rollup, etc)
@@ -55,7 +68,20 @@ yarn add @josefarias/hotwire_combobox
 npm install @josefarias/hotwire_combobox
 ```
 
-Then, follow the same instructions as in the [Importmaps](#importmaps) section above.
+Then, register the library's stimulus controller in `app/javascript/controllers/application.js` as follows:
+
+```js
+// You'll already have something like this:
+import { Application } from "@hotwired/stimulus"
+const application = Application.start()
+
+// Add the following two lines:
+import HwComboboxController from "@josefarias/hotwire_combobox"
+application.register("hw-combobox", HwComboboxController)
+
+// Again, you'll already have something like this:
+export { application }
+```
 
 > [!WARNING]
 > Keep in mind you need to update both the npm package and the gem every time there's a new version of HotwireCombobox. You should always run the same version number on both sides.
