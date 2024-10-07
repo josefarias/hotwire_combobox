@@ -704,6 +704,14 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     click_away
   end
 
+  test "enum combobox with form" do
+    visit enum_path
+
+    open_combobox "#movie_rating"
+    click_on_option "R"
+    click_on "Update Movie"
+  end
+
   test "async autocomplete selections don't trample over each other" do
     visit async_path
 
