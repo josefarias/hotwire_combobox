@@ -26,20 +26,13 @@ const concerns = [
 ]
 
 export default class HwComboboxController extends Concerns(...concerns) {
-  static classes = [
-    "invalid",
-    "selected"
-  ]
-
+  static classes = [ "invalid", "selected" ]
   static targets = [
     "announcer",
     "combobox",
     "chipDismisser",
     "closer",
-    "dialog",
-    "dialogCombobox",
-    "dialogFocusTrap",
-    "dialogListbox",
+    "dialog", "dialogCombobox", "dialogFocusTrap", "dialogListbox",
     "endOfOptionsStream",
     "handle",
     "hiddenField",
@@ -101,8 +94,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
     const callbackId = element.dataset.callbackId
 
     if (this._callbackAttemptsExceeded(callbackId)) {
-      this._dequeueCallback(callbackId)
-      return
+      return this._dequeueCallback(callbackId)
     } else {
       this._recordCallbackAttempt(callbackId)
     }

@@ -9,7 +9,7 @@ class HotwireCombobox::Listbox::Group
   end
 
   def render_in(view)
-    view.tag.ul **group_attrs do
+    view.tag.ul(**group_attrs) do
       view.concat view.tag.li(name, **label_attrs)
 
       options.map do |option|
@@ -26,22 +26,10 @@ class HotwireCombobox::Listbox::Group
     end
 
     def group_attrs
-      {
-        class: "hw-combobox__group",
-        role: :group,
-        aria: group_aria
-      }
-    end
-
-    def group_aria
-      { labelledby: id }
+      { class: "hw-combobox__group", role: :group, aria: { labelledby: id } }
     end
 
     def label_attrs
-      {
-        id: id,
-        class: "hw-combobox__group__label",
-        role: :presentation
-      }
+      { id: id, class: "hw-combobox__group__label", role: :presentation }
     end
 end

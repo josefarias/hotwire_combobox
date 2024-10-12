@@ -1,9 +1,0 @@
-<%= tag.ul **component.listbox_attrs do |ul| %>
-  <% component.options.each do |option| %>
-    <%= render option %>
-  <% end %>
-
-  <% if component.paginated? %>
-    <%= render "hotwire_combobox/pagination", **component.pagination_attrs %>
-  <% end %>
-<% end %>

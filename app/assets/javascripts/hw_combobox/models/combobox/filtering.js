@@ -50,12 +50,7 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _filterSync() {
-    this._allFilterableOptionElements.forEach(
-      applyFilter(
-        this._fullQuery,
-        { matching: this.filterableAttributeValue }
-      )
-    )
+    this._allFilterableOptionElements.forEach(applyFilter(this._fullQuery, { matching: this.filterableAttributeValue }))
   }
 
   _clearQuery() {

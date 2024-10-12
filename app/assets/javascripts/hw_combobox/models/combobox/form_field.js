@@ -53,8 +53,7 @@ Combobox.FormField = Base => class extends Base {
 
   get _hasEmptyFieldValue() {
     if (this._isMultiselect) {
-      return this.hiddenFieldTarget.dataset.valueForMultiselect == "" ||
-        this.hiddenFieldTarget.dataset.valueForMultiselect == "undefined"
+      return this.hiddenFieldTarget.dataset.valueForMultiselect == "" || this.hiddenFieldTarget.dataset.valueForMultiselect == "undefined"
     } else {
       return this.hiddenFieldTarget.value === ""
     }
