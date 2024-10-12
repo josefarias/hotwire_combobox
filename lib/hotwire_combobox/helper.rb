@@ -20,28 +20,11 @@ module HotwireCombobox
       render component, &block
     end
 
-    def hw_combobox_options(
-          options,
-          render_in: {},
-          include_blank: nil,
-          display: :to_combobox_display,
-          **custom_methods)
-      HotwireCombobox::Listbox::Item.collection_for \
-        self,
-        options,
-        render_in: render_in,
-        include_blank: include_blank,
-        **custom_methods.merge(display: display)
+    def hw_combobox_options(options, render_in: {}, include_blank: nil, display: :to_combobox_display, **custom_methods)
+      HotwireCombobox::Listbox::Item.collection_for self, options, render_in: render_in, include_blank: include_blank, **custom_methods.merge(display: display)
     end
 
-    def hw_paginated_combobox_options(
-          options,
-          for_id: params[:for_id],
-          src: hw_fullpath_for_pagination,
-          next_page: nil,
-          render_in: {},
-          include_blank: {},
-          **custom_methods)
+    def hw_paginated_combobox_options(options, for_id: params[:for_id], src: hw_fullpath_for_pagination, next_page: nil, render_in: {}, include_blank: {}, **custom_methods)
       include_blank = params[:page].to_i > 0 ? nil : include_blank
       options = hw_combobox_options options, render_in: render_in, include_blank: include_blank, **custom_methods
       this_page = render "hotwire_combobox/paginated_options", for_id: for_id, options: options
@@ -49,55 +32,31 @@ module HotwireCombobox
 
       safe_join [ this_page, next_page ]
     end
+    # setup up backward compatibility with old `#hw_paginated_combobox_options`
     alias_method :hw_async_combobox_options, :hw_paginated_combobox_options
 
     def hw_within_combobox_selection_chip(for_id: params[:for_id], &block)
       render layout: "hotwire_combobox/layouts/selection_chip", locals: { for_id: for_id }, &block
     end
 
-    def hw_combobox_selection_chip(
-          display:,
-          value:,
-          for_id: params[:for_id],
-          remover_attrs: hw_combobox_chip_remover_attrs(display: display, value: value))
-      render "hotwire_combobox/selection_chip",
-        display: display,
-        value: value,
-        for_id: for_id,
-        remover_attrs: remover_attrs
+    def hw_combobox_selection_chip(display:, value:, for_id: params[:for_id], remover_attrs: nil)
+      remover_attrs ||= hw_combobox_chip_remover_attrs(display: display, value: value)
+      render "hotwire_combobox/selection_chip", display: display, value: value, for_id: for_id, remover_attrs: remover_attrs
     end
 
-    def hw_combobox_selection_chips_for(
-          objects,
-          display: :to_combobox_display,
-          value: :id,
-          for_id: params[:for_id])
+    def hw_combobox_selection_chips_for(objects, display: :to_combobox_display, value: :id, for_id: params[:for_id])
       objects.map do |object|
-        hw_combobox_selection_chip \
-          display: hw_call_method(object, display),
-          value: hw_call_method(object, value),
-          for_id: for_id
+        hw_combobox_selection_chip display: hw_call_method(object, display), value: hw_call_method(object, value), for_id: for_id
       end.then { |chips| safe_join chips }
     end
 
     def hw_dismissing_combobox_selection_chip(display:, value:, for_id: params[:for_id])
-      hw_combobox_selection_chip \
-        display: display,
-        value: value,
-        for_id: for_id,
-        remover_attrs: hw_combobox_dismissing_chip_remover_attrs(display, value)
+      hw_combobox_selection_chip display: display, value: value, for_id: for_id, remover_attrs: hw_combobox_dismissing_chip_remover_attrs(display, value)
     end
 
-    def hw_dismissing_combobox_selection_chips_for(
-          objects,
-          display: :to_combobox_display,
-          value: :id,
-          for_id: params[:for_id])
+    def hw_dismissing_combobox_selection_chips_for(objects, display: :to_combobox_display, value: :id, for_id: params[:for_id])
       objects.map do |object|
-        hw_dismissing_combobox_selection_chip \
-          display: hw_call_method(object, display),
-          value: hw_call_method(object, value),
-          for_id: for_id
+        hw_dismissing_combobox_selection_chip display: hw_call_method(object, display), value: hw_call_method(object, value), for_id: for_id
       end.then { |chips| safe_join chips }
     end
 
@@ -174,13 +133,9 @@ module HotwireCombobox
       end
 
       def hw_combobox_next_page_uri(uri, next_page, for_id)
-        return unless next_page
-
-        hw_uri_with_params uri,
-          page: next_page,
-          q: params[:q],
-          for_id: for_id,
-          format: :turbo_stream
+        if next_page
+          hw_uri_with_params uri, page: next_page, q: params[:q], for_id: for_id, format: :turbo_stream
+        end
       end
 
       def hw_extract_options_and_src(options_or_src, render_in, include_blank)
