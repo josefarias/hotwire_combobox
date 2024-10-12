@@ -1,11 +1,13 @@
+<% hidden_field_attrs = component.hidden_field_attrs %>
+
 <%= tag.fieldset **component.fieldset_attrs do %>
   <%= tag.label component.label, **component.label_attrs %>
 
-  <%= render "hotwire_combobox/combobox/hidden_field", component: component %>
+  <%= hidden_field_tag hidden_field_attrs.delete(:name), hidden_field_attrs.delete(:value), **hidden_field_attrs %>
 
   <%= tag.div **component.main_wrapper_attrs do %>
-    <%# Essential styles defined here, removing these would break the combobox %>
     <%= tag.style nonce: content_security_policy_nonce do %>
+      <%# Essential styles defined here, removing these would break the combobox %>
       .hw-combobox__announcer {
         position: absolute;
         width: 1px;
@@ -21,9 +23,29 @@
         height: 5px;
       }
     <% end %>
+
     <%= tag.div **component.announcer_attrs %>
-    <%= render "hotwire_combobox/combobox/input", component: component %>
-    <%= render "hotwire_combobox/combobox/paginated_listbox", component: component %>
-    <%= render "hotwire_combobox/combobox/dialog", component: component %>
+    <%= tag.input **component.input_attrs %>
+    <%= tag.span **component.handle_attrs %>
+
+    <%= tag.ul **component.listbox_attrs do |ul| %>
+      <% component.options.each do |option| %>
+        <%= render option %>
+      <% end %>
+
+      <% if component.paginated? %>
+        <%= render "hotwire_combobox/pagination", **component.pagination_attrs %>
+      <% end %>
+    <% end %>
+
+    <%= tag.div **component.dialog_focus_trap_attrs %>
+
+    <%= tag.div **component.dialog_wrapper_attrs do %>
+      <%= tag.dialog **component.dialog_attrs do %>
+        <%= tag.label component.dialog_label, **component.dialog_label_attrs %>
+        <%= tag.input **component.dialog_input_attrs %>
+        <%= tag.ul **component.dialog_listbox_attrs %>
+      <% end %>
+    <% end %>
   <% end %>
 <% end %>
