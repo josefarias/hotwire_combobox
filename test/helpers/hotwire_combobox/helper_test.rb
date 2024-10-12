@@ -3,61 +3,43 @@ require "ostruct"
 
 class HotwireCombobox::HelperTest < ApplicationViewTestCase
   test "passing an input type" do
-    tag = combobox_tag :foo, type: :search
-
-    assert_attrs tag, type: "search"
+    assert_attrs combobox_tag(:foo, type: :search), type: "search"
   end
 
   test "passing an id" do
-    tag = combobox_tag :foo, id: :foobar
-
-    assert_attrs tag, id: "foobar"
+    assert_attrs combobox_tag(:foo, id: :foobar), id: "foobar"
   end
 
   test "passing a name" do
-    tag = combobox_tag :foo
-
-    assert_attrs tag, name: "foo"
+    assert_attrs combobox_tag(:foo), name: "foo"
   end
 
   test "passing a value" do
-    tag = combobox_tag :foo, value: :bar
-
-    assert_attrs tag, value: "bar"
+    assert_attrs combobox_tag(:foo, value: :bar), value: "bar"
   end
 
   test "passing a form builder object" do
     form = ActionView::Helpers::FormBuilder.new :foo, nil, self, {}
-    tag = combobox_tag :bar, form: form
-
-    assert_attrs tag, type: "hidden", name: "foo[bar]" # name is not "bar"
-    assert_attrs tag, id: "foo_bar", role: "combobox" # id is determined by the form builder
+    assert_attrs combobox_tag(:bar, form: form), type: "hidden", name: "foo[bar]" # name is not "bar"
+    assert_attrs combobox_tag(:bar, form: form), id: "foo_bar", role: "combobox" # id is determined by the form builder
   end
 
   test "passing a value overrides form builder object" do
     form = ActionView::Helpers::FormBuilder.new :foo, OpenStruct.new(bar: "foobar"), self, {}
-    tag = combobox_tag :bar, value: :baz, form: form
-
-    assert_attrs tag, value: "baz" # not "foobar"
+    assert_attrs combobox_tag(:bar, value: :baz, form: form), value: "baz" # not "foobar"
   end
 
   test "passing an id overrides form builder" do
     form = ActionView::Helpers::FormBuilder.new :foo, nil, self, {}
-    tag = combobox_tag :bar, form: form, id: :foobar
-
-    assert_attrs tag, id: "foobar" # not "foo_bar"
+    assert_attrs combobox_tag(:bar, form: form, id: :foobar), id: "foobar" # not "foo_bar"
   end
 
   test "passing open" do
-    tag = combobox_tag :foo, open: true
-
-    assert_attrs tag, tag_name: :fieldset, "data-hw-combobox-expanded-value": "true"
+    assert_attrs combobox_tag(:foo, open: true), tag_name: :fieldset, "data-hw-combobox-expanded-value": "true"
   end
 
   test "a11y attributes" do
-    tag = combobox_tag :foo, id: :foobar
-
-    assert_attrs tag, role: "combobox",
+    assert_attrs combobox_tag(:foo, id: :foobar), role: "combobox",
       "aria-controls": "foobar-hw-listbox", "aria-owns": "foobar-hw-listbox",
       "aria-haspopup": "listbox", "aria-autocomplete": "both"
   end
@@ -89,22 +71,18 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     { alias: :async_combobox_options, method: :hw_async_combobox_options }
   ].each do |pair|
     test "#{pair[:alias]} is an alias for #{pair[:method]}" do
-      assert_equal \
-        HotwireCombobox::Helper.instance_method(pair[:method]),
-        HotwireCombobox::Helper.instance_method(pair[:alias])
+      assert_equal HotwireCombobox::Helper.instance_method(pair[:method]), HotwireCombobox::Helper.instance_method(pair[:alias])
     end
 
     test "#{pair[:alias]} is not defined when bypassing convenience methods" do
       swap_config bypass_convenience_methods: true do
-        assert_not HotwireCombobox::Helper.instance_methods.include?(pair[:alias]),
-          "#{pair[:alias]} is defined"
+        assert_not HotwireCombobox::Helper.instance_methods.include?(pair[:alias]), "#{pair[:alias]} is defined"
       end
     end
   end
 
   test "hw_combobox_style_tag" do
-    assert_attrs hw_combobox_style_tag, tag_name: :link,
-      rel: "stylesheet", href: "/stylesheets/hotwire_combobox.css"
+    assert_attrs hw_combobox_style_tag, tag_name: :link, rel: "stylesheet", href: "/stylesheets/hotwire_combobox.css"
   end
 
   test "hw_listbox_id returns the same as component#listbox_id" do
