@@ -26,11 +26,7 @@ class HotwireCombobox::Listbox::Group
     end
 
     def group_attrs
-      { class: "hw-combobox__group", role: :group, aria: group_aria }
-    end
-
-    def group_aria
-      { labelledby: id }
+      { class: "hw-combobox__group", role: :group, aria: { labelledby: id } }
     end
 
     def label_attrs
