@@ -39,10 +39,7 @@ Combobox.Dialog = Base => class extends Base {
 
   _resizeDialog = () => {
     if (window.visualViewport) {
-      this.dialogTarget.style.setProperty(
-        "--hw-visual-viewport-height",
-        `${window.visualViewport.height}px`
-      )
+      this.dialogTarget.style.setProperty("--hw-visual-viewport-height", `${window.visualViewport.height}px`)
     }
   }
 

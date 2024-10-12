@@ -67,13 +67,16 @@ Combobox.Multiselect = Base => class extends Base {
 
     this._beforeClearingMultiselectQuery(async (display, value) => {
       this._fullQuery = ""
+
       this._filter("hw:multiselectSync")
       this._requestChips(value)
       this._addToFieldValue(value)
+
       if (shouldReopen) {
         await nextRepaint()
         this.openByFocusing()
       }
+
       this._announceToScreenReader(display, "multi-selected. Press Shift + Tab, then Enter to remove.")
     })
   }
