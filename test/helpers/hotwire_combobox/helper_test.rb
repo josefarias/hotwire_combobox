@@ -1,4 +1,5 @@
 require "test_helper"
+require "ostruct"
 
 class HotwireCombobox::HelperTest < ApplicationViewTestCase
   test "passing an input type" do

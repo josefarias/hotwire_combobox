@@ -6,11 +6,8 @@ class HotwireCombobox::Listbox::Item
   end
 
   def initialize(view, options, render_in:, include_blank:, **custom_methods)
-    @view = view
-    @options = options
-    @render_in = render_in
-    @include_blank = include_blank
-    @custom_methods = custom_methods
+    @view, @options, @render_in, @include_blank, @custom_methods =
+      view, options, render_in, include_blank, custom_methods
   end
 
   def collection
@@ -37,8 +34,7 @@ class HotwireCombobox::Listbox::Item
 
     def create_listbox_group(options)
       options.map do |group_name, group_options|
-        HotwireCombobox::Listbox::Group.new group_name,
-          options: create_listbox_options(group_options)
+        HotwireCombobox::Listbox::Group.new group_name, options: create_listbox_options(group_options)
       end
     end
 
@@ -47,7 +43,7 @@ class HotwireCombobox::Listbox::Item
         options
       else
         options.map do |option|
-          HotwireCombobox::Listbox::Option.new **option_attrs(option)
+          HotwireCombobox::Listbox::Option.new(**option_attrs(option))
         end
       end
     end
@@ -86,9 +82,7 @@ class HotwireCombobox::Listbox::Item
     end
 
     def render_content(render_opts: render_in, object:, attrs:)
-      view.render **render_opts.reverse_merge(
-        object: object,
-        locals: { combobox_display: attrs[:display], combobox_value: attrs[:value] })
+      view.render(**render_opts.reverse_merge(object: object, locals: { combobox_display: attrs[:display], combobox_value: attrs[:value] }))
     end
 
     def blank_option
@@ -100,7 +94,6 @@ class HotwireCombobox::Listbox::Item
       case include_blank
       when Hash
         text = include_blank.delete(:text)
-
         [ text, render_content(render_opts: include_blank, object: text, attrs: { display: text, value: "" }) ]
       when String
         [ include_blank, include_blank ]

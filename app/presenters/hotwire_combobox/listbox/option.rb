@@ -23,14 +23,7 @@ class HotwireCombobox::Listbox::Option
     attr_reader :option
 
     def options
-      {
-        id: id,
-        role: :option,
-        tabindex: "-1",
-        class: [ "hw-combobox__option", { "hw-combobox__option--blank": blank? } ],
-        data: data,
-        aria: aria
-      }
+      { id: id, role: :option, tabindex: "-1", class: [ "hw-combobox__option", { "hw-combobox__option--blank": blank? } ], data: data, aria: aria }
     end
 
     def id
@@ -38,12 +31,7 @@ class HotwireCombobox::Listbox::Option
     end
 
     def data
-      {
-        action: "click->hw-combobox#selectOnClick",
-        filterable_as: filterable_as,
-        autocompletable_as: autocompletable_as,
-        value: value
-      }
+      { action: "click->hw-combobox#selectOnClick", filterable_as: filterable_as, autocompletable_as: autocompletable_as, value: value }
     end
 
     def aria

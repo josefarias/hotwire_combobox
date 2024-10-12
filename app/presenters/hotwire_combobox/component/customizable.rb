@@ -1,32 +1,20 @@
 module HotwireCombobox::Component::Customizable
   CUSTOMIZABLE_ELEMENTS = %i[
+    dialog dialog_input dialog_label dialog_listbox dialog_wrapper
     fieldset
-    label
-    hidden_field
-    main_wrapper
-    input
     handle
+    hidden_field
+    input
+    label
     listbox
-    dialog
-    dialog_wrapper
-    dialog_label
-    dialog_input
-    dialog_listbox
+    main_wrapper
   ].freeze
 
-  PROTECTED_ATTRS = %i[
-    id
-    name
-    value
-    open
-    role
-    hidden
-    for
-  ].freeze
+  PROTECTED_ATTRS = %i[ for hidden id name open role value ].freeze
 
   CUSTOMIZABLE_ELEMENTS.each do |element|
     define_method "customize_#{element}" do |**attrs|
-      customize element, **attrs
+      store_customizations element, **attrs
     end
   end
 
@@ -35,14 +23,14 @@ module HotwireCombobox::Component::Customizable
       @custom_attrs ||= Hash.new { |h, k| h[k] = {} }
     end
 
-    def customize(element, **attrs)
+    def store_customizations(element, **attrs)
       element = element.to_sym.presence_in(CUSTOMIZABLE_ELEMENTS)
       sanitized_attrs = attrs.deep_symbolize_keys.except(*PROTECTED_ATTRS)
 
       custom_attrs.store element, sanitized_attrs
     end
 
-    def apply_customizations_to(element, base: {})
+    def customize(element, base: {})
       custom = custom_attrs[element]
 
       coalesce = ->(key, value) do
