@@ -1,14 +1,14 @@
 require_relative "lib/hotwire_combobox/version"
 
 Gem::Specification.new do |spec|
-  spec.name        = "hotwire_combobox"
-  spec.version     = HotwireCombobox::VERSION
-  spec.authors     = [ "Jose Farias" ]
-  spec.email       = [ "jose@farias.mx" ]
-  spec.homepage    = "https://hotwirecombobox.com/"
-  spec.summary     = "Accessible Autocomplete for Rails apps"
+  spec.name = "hotwire_combobox"
+  spec.version = HotwireCombobox::VERSION
+  spec.authors = [ "Jose Farias" ]
+  spec.email = [ "jose@farias.mx" ]
+  spec.homepage = "https://hotwirecombobox.com/"
+  spec.summary = "Accessible Autocomplete for Rails apps"
   spec.description = "An accessible autocomplete for Ruby on Rails apps using Hotwire."
-  spec.license     = "MIT"
+  spec.license = "MIT"
 
   spec.required_ruby_version = ">= 2.7.0"
 
