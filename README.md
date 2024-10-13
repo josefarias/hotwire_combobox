@@ -48,7 +48,18 @@ import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
 lazyLoadControllersFrom("controllers", application)
 ```
 
-Alternatively, modify `app/javascript/controllers/application.js` as suggested in the [JS bundling](#js-bundling-esbuild-rollup-etc) section below.
+Alternatively, modify `app/javascript/controllers/application.js` as follows:
+
+```js
+import { Application } from "@hotwired/stimulus"
+const application = Application.start()
+
+// Add the following two lines:
+import HwComboboxController from "controllers/hw_combobox_controller"
+application.register("hw-combobox", HwComboboxController)
+
+export { application }
+```
 
 #### JS bundling (esbuild, rollup, etc)
 
