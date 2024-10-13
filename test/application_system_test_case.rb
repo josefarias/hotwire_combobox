@@ -1,4 +1,7 @@
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+  include ComboboxActionsHelper
+  include ComboboxAssertionsHelper
+
   driven_by :selenium, using: :headless_chrome
 
   def states(...)
