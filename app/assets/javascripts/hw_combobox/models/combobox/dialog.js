@@ -11,6 +11,10 @@ Combobox.Dialog = Base => class extends Base {
     if (window.visualViewport) {
       window.visualViewport.addEventListener("resize", this._resizeDialog)
     }
+
+    if (this._isiOS) {
+      this.dialogTarget.style.position = "absolute"
+    }
   }
 
   _disconnectDialog() {

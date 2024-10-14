@@ -248,6 +248,20 @@ Combobox.Callbacks = Base => class extends Base {
   }
 };
 
+Combobox.Devices = Base => class extends Base {
+  get _isiOS() {
+    return this._isMobileWebkit && !this._isAndroid
+  }
+
+  get _isAndroid() {
+    return window.navigator.userAgent.includes("Android")
+  }
+
+  get _isMobileWebkit() {
+    return window.navigator.userAgent.includes("AppleWebKit") && window.navigator.userAgent.includes("Mobile")
+  }
+};
+
 Combobox.Dialog = Base => class extends Base {
   rerouteListboxStreamToDialog({ detail: { newStream } }) {
     if (newStream.target == this.listboxTarget.id && this._dialogIsOpen) {
@@ -258,6 +272,10 @@ Combobox.Dialog = Base => class extends Base {
   _connectDialog() {
     if (window.visualViewport) {
       window.visualViewport.addEventListener("resize", this._resizeDialog);
+    }
+
+    if (this._isiOS) {
+      this.dialogTarget.style.position = "absolute";
     }
   }
 
@@ -1702,6 +1720,7 @@ const concerns = [
   Combobox.AsyncLoading,
   Combobox.Autocomplete,
   Combobox.Callbacks,
+  Combobox.Devices,
   Combobox.Dialog,
   Combobox.Events,
   Combobox.Filtering,

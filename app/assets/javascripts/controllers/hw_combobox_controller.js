@@ -12,6 +12,7 @@ const concerns = [
   Combobox.AsyncLoading,
   Combobox.Autocomplete,
   Combobox.Callbacks,
+  Combobox.Devices,
   Combobox.Dialog,
   Combobox.Events,
   Combobox.Filtering,
