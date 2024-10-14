@@ -1,2 +1,8 @@
 #!/usr/bin/env bash
-bundle exec rake app:test:system
+yarn build
+
+if [ $# -eq 0 ]; then
+  bundle exec rake app:test:system
+else
+  bundle exec rails test "$@"
+fi

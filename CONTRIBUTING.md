@@ -14,6 +14,8 @@ $ bin/test
 $ bin/test_system
 ```
 
+You can optionally pass the path to a specific test.
+
 ## Running the dummy app
 
 ```bash
