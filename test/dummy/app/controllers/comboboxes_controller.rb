@@ -4,6 +4,9 @@ class ComboboxesController < ApplicationController
   def plain
   end
 
+  def padded
+  end
+
   def open
   end
 

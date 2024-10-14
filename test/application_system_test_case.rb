@@ -1,6 +1,6 @@
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include ComboboxActionsHelper
-  include ComboboxAssertionsHelper
+  include ComboboxAssertionsHelper, ViewportAssertionsHelper
 
   driven_by :selenium, using: :headless_chrome
 

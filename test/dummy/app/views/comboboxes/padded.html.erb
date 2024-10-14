@@ -1,0 +1,12 @@
+<%= tag.style nonce: content_security_policy_nonce do %>
+  .wrapper {
+    border: 2px dashed green;
+    padding-top: 2000px;
+  }
+<% end %>
+
+<h1 id="to-be-hidden-by-dialog">To be hidden by dialog</h1>
+
+<div class="wrapper">
+  <%= combobox_tag "state", @state_options, id: "state-field" %>
+</div>
