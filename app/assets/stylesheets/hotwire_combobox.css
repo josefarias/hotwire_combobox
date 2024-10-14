@@ -22,7 +22,7 @@
   --hw-dialog-label-size: 1.05rem;
   --hw-dialog-listbox-margin: 1.25rem 0 0;
   --hw-dialog-padding: 1rem 1rem 0;
-  --hw-dialog-top-offset: 4rem;
+  --hw-dialog-top-offset: 18vh;
 
   --hw-font-size: 1rem;
 
@@ -201,7 +201,7 @@
   overflow: hidden;
   padding: var(--hw-dialog-padding);
   pointer-events: auto;
-  position: absolute;
+  position: fixed;
   top: var(--hw-dialog-top-offset);
   width: auto;
 

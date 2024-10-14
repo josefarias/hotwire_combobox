@@ -286,12 +286,7 @@ Combobox.Dialog = Base => class extends Base {
   }
 
   _resizeDialog = () => {
-    if (window.visualViewport) {
-      this.dialogTarget.style.setProperty(
-        "--hw-visual-viewport-height",
-        `${window.visualViewport.height}px`
-      );
-    }
+    this.dialogTarget.style.setProperty("--hw-visual-viewport-height", `${window.visualViewport.height}px`);
   }
 
   // After closing a dialog, focus returns to the last focused element.
@@ -672,12 +667,7 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _filterSync() {
-    this._allFilterableOptionElements.forEach(
-      applyFilter(
-        this._fullQuery,
-        { matching: this.filterableAttributeValue }
-      )
-    );
+    this._allFilterableOptionElements.forEach(applyFilter(this._fullQuery, { matching: this.filterableAttributeValue }));
   }
 
   _clearQuery() {
@@ -759,8 +749,7 @@ Combobox.FormField = Base => class extends Base {
 
   get _hasEmptyFieldValue() {
     if (this._isMultiselect) {
-      return this.hiddenFieldTarget.dataset.valueForMultiselect == "" ||
-        this.hiddenFieldTarget.dataset.valueForMultiselect == "undefined"
+      return this.hiddenFieldTarget.dataset.valueForMultiselect == "" || this.hiddenFieldTarget.dataset.valueForMultiselect == "undefined"
     } else {
       return this.hiddenFieldTarget.value === ""
     }
@@ -844,13 +833,16 @@ Combobox.Multiselect = Base => class extends Base {
 
     this._beforeClearingMultiselectQuery(async (display, value) => {
       this._fullQuery = "";
+
       this._filter("hw:multiselectSync");
       this._requestChips(value);
       this._addToFieldValue(value);
+
       if (shouldReopen) {
         await nextRepaint();
         this.openByFocusing();
       }
+
       this._announceToScreenReader(display, "multi-selected. Press Shift + Tab, then Enter to remove.");
     });
   }
@@ -1624,6 +1616,7 @@ Combobox.Toggle = Base => class extends Base {
     this._preventFocusingComboboxAfterClosingDialog();
     this._preventBodyScroll();
     this.dialogTarget.showModal();
+    this._resizeDialog();
   }
 
   _openInline() {
@@ -1723,20 +1716,13 @@ const concerns = [
 ];
 
 class HwComboboxController extends Concerns(...concerns) {
-  static classes = [
-    "invalid",
-    "selected"
-  ]
-
+  static classes = [ "invalid", "selected" ]
   static targets = [
     "announcer",
     "combobox",
     "chipDismisser",
     "closer",
-    "dialog",
-    "dialogCombobox",
-    "dialogFocusTrap",
-    "dialogListbox",
+    "dialog", "dialogCombobox", "dialogFocusTrap", "dialogListbox",
     "endOfOptionsStream",
     "handle",
     "hiddenField",
@@ -1798,8 +1784,7 @@ class HwComboboxController extends Concerns(...concerns) {
     const callbackId = element.dataset.callbackId;
 
     if (this._callbackAttemptsExceeded(callbackId)) {
-      this._dequeueCallback(callbackId);
-      return
+      return this._dequeueCallback(callbackId)
     } else {
       this._recordCallbackAttempt(callbackId);
     }

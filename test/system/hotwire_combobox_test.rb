@@ -164,4 +164,14 @@ class HotwireComboboxTest < ApplicationSystemTestCase
 
     assert_combobox_display_and_value "#form_state_id", "Alabama", states(:alabama).id
   end
+
+  test "selecting options within a modal dialog" do
+    visit dialog_path
+
+    click_on "Show modal"
+
+    open_combobox "#movie_rating"
+    click_on_option "R"
+    assert_combobox_display_and_value "#movie_rating", "R", Movie.ratings[:R]
+  end
 end
