@@ -1,6 +1,7 @@
 :root {
   --hw-active-bg-color: #F3F4F6;
   --hw-border-color: #D1D5DB;
+  --hw-component-bg-color: #FFFFFF;
   --hw-group-color: #57595C;
   --hw-group-bg-color: #FFFFFF;
   --hw-invalid-color: #EF4444;
@@ -63,6 +64,7 @@
 }
 
 .hw-combobox__main__wrapper {
+  background-color: var(--hw-component-bg-color);
   border: var(--hw-border-width--slim) solid var(--hw-border-color);
   border-radius: var(--hw-border-radius);
   padding: var(--hw-padding--slim) calc(var(--hw-handle-width) + var(--hw-padding--slimmer)) var(--hw-padding--slim) var(--hw-padding--thick);
@@ -291,4 +293,8 @@
 
 .hw_combobox__pagination__wrapper {
   background-color: var(--hw-option-bg-color);
+
+  &:only-child {
+    background-color: transparent;
+  }
 }
