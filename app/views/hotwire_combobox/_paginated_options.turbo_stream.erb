@@ -1,7 +1,13 @@
 <%# locals: (for_id:, options:) -%>
 
 <%= turbo_stream.public_send(hw_combobox_page_stream_action, hw_listbox_id(for_id)) do %>
-  <% options.each do |option| %>
-    <%= render option %>
+  <% if options.any? %>
+    <% options.each do |option| %>
+      <%= render option %>
+    <% end %>
+  <% else %>
+    <li role="option" tabindex="-1" class="hw-combobox__option hw-combobox__option--no-results">
+      No results found.
+    </li>
   <% end %>
 <% end %>

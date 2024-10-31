@@ -171,6 +171,15 @@
   border-bottom: var(--hw-border-width--slim) solid var(--hw-border-color);
 }
 
+.hw-combobox__option--no-results {
+  color: var(--hw-border-color);
+  cursor: initial;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
 .hw-combobox__option:hover,
 .hw-combobox__option--navigated,
 .hw-combobox__option--selected {
