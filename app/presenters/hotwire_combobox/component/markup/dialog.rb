@@ -5,7 +5,7 @@ module HotwireCombobox::Component::Markup::Dialog
 
   def dialog_attrs
     customize :dialog, base: {
-      class: "hw-combobox__dialog #{platform_classes}", role: :dialog, data: {
+      class: "hw-combobox__dialog", role: :dialog, data: {
       action: "keydown->hw-combobox#navigate", hw_combobox_target: "dialog" } }
   end
 
@@ -34,15 +34,6 @@ module HotwireCombobox::Component::Markup::Dialog
   end
 
   private
-    def platform_classes
-      platform = HotwireCombobox::Platform.new request&.user_agent
-
-      view.token_list \
-        "hw-combobox--ios": platform.ios?,
-        "hw-combobox--android": platform.android?,
-        "hw-combobox--mobile-webkit": platform.mobile_webkit?
-    end
-
     def dialog_input_id
       "#{canonical_id}-hw-dialog-combobox"
     end
