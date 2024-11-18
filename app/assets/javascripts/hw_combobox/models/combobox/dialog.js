@@ -11,10 +11,6 @@ Combobox.Dialog = Base => class extends Base {
     if (window.visualViewport) {
       window.visualViewport.addEventListener("resize", this._resizeDialog)
     }
-
-    if (this._isiOS) {
-      this.dialogTarget.style.position = "absolute"
-    }
   }
 
   _disconnectDialog() {
@@ -42,7 +38,9 @@ Combobox.Dialog = Base => class extends Base {
   }
 
   _resizeDialog = () => {
-    this.dialogTarget.style.setProperty("--hw-visual-viewport-height", `${window.visualViewport.height}px`)
+    if (window.visualViewport) {
+      this.dialogTarget.style.setProperty("--hw-visual-viewport-height", `${window.visualViewport.height}px`)
+    }
   }
 
   // After closing a dialog, focus returns to the last focused element.

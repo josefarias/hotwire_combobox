@@ -249,6 +249,12 @@ Combobox.Callbacks = Base => class extends Base {
 };
 
 Combobox.Devices = Base => class extends Base {
+  _initializeDevice() {
+    this.element.classList.toggle("hw-combobox--ios", this._isiOS);
+    this.element.classList.toggle("hw-combobox--android", this._isAndroid);
+    this.element.classList.toggle("hw-combobox--mobile-webkit", this._isMobileWebkit);
+  }
+
   get _isiOS() {
     return this._isMobileWebkit && !this._isAndroid
   }
@@ -272,10 +278,6 @@ Combobox.Dialog = Base => class extends Base {
   _connectDialog() {
     if (window.visualViewport) {
       window.visualViewport.addEventListener("resize", this._resizeDialog);
-    }
-
-    if (this._isiOS) {
-      this.dialogTarget.style.position = "absolute";
     }
   }
 
@@ -304,7 +306,9 @@ Combobox.Dialog = Base => class extends Base {
   }
 
   _resizeDialog = () => {
-    this.dialogTarget.style.setProperty("--hw-visual-viewport-height", `${window.visualViewport.height}px`);
+    if (window.visualViewport) {
+      this.dialogTarget.style.setProperty("--hw-visual-viewport-height", `${window.visualViewport.height}px`);
+    }
   }
 
   // After closing a dialog, focus returns to the last focused element.
@@ -1763,6 +1767,7 @@ class HwComboboxController extends Concerns(...concerns) {
   }
 
   initialize() {
+    this._initializeDevice();
     this._initializeActors();
     this._initializeFiltering();
     this._initializeCallbacks();

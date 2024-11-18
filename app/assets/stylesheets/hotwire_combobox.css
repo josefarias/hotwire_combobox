@@ -215,6 +215,10 @@
   &::backdrop {
     background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 50%, white 50%);
   }
+
+  .hw-combobox--ios & {
+    position: absolute;
+  }
 }
 
 .hw-combobox__dialog__label {

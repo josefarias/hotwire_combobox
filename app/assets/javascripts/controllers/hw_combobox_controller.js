@@ -55,6 +55,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
   }
 
   initialize() {
+    this._initializeDevice()
     this._initializeActors()
     this._initializeFiltering()
     this._initializeCallbacks()
