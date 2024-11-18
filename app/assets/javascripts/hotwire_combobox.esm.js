@@ -1618,6 +1618,7 @@ Combobox.Toggle = Base => class extends Base {
     this._preventFocusingComboboxAfterClosingDialog();
     this._preventBodyScroll();
     this.dialogTarget.showModal();
+    this._resizeDialog();
   }
 
   _openInline() {

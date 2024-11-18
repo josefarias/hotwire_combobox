@@ -16,7 +16,7 @@ module HotwireCombobox
 
     def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, **kwargs, &block)
       options, src = hw_extract_options_and_src options_or_src, render_in, include_blank
-      component = HotwireCombobox::Component.new self, name, options: options, async_src: src, **kwargs
+      component = HotwireCombobox::Component.new self, name, options: options, async_src: src, request: request, **kwargs
       render component, &block
     end
 

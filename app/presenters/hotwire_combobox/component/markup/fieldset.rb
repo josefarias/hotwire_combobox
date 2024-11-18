@@ -1,10 +1,19 @@
 module HotwireCombobox::Component::Markup::Fieldset
   def fieldset_attrs
     customize :fieldset, base: {
-      class: [ "hw-combobox", { "hw-combobox--multiple": multiselect? } ], data: fieldset_data }
+      class: [ "hw-combobox", platform_classes, { "hw-combobox--multiple": multiselect? } ], data: fieldset_data }
   end
 
   private
+    def platform_classes
+      platform = HotwireCombobox::Platform.new request&.user_agent
+
+      view.token_list \
+        "hw-combobox--ios": platform.ios?,
+        "hw-combobox--android": platform.android?,
+        "hw-combobox--mobile-webkit": platform.mobile_webkit?
+    end
+
     def fieldset_data
       data.merge \
         async_id: canonical_id,

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get "plain", to: "comboboxes#plain"
+  get "padded", to: "comboboxes#padded"
   get "open", to: "comboboxes#open"
   get "html_options", to: "comboboxes#html_options"
   get "prefilled", to: "comboboxes#prefilled"

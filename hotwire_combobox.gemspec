@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rails", ">= 7.0.7.2"
   spec.add_dependency "stimulus-rails", ">= 1.2"
   spec.add_dependency "turbo-rails", ">= 1.2"
+  spec.add_dependency "platform_agent", ">= 1.0.1"
 
   spec.add_development_dependency "mocha", "~> 2.1"
 end

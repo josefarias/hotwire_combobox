@@ -22,13 +22,20 @@ class DialogTest < ApplicationSystemTestCase
     end
   end
 
-  test "selecting options within a dialog" do
-    visit dialog_path
+  test "no scrolling behind dialog" do
+    # On mobile Safari — Manually test opening combobox, selecting, then re-opening.
 
-    click_on "Show modal"
+    on_small_screen do
+      visit padded_path
 
-    open_combobox "#movie_rating"
-    click_on_option "R"
-    assert_combobox_display_and_value "#movie_rating", "R", Movie.ratings[:R]
+      title_element = find("#to-be-hidden-by-dialog")
+
+      assert_in_viewport title_element
+      page.scroll_to(find("#state-field"))
+      assert_not_in_viewport title_element
+
+      open_combobox "#state-field"
+      assert_not_in_viewport title_element
+    end
   end
 end

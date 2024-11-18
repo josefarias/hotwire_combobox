@@ -26,10 +26,11 @@ class HotwireCombobox::Component
     name_when_new: nil,
     open: false,
     options: [],
+    request: nil,
     value: nil, **rest)
-    @view, @autocomplete, @id, @name, @value, @form, @async_src, @label, @free_text,
+    @view, @autocomplete, @id, @name, @value, @form, @async_src, @label, @free_text, @request,
     @name_when_new, @open, @data, @mobile_at, @multiselect_chip_src, @options, @dialog_label =
-      view, autocomplete, id, name.to_s, value, form, async_src, label, free_text,
+      view, autocomplete, id, name.to_s, value, form, async_src, label, free_text, request,
       name_when_new, open, data, mobile_at, multiselect_chip_src, options, dialog_label
 
     @combobox_attrs = input.reverse_merge(rest).deep_symbolize_keys
@@ -44,7 +45,7 @@ class HotwireCombobox::Component
   end
 
   private
-    attr_reader :view, :autocomplete, :id, :name, :value, :form, :free_text, :open,
+    attr_reader :view, :autocomplete, :id, :name, :value, :form, :free_text, :open, :request,
       :data, :combobox_attrs, :mobile_at, :association_name, :multiselect_chip_src
 
     def canonical_id
