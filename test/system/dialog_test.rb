@@ -23,6 +23,8 @@ class DialogTest < ApplicationSystemTestCase
   end
 
   test "no scrolling behind dialog" do
+    # On mobile Safari — Manually test opening combobox, selecting, then re-opening.
+
     on_small_screen do
       visit padded_path
 

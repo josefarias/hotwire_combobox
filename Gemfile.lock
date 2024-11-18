@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     hotwire_combobox (0.3.2)
+      platform_agent (>= 1.0.1)
       rails (>= 7.0.7.2)
       stimulus-rails (>= 1.2)
       turbo-rails (>= 1.2)
@@ -157,6 +158,9 @@ GEM
     parser (3.3.5.0)
       ast (~> 2.4.1)
       racc
+    platform_agent (1.0.1)
+      activesupport (>= 5.2.0)
+      useragent (~> 0.16.3)
     propshaft (1.1.0)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)

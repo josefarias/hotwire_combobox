@@ -248,26 +248,6 @@ Combobox.Callbacks = Base => class extends Base {
   }
 };
 
-Combobox.Devices = Base => class extends Base {
-  _initializeDevice() {
-    this.element.classList.toggle("hw-combobox--ios", this._isiOS);
-    this.element.classList.toggle("hw-combobox--android", this._isAndroid);
-    this.element.classList.toggle("hw-combobox--mobile-webkit", this._isMobileWebkit);
-  }
-
-  get _isiOS() {
-    return this._isMobileWebkit && !this._isAndroid
-  }
-
-  get _isAndroid() {
-    return window.navigator.userAgent.includes("Android")
-  }
-
-  get _isMobileWebkit() {
-    return window.navigator.userAgent.includes("AppleWebKit") && window.navigator.userAgent.includes("Mobile")
-  }
-};
-
 Combobox.Dialog = Base => class extends Base {
   rerouteListboxStreamToDialog({ detail: { newStream } }) {
     if (newStream.target == this.listboxTarget.id && this._dialogIsOpen) {
@@ -1724,7 +1704,6 @@ const concerns = [
   Combobox.AsyncLoading,
   Combobox.Autocomplete,
   Combobox.Callbacks,
-  Combobox.Devices,
   Combobox.Dialog,
   Combobox.Events,
   Combobox.Filtering,
@@ -1767,7 +1746,6 @@ class HwComboboxController extends Concerns(...concerns) {
   }
 
   initialize() {
-    this._initializeDevice();
     this._initializeActors();
     this._initializeFiltering();
     this._initializeCallbacks();

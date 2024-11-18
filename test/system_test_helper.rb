@@ -11,10 +11,9 @@ end
 Capybara.default_max_wait_time = 10
 
 Minitest.after_run do
-  puts "\n"
-  puts <<~WARNING
-    ⚠️ Warning
-    Focus tests might pass on Selenium but not when checked manually on Chrome.
-    Make sure you grep for `assert_focused_combobox` and test manually before releasing a new version.
+  puts "\n" + <<~WARNING
+    ✋ Warning
+    * "no scrolling behind dialog" test needs to be checked manually on mobile Safari (device, not emulator).
+    * Tests using `assert_focused_combobox` need to be checked manually on Chrome
   WARNING
 end

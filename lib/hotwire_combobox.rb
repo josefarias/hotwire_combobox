@@ -1,5 +1,6 @@
 require "hotwire_combobox/version"
 require "hotwire_combobox/engine"
+require "hotwire_combobox/platform"
 
 module HotwireCombobox
   mattr_accessor :bypass_convenience_methods

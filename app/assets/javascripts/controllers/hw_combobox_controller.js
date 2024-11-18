@@ -12,7 +12,6 @@ const concerns = [
   Combobox.AsyncLoading,
   Combobox.Autocomplete,
   Combobox.Callbacks,
-  Combobox.Devices,
   Combobox.Dialog,
   Combobox.Events,
   Combobox.Filtering,
@@ -55,7 +54,6 @@ export default class HwComboboxController extends Concerns(...concerns) {
   }
 
   initialize() {
-    this._initializeDevice()
     this._initializeActors()
     this._initializeFiltering()
     this._initializeCallbacks()
