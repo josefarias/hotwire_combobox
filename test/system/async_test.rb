@@ -54,4 +54,9 @@ class AsyncTest < ApplicationSystemTestCase
     click_on_option "A Few Good Men"
     assert_combobox_display_and_value "#movie-field", "A Few Good Men", movies(:a_few_good_men).id
   end
+
+  test "preload" do
+    visit async_preload_path
+    assert_options_with count: 5, visible: :hidden
+  end
 end
