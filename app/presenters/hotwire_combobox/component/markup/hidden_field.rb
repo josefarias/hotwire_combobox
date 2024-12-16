@@ -2,7 +2,8 @@ module HotwireCombobox::Component::Markup::HiddenField
   def hidden_field_attrs
     customize :hidden_field, base: {
       id: hidden_field_id, name: hidden_field_name, value: hidden_field_value,
-      data: { hw_combobox_target: "hiddenField" } }
+      data: { hw_combobox_target: "hiddenField" }
+    }.merge(hidden_field)
   end
 
   private
