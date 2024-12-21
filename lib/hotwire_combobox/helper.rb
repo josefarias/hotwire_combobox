@@ -115,7 +115,7 @@ module HotwireCombobox
 
       def hw_uri_with_params(url_or_path, **params)
         URI.parse(url_or_path).tap do |url_or_path|
-          query = URI.decode_www_form(url_or_path.query || "").to_h.merge(params.compact_blank.stringify_keys)
+          query = Rack::Utils.parse_query(url_or_path.query || "").merge(params.compact_blank.stringify_keys)
           url_or_path.query = URI.encode_www_form query
         end.to_s
       rescue URI::InvalidURIError
