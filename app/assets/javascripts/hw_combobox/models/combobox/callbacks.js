@@ -1,5 +1,5 @@
 import Combobox from "hw_combobox/models/combobox/base"
-import { randomUUID } from "hw_combobox/helpers";
+import { randomUUID } from "hw_combobox/helpers"
 
 const MAX_CALLBACK_ATTEMPTS = 3
 
