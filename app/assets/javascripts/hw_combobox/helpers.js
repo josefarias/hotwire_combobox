@@ -95,3 +95,12 @@ export function nextAnimationFrame() {
 export function nextEventLoopTick() {
   return new Promise((resolve) => setTimeout(() => resolve(), 0))
 }
+
+export function randomUUID() {
+  const uuidPattern = "10000000-1000-4000-8000-100000000000"
+
+  return uuidPattern.replace(/[018]/g, (match) => {
+    const randomByte = crypto.getRandomValues(new Uint8Array(1))[0]
+    return (match ^ (randomByte & 15) >> (match / 4)).toString(16)
+  })
+}
