@@ -144,7 +144,7 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
 
     html = hw_paginated_combobox_options [], next_page: 2
 
-    assert_attrs html, tag_name: "turbo-frame", src: "/foo?ary=1&ary=2&page=2&format=turbo_stream"
+    assert_attrs CGI.unescape(html), tag_name: "turbo-frame", src: "/foo?ary[]=1&ary[]=2&page=2&format=turbo_stream"
   end
 
   test "single repeating character values" do
