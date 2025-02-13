@@ -13,6 +13,13 @@ class HotwireCombobox::ComponentTest < ApplicationViewTestCase
     end
   end
 
+  test "additional input actions can be added" do
+    HotwireCombobox::Component.new(view, :foo, input: { data: { action: "click->otherController#binky" } }).tap do |component|
+      assert_match /focus->hw-combobox#open/, component.input_attrs[:data][:action].to_s       # make sure default actions are still present
+      assert_match /click->otherController#binky/, component.input_attrs[:data][:action].to_s  # see if additional action is present
+    end
+  end
+
   test "attributes can be customized" do
     component = HotwireCombobox::Component.new(view, "field-name", id: "id-string")
     component.customize_input class: "my-custom-class", data: { my_custom_attr: "value" }
