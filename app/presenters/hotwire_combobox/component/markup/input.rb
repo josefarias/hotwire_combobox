@@ -26,7 +26,8 @@ module HotwireCombobox::Component::Markup::Input
           focusin@window->hw-combobox#closeOnFocusOutside
           turbo:before-stream-render@document->hw-combobox#rerouteListboxStreamToDialog
           turbo:before-cache@document->hw-combobox#hideChipsForCache
-          turbo:morph-element->hw-combobox#idempotentConnect".squish,
+          turbo:morph-element->hw-combobox#idempotentConnect
+          #{combobox_attrs.fetch(:data, {})[:action]}".squish,
         hw_combobox_target: "combobox",
         async_id: canonical_id
     end
