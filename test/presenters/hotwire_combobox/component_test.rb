@@ -13,10 +13,10 @@ class HotwireCombobox::ComponentTest < ApplicationViewTestCase
     end
   end
 
-  test "additional input actions can be added" do
+  test "additional input actions can be added without affecting library defaults" do
     HotwireCombobox::Component.new(view, :foo, input: { data: { action: "click->other-controller#takeAction" } }).tap do |component|
-      assert_match /focus->hw-combobox#open/, component.input_attrs[:data][:action].to_s       # make sure default actions are still present
-      assert_match /click->other-controller#takeAction/, component.input_attrs[:data][:action].to_s  # see if additional action is present
+      assert_match /focus->hw-combobox#open/, component.input_attrs[:data][:action].to_s
+      assert_match /click->other-controller#takeAction/, component.input_attrs[:data][:action].to_s
     end
   end
 
