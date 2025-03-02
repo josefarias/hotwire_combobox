@@ -17,7 +17,8 @@ module HotwireCombobox
     def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, **kwargs, &block)
       options, src = hw_extract_options_and_src options_or_src, render_in, include_blank
       component = HotwireCombobox::Component.new self, name, options: options, async_src: src, request: request, **kwargs
-      hw_with_html_format { render component, &block }
+      # hw_with_html_format { render component, &block }
+       render component, &block
     end
 
     def hw_combobox_options(options, render_in: {}, include_blank: nil, display: :to_combobox_display, **custom_methods)

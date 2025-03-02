@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "turbo_stream_rendering", to: "comboboxes#turbo_stream_rendering"
   get "async", to: "comboboxes#async"
   get "async_html", to: "comboboxes#async_html"
   get "async_preload", to: "comboboxes#async_preload"
@@ -35,6 +36,10 @@ Rails.application.routes.draw do
   get "render_in", to: "comboboxes#render_in"
   get "render_in_locals", to: "comboboxes#render_in_locals"
   get "required", to: "comboboxes#required"
+
+  resources :turbo_stream_rendering, only: %i[edit] do
+    get :edit2, on: :member
+  end
 
   resources :movies, only: %i[ index update ]
   get "movies_html", to: "movies#index_html"
