@@ -119,7 +119,6 @@ class ComboboxesController < ApplicationController
   end
 
   def turbo_streamed_block
-    @state = State.first || raise("No state found, load fixtures first.")
   end
 
   private
