@@ -35,6 +35,7 @@ Rails.application.routes.draw do
   get "render_in", to: "comboboxes#render_in"
   get "render_in_locals", to: "comboboxes#render_in_locals"
   get "required", to: "comboboxes#required"
+  get "turbo_streamed_block", to: "comboboxes#turbo_streamed_block"
 
   resources :movies, only: %i[ index update ]
   get "movies_html", to: "movies#index_html"

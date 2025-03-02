@@ -118,6 +118,10 @@ class ComboboxesController < ApplicationController
   def dialog
   end
 
+  def turbo_streamed_block
+    @state = State.first || raise("No state found, load fixtures first.")
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 
