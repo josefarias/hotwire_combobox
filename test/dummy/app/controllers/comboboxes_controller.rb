@@ -118,7 +118,7 @@ class ComboboxesController < ApplicationController
   def dialog
   end
 
-  def turbo_stream_rendering
+  def turbo_streamed_block
     @state = State.first || raise("No state found, load fixtures first.")
   end
 

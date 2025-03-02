@@ -174,4 +174,9 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     click_on_option "R"
     assert_combobox_display_and_value "#movie_rating", "R", Movie.ratings[:R]
   end
+
+  test "turbo streaming in a block" do
+    visit turbo_streamed_block_path(format: :turbo_stream)
+    assert_text "Alabama"
+  end
 end

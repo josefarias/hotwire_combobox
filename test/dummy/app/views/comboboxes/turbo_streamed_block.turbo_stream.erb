@@ -1,0 +1,9 @@
+<%
+  def capturing_helper(&block)
+    capture &block
+  end
+%>
+
+<%= capturing_helper do %>
+  <%= combobox_tag "state", @state_options, id: "state-field" %>
+<% end %>

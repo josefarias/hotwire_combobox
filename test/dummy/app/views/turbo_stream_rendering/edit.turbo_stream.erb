@@ -1,9 +1,0 @@
-<%= turbo_stream_action_tag_with_block "replace", 
-        target: dom_id(@state), 
-        data: {
-            transition_enter: "",
-            transition_enter_start: "",
-            transition_enter_end: "",
-        } do %>
-  <%= combobox_tag "State", states_path, id: :fav_state %>
-<% end %>
