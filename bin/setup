@@ -15,7 +15,7 @@ FileUtils.chdir APP_ROOT do
   system! "yarn install --check-files"
 
   puts "\n== Homebrew =="
-  system! "brew bundle --no-lock --no-upgrade"
+  system! "brew bundle --no-upgrade"
 
   puts "\n== Resetting database =="
   system! "bin/rails db:drop db:create db:schema:load --trace"
