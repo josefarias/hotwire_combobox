@@ -16,6 +16,14 @@ $ bin/test_system
 
 You can optionally pass the path to a specific test.
 
+If your system tests are failing, try using a non-headless browser.
+Change this line in `test/application_system_test_case.rb`:
+
+```diff
+-  driven_by :selenium, using: :headless_chrome
++  driven_by :selenium, using: :chrome
+```
+
 ## Running the dummy app
 
 ```bash
