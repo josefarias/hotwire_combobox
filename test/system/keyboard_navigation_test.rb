@@ -80,4 +80,21 @@ class KeyboardNavigationTest < ApplicationSystemTestCase
     type_in_combobox "#state-field", :home
     assert_selected_option_with text: "Alabama"
   end
+
+  test "pressing escape" do
+    visit html_options_path
+
+    open_combobox "#state-field"
+    type_in_combobox "#state-field", "Flor"
+    assert_combobox_display_and_value "#state-field", "Florida", "FL"
+    assert_selected_option_with text: "Florida"
+
+    type_in_combobox "#state-field", :escape
+    assert_closed_combobox
+    assert_combobox_display_and_value "#state-field", "Florida", "FL"
+
+    send_keys :escape
+    assert_closed_combobox
+    assert_combobox_display_and_value "#state-field", "", nil
+  end
 end

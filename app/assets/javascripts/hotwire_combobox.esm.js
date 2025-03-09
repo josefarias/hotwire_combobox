@@ -166,21 +166,31 @@ Combobox.Autocomplete = Base => class extends Base {
     }
   }
 
-  _replaceFullQueryWithAutocompletedValue(option) {
-    const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue);
-
-    this._fullQuery = autocompletedValue;
-    this._actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length);
-  }
-
-  _autocompleteMissingPortion(option) {
+  _hardAutocomplete(option) {
     const typedValue = this._typedQuery;
     const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue);
 
-    if (this._autocompletesInline && startsWith(autocompletedValue, typedValue)) {
+    this._fullQuery = autocompletedValue;
+
+    if (this._isAutocompletableWith(typedValue, autocompletedValue)) {
+      this._actingCombobox.setSelectionRange(typedValue.length, autocompletedValue.length);
+    } else {
+      this._actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length);
+    }
+  }
+
+  _softAutocomplete(option) {
+    const typedValue = this._typedQuery;
+    const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue);
+
+    if (this._isAutocompletableWith(typedValue, autocompletedValue)) {
       this._fullQuery = autocompletedValue;
       this._actingCombobox.setSelectionRange(typedValue.length, autocompletedValue.length);
     }
+  }
+
+  _isAutocompletableWith(typedValue, autocompletedValue) {
+    return this._autocompletesInline && startsWith(autocompletedValue, typedValue)
   }
 
   // +visuallyHideListbox+ hides the listbox from the user,
@@ -973,7 +983,7 @@ Combobox.Navigation = Base => class extends Base {
       cancel(event);
     },
     Escape: (event) => {
-      this.close("hw:keyHandler:escape");
+      this._isOpen ? this.close("hw:keyHandler:escape") : this._clearQuery();
       cancel(event);
     },
     Backspace: (event) => {
@@ -1098,9 +1108,9 @@ Combobox.Selection = Base => class extends Base {
     } else if (isDeleteEvent({ inputType: inputType })) {
       this._deselect();
     } else if (inputType === "hw:lockInSelection" && this._ensurableOption) {
-      this._selectAndAutocompleteMissingPortion(this._ensurableOption);
+      this._select(this._ensurableOption, this._softAutocomplete.bind(this));
     } else if (this._isOpen && this._visibleOptionElements[0]) {
-      this._selectAndAutocompleteMissingPortion(this._visibleOptionElements[0]);
+      this._select(this._visibleOptionElements[0], this._softAutocomplete.bind(this));
     } else if (this._isOpen) {
       this._resetOptionsAndNotify();
       this._markInvalid();
@@ -1169,21 +1179,13 @@ Combobox.Selection = Base => class extends Base {
     }
   }
 
-  _selectAndAutocompleteMissingPortion(option) {
-    this._select(option, this._autocompleteMissingPortion.bind(this));
-  }
-
-  _selectAndAutocompleteFullQuery(option) {
-    this._select(option, this._replaceFullQueryWithAutocompletedValue.bind(this));
-  }
-
   _forceSelectionAndFilter(option, inputType) {
     this._forceSelectionWithoutFiltering(option);
     this._filter(inputType);
   }
 
   _forceSelectionWithoutFiltering(option) {
-    this._selectAndAutocompleteFullQuery(option);
+    this._select(option, this._hardAutocomplete.bind(this));
   }
 
   _lockInSelection() {
