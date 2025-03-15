@@ -92,9 +92,21 @@ class KeyboardNavigationTest < ApplicationSystemTestCase
     type_in_combobox "#state-field", :escape
     assert_closed_combobox
     assert_combobox_display_and_value "#state-field", "Florida", "FL"
+    assert_highlighted "#state-field", "Florida", onwards_from: 4
 
     send_keys :escape
     assert_closed_combobox
     assert_combobox_display_and_value "#state-field", "", nil
+  end
+
+  test "pressing enter closes the listbox but keeps the current selection range in the text field" do
+    visit html_options_path
+
+    open_combobox "#state-field"
+    type_in_combobox "#state-field", "mi", :enter
+    assert_combobox_display_and_value "#state-field", "Michigan", "MI"
+    assert_closed_combobox
+    assert_combobox_display_and_value "#state-field", "Michigan", "MI"
+    assert_highlighted "#state-field", "Michigan", onwards_from: 2
   end
 end
