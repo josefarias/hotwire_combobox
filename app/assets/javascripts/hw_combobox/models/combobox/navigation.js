@@ -31,11 +31,11 @@ Combobox.Navigation = Base => class extends Base {
       cancel(event)
     },
     Enter: (event) => {
-      this._closeAndBlur("hw:keyHandler:enter")
+      this.close("hw:keyHandler:enter")
       cancel(event)
     },
     Escape: (event) => {
-      this._closeAndBlur("hw:keyHandler:escape")
+      this._isOpen ? this.close("hw:keyHandler:escape") : this._clearQuery()
       cancel(event)
     },
     Backspace: (event) => {

@@ -166,21 +166,31 @@ Combobox.Autocomplete = Base => class extends Base {
     }
   }
 
-  _replaceFullQueryWithAutocompletedValue(option) {
-    const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue);
-
-    this._fullQuery = autocompletedValue;
-    this._actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length);
-  }
-
-  _autocompleteMissingPortion(option) {
+  _hardAutocomplete(option) {
     const typedValue = this._typedQuery;
     const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue);
 
-    if (this._autocompletesInline && startsWith(autocompletedValue, typedValue)) {
+    this._fullQuery = autocompletedValue;
+
+    if (this._isAutocompletableWith(typedValue, autocompletedValue)) {
+      this._actingCombobox.setSelectionRange(typedValue.length, autocompletedValue.length);
+    } else {
+      this._actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length);
+    }
+  }
+
+  _softAutocomplete(option) {
+    const typedValue = this._typedQuery;
+    const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue);
+
+    if (this._isAutocompletableWith(typedValue, autocompletedValue)) {
       this._fullQuery = autocompletedValue;
       this._actingCombobox.setSelectionRange(typedValue.length, autocompletedValue.length);
     }
+  }
+
+  _isAutocompletableWith(typedValue, autocompletedValue) {
+    return this._autocompletesInline && startsWith(autocompletedValue, typedValue)
   }
 
   // +visuallyHideListbox+ hides the listbox from the user,
@@ -634,6 +644,15 @@ async function post(url, options) {
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Combobox.Filtering = Base => class extends Base {
+  prepareToFilter({ key }) {
+    const intendsToFilter = key.match(/^[a-zA-Z0-9]$|^ArrowDown$/);
+
+    if (this._isClosed && intendsToFilter) {
+      this.open(); // `.open()` sets the appropriate state so the combobox knows it’s open.
+      this._expand(); // `.open()` will call `._expand()` via stimulus callbacks, but we’re calling it inline so it happens immediately.
+    }
+  }
+
   filterAndSelect({ inputType }) {
     this._filter(inputType);
 
@@ -802,7 +821,7 @@ Combobox.Multiselect = Base => class extends Base {
     currentTarget.closest("[data-hw-combobox-chip]").remove();
 
     if (!this._isSmallViewport) {
-      this.openByFocusing();
+      this.open();
     }
 
     this._announceToScreenReader(display, "removed");
@@ -827,7 +846,7 @@ Combobox.Multiselect = Base => class extends Base {
       cancel(event);
     },
     Escape: (event) => {
-      this.openByFocusing();
+      this.open();
       cancel(event);
     }
   }
@@ -851,7 +870,7 @@ Combobox.Multiselect = Base => class extends Base {
 
       if (shouldReopen) {
         await nextRepaint();
-        this.openByFocusing();
+        this.open();
       }
 
       this._announceToScreenReader(display, "multi-selected. Press Shift + Tab, then Enter to remove.");
@@ -969,11 +988,11 @@ Combobox.Navigation = Base => class extends Base {
       cancel(event);
     },
     Enter: (event) => {
-      this._closeAndBlur("hw:keyHandler:enter");
+      this.close("hw:keyHandler:enter");
       cancel(event);
     },
     Escape: (event) => {
-      this._closeAndBlur("hw:keyHandler:escape");
+      this._isOpen ? this.close("hw:keyHandler:escape") : this._clearQuery();
       cancel(event);
     },
     Backspace: (event) => {
@@ -1082,7 +1101,7 @@ Combobox.Options = Base => class extends Base {
 Combobox.Selection = Base => class extends Base {
   selectOnClick({ currentTarget, inputType }) {
     this._forceSelectionAndFilter(currentTarget, inputType);
-    this._closeAndBlur("hw:optionRoleClick");
+    this.close("hw:optionRoleClick");
   }
 
   _connectSelection() {
@@ -1098,9 +1117,9 @@ Combobox.Selection = Base => class extends Base {
     } else if (isDeleteEvent({ inputType: inputType })) {
       this._deselect();
     } else if (inputType === "hw:lockInSelection" && this._ensurableOption) {
-      this._selectAndAutocompleteMissingPortion(this._ensurableOption);
+      this._select(this._ensurableOption, this._softAutocomplete.bind(this));
     } else if (this._isOpen && this._visibleOptionElements[0]) {
-      this._selectAndAutocompleteMissingPortion(this._visibleOptionElements[0]);
+      this._select(this._visibleOptionElements[0], this._softAutocomplete.bind(this));
     } else if (this._isOpen) {
       this._resetOptionsAndNotify();
       this._markInvalid();
@@ -1169,21 +1188,13 @@ Combobox.Selection = Base => class extends Base {
     }
   }
 
-  _selectAndAutocompleteMissingPortion(option) {
-    this._select(option, this._autocompleteMissingPortion.bind(this));
-  }
-
-  _selectAndAutocompleteFullQuery(option) {
-    this._select(option, this._replaceFullQueryWithAutocompletedValue.bind(this));
-  }
-
   _forceSelectionAndFilter(option, inputType) {
     this._forceSelectionWithoutFiltering(option);
     this._filter(inputType);
   }
 
   _forceSelectionWithoutFiltering(option) {
-    this._selectAndAutocompleteFullQuery(option);
+    this._select(option, this._hardAutocomplete.bind(this));
   }
 
   _lockInSelection() {
@@ -1512,10 +1523,6 @@ Combobox.Toggle = Base => class extends Base {
     this.expandedValue = true;
   }
 
-  openByFocusing() {
-    this._actingCombobox.focus();
-  }
-
   close(inputType) {
     if (this._isOpen) {
       const shouldReopen = this._isMultiselect &&
@@ -1543,41 +1550,36 @@ Combobox.Toggle = Base => class extends Base {
 
   toggle() {
     if (this.expandedValue) {
-      this._closeAndBlur("hw:toggle");
+      this.close("hw:toggle");
     } else {
-      this.openByFocusing();
+      this.open();
     }
   }
 
   closeOnClickOutside(event) {
     const target = event.target;
 
-    if (!this._isOpen) return
+    if (this._isClosed) return
     if (this.mainWrapperTarget.contains(target) && !this._isDialogDismisser(target)) return
     if (this._withinElementBounds(event)) return
 
-    this._closeAndBlur("hw:clickOutside");
+    this.close("hw:clickOutside");
   }
 
   closeOnFocusOutside({ target }) {
-    if (!this._isOpen) return
+    if (this._isClosed) return
     if (this.element.contains(target)) return
 
-    this._closeAndBlur("hw:focusOutside");
+    this.close("hw:focusOutside");
   }
 
   clearOrToggleOnHandleClick() {
     if (this._isQueried) {
       this._clearQuery();
-      this._actingCombobox.focus();
+      this.open();
     } else {
       this.toggle();
     }
-  }
-
-  _closeAndBlur(inputType) {
-    this.close(inputType);
-    this._actingCombobox.blur();
   }
 
   // Some browser extensions like 1Password overlay elements on top of the combobox.
@@ -1661,6 +1663,10 @@ Combobox.Toggle = Base => class extends Base {
 
   get _isOpen() {
     return this.expandedValue
+  }
+
+  get _isClosed() {
+    return !this._isOpen
   }
 };
 
@@ -1808,7 +1814,7 @@ class HwComboboxController extends Concerns(...concerns) {
       this._resetMultiselectionMarks();
 
       if (inputType === "hw:multiselectSync") {
-        this.openByFocusing();
+        this.open();
       } else if (inputType !== "hw:lockInSelection") {
         this._selectOnQuery(inputType);
       }
@@ -1819,7 +1825,7 @@ class HwComboboxController extends Concerns(...concerns) {
   }
 
   closerTargetConnected() {
-    this._closeAndBlur("hw:asyncCloser");
+    this.close("hw:asyncCloser");
   }
 
   // Use +_printStack+ for debugging purposes

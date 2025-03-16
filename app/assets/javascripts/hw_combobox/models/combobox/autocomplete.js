@@ -8,21 +8,31 @@ Combobox.Autocomplete = Base => class extends Base {
     }
   }
 
-  _replaceFullQueryWithAutocompletedValue(option) {
-    const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
-
-    this._fullQuery = autocompletedValue
-    this._actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length)
-  }
-
-  _autocompleteMissingPortion(option) {
+  _hardAutocomplete(option) {
     const typedValue = this._typedQuery
     const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
 
-    if (this._autocompletesInline && startsWith(autocompletedValue, typedValue)) {
+    this._fullQuery = autocompletedValue
+
+    if (this._isAutocompletableWith(typedValue, autocompletedValue)) {
+      this._actingCombobox.setSelectionRange(typedValue.length, autocompletedValue.length)
+    } else {
+      this._actingCombobox.setSelectionRange(autocompletedValue.length, autocompletedValue.length)
+    }
+  }
+
+  _softAutocomplete(option) {
+    const typedValue = this._typedQuery
+    const autocompletedValue = option.getAttribute(this.autocompletableAttributeValue)
+
+    if (this._isAutocompletableWith(typedValue, autocompletedValue)) {
       this._fullQuery = autocompletedValue
       this._actingCombobox.setSelectionRange(typedValue.length, autocompletedValue.length)
     }
+  }
+
+  _isAutocompletableWith(typedValue, autocompletedValue) {
+    return this._autocompletesInline && startsWith(autocompletedValue, typedValue)
   }
 
   // +visuallyHideListbox+ hides the listbox from the user,
