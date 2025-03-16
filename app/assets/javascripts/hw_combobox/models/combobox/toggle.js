@@ -42,7 +42,7 @@ Combobox.Toggle = Base => class extends Base {
   closeOnClickOutside(event) {
     const target = event.target
 
-    if (!this._isOpen) return
+    if (this._isClosed) return
     if (this.mainWrapperTarget.contains(target) && !this._isDialogDismisser(target)) return
     if (this._withinElementBounds(event)) return
 
@@ -50,7 +50,7 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   closeOnFocusOutside({ target }) {
-    if (!this._isOpen) return
+    if (this._isClosed) return
     if (this.element.contains(target)) return
 
     this.close("hw:focusOutside")
@@ -146,5 +146,9 @@ Combobox.Toggle = Base => class extends Base {
 
   get _isOpen() {
     return this.expandedValue
+  }
+
+  get _isClosed() {
+    return !this._isOpen
   }
 }

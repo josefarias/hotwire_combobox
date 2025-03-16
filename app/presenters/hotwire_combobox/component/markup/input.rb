@@ -20,6 +20,7 @@ module HotwireCombobox::Component::Markup::Input
       combobox_attrs.fetch(:data, {}).merge \
         action: "
           click->hw-combobox#toggle
+          keydown->hw-combobox#prepareToFilter
           input->hw-combobox#filterAndSelect
           keydown->hw-combobox#navigate
           click@window->hw-combobox#closeOnClickOutside

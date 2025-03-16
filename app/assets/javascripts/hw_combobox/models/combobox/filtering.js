@@ -4,6 +4,15 @@ import { applyFilter, debounce, unselectedPortion } from "hw_combobox/helpers"
 import { get } from "hw_combobox/vendor/requestjs"
 
 Combobox.Filtering = Base => class extends Base {
+  prepareToFilter({ key }) {
+    const intendsToFilter = key.match(/^[a-zA-Z0-9]$|^ArrowDown$/)
+
+    if (this._isClosed && intendsToFilter) {
+      this.open() // `.open()` sets the appropriate state so the combobox knows it’s open.
+      this._expand() // `.open()` will call `._expand()` via stimulus callbacks, but we’re calling it inline so it happens immediately.
+    }
+  }
+
   filterAndSelect({ inputType }) {
     this._filter(inputType)
 

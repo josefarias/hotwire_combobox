@@ -644,6 +644,15 @@ async function post(url, options) {
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Combobox.Filtering = Base => class extends Base {
+  prepareToFilter({ key }) {
+    const intendsToFilter = key.match(/^[a-zA-Z0-9]$|^ArrowDown$/);
+
+    if (this._isClosed && intendsToFilter) {
+      this.open(); // `.open()` sets the appropriate state so the combobox knows it’s open.
+      this._expand(); // `.open()` will call `._expand()` via stimulus callbacks, but we’re calling it inline so it happens immediately.
+    }
+  }
+
   filterAndSelect({ inputType }) {
     this._filter(inputType);
 
@@ -1550,7 +1559,7 @@ Combobox.Toggle = Base => class extends Base {
   closeOnClickOutside(event) {
     const target = event.target;
 
-    if (!this._isOpen) return
+    if (this._isClosed) return
     if (this.mainWrapperTarget.contains(target) && !this._isDialogDismisser(target)) return
     if (this._withinElementBounds(event)) return
 
@@ -1558,7 +1567,7 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   closeOnFocusOutside({ target }) {
-    if (!this._isOpen) return
+    if (this._isClosed) return
     if (this.element.contains(target)) return
 
     this.close("hw:focusOutside");
@@ -1654,6 +1663,10 @@ Combobox.Toggle = Base => class extends Base {
 
   get _isOpen() {
     return this.expandedValue
+  }
+
+  get _isClosed() {
+    return !this._isOpen
   }
 };
 
