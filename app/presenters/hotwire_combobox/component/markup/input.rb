@@ -17,20 +17,20 @@ module HotwireCombobox::Component::Markup::Input
     end
 
     def input_data
-      combobox_attrs.fetch(:data, {}).merge \
-        action: "
-          click->hw-combobox#toggle
-          keydown->hw-combobox#prepareToFilter
-          input->hw-combobox#filterAndSelect
-          keydown->hw-combobox#navigate
-          click@window->hw-combobox#closeOnClickOutside
-          focusin@window->hw-combobox#closeOnFocusOutside
-          turbo:before-stream-render@document->hw-combobox#rerouteListboxStreamToDialog
-          turbo:before-cache@document->hw-combobox#hideChipsForCache
-          turbo:morph-element->hw-combobox#idempotentConnect
-          #{combobox_attrs.fetch(:data, {})[:action]}".squish,
-        hw_combobox_target: "combobox",
-        async_id: canonical_id
+      data = combobox_attrs.fetch(:data, {}).dup
+      action = %w[
+        click->hw-combobox#toggle
+        keydown->hw-combobox#prepareToFilter
+        input->hw-combobox#filterAndSelect
+        keydown->hw-combobox#navigate
+        click@window->hw-combobox#closeOnClickOutside
+        focusin@window->hw-combobox#closeOnFocusOutside
+        turbo:before-stream-render@document->hw-combobox#rerouteListboxStreamToDialog
+        turbo:before-cache@document->hw-combobox#hideChipsForCache
+        turbo:morph-element->hw-combobox#idempotentConnect
+      ].append(data.delete(:action)).compact.join(" ")
+
+      data.merge action: action, hw_combobox_target: "combobox", async_id: canonical_id
     end
 
     def input_aria
