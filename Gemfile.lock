@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hotwire_combobox (0.3.2)
+    hotwire_combobox (0.4.0)
       platform_agent (>= 1.0.1)
       rails (>= 7.0.7.2)
       stimulus-rails (>= 1.2)

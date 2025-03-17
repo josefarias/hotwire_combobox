@@ -1,5 +1,5 @@
 /*!
-HotwireCombobox 0.3.2
+HotwireCombobox 0.4.0
 */
 import { Controller } from '@hotwired/stimulus';
 
