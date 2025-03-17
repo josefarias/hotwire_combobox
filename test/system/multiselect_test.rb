@@ -21,14 +21,12 @@ class MultiselectTest < ApplicationSystemTestCase
       states(:alabama, :california, :arizona).pluck(:id)
 
     remove_chip "California"
+    assert_option_with text: "California"
 
     assert_combobox_display_and_value \
       "#states-field",
       %w[ Alabama Arizona ],
       states(:alabama, :arizona).pluck(:id)
-
-    open_combobox "#states-field"
-    assert_option_with text: "California"
   end
 
   test "multiselect idiosyncrasies" do
@@ -179,30 +177,33 @@ class MultiselectTest < ApplicationSystemTestCase
     open_combobox "#states-field"
     type_in_combobox "#states-field", "mi"
 
-    assert_text "event: hw-combobox:preselection"
-    assert_text "value: #{states(:michigan).id}."
-    assert_text "display: Michigan"
-    assert_text "query: Mi"
-    assert_text "fieldName: states"
-    assert_text "isNewAndAllowed: false"
-    assert_text "isValid: true"
-    assert_text "previousValue: <empty>"
+    within "#preselection" do
+      assert_text "event: hw-combobox:preselection"
+      assert_text "value: #{states(:michigan).id}."
+      assert_text "display: Michigan"
+      assert_text "query: Mi"
+      assert_text "fieldName: states"
+      assert_text "isNewAndAllowed: false"
+      assert_text "isValid: true"
+      assert_text "previousValue: <empty>"
+    end
     assert_text "preselections: 2." # `m`, then `mi`
     assert_no_text "event: hw-combobox:selection"
 
     click_away
     assert_closed_combobox
 
-    assert_text "event: hw-combobox:selection"
-    assert_text "value: #{states(:michigan).id}."
-    assert_text "display: Michigan"
-    assert_text "query: Michigan"
-    assert_text "fieldName: states"
-    assert_text "isNewAndAllowed: <empty>"
-    assert_text "isValid: true"
-    assert_text "previousValue: <empty>"
+    within "#selection" do
+      assert_text "event: hw-combobox:selection"
+      assert_text "value: #{states(:michigan).id}."
+      assert_text "display: Michigan"
+      assert_text "query: Mi."
+      assert_text "fieldName: states"
+      assert_text "isNewAndAllowed: <empty>"
+      assert_text "isValid: true"
+      assert_text "previousValue: <empty>"
+    end
     assert_text "selections: 1."
-
     assert_text "preselections: 3."
 
     remove_chip "Michigan"
@@ -215,27 +216,31 @@ class MultiselectTest < ApplicationSystemTestCase
     click_on_option "Arkansas"
     click_on_option "Colorado"
 
-    assert_text "event: hw-combobox:preselection"
-    assert_text "value: #{states(:arkansas, :colorado).pluck(:id).join(",")}."
-    assert_text "display: Colorado."
-    assert_text "query: Colorado."
-    assert_text "fieldName: states."
-    assert_text "isNewAndAllowed: false."
-    assert_text "isValid: true."
-    assert_text "previousValue: 1011954550."
-    assert_text "removedDisplay: <empty>."
-    assert_text "removedValue: <empty>."
+    within "#preselection" do
+      assert_text "event: hw-combobox:preselection"
+      assert_text "value: #{states(:arkansas, :colorado).pluck(:id).join(",")}."
+      assert_text "display: Colorado."
+      assert_text "query: <empty>."
+      assert_text "fieldName: states."
+      assert_text "isNewAndAllowed: false."
+      assert_text "isValid: true."
+      assert_text "previousValue: 1011954550."
+      assert_text "removedDisplay: <empty>."
+      assert_text "removedValue: <empty>."
+    end
 
-    assert_text "event: hw-combobox:selection"
-    assert_text "value: #{states(:arkansas, :colorado).pluck(:id).join(",")}."
-    assert_text "display: Colorado."
-    assert_text "query: Colorado."
-    assert_text "fieldName: states."
-    assert_text "isNewAndAllowed: <empty>."
-    assert_text "isValid: true."
-    assert_text "previousValue: <empty>."
-    assert_text "removedDisplay: <empty>."
-    assert_text "removedValue: <empty>."
+    within "#selection" do
+      assert_text "event: hw-combobox:selection"
+      assert_text "value: #{states(:arkansas, :colorado).pluck(:id).join(",")}."
+      assert_text "display: Colorado."
+      assert_text "query: <empty>."
+      assert_text "fieldName: states."
+      assert_text "isNewAndAllowed: <empty>."
+      assert_text "isValid: true."
+      assert_text "previousValue: <empty>."
+      assert_text "removedDisplay: <empty>."
+      assert_text "removedValue: <empty>."
+    end
 
     click_away
 

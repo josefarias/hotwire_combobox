@@ -40,6 +40,7 @@ module HotwireCombobox::Component::Markup::Dialog
 
     def dialog_input_data
       { action: "
+          keydown->hw-combobox#prepareToFilter
           input->hw-combobox#filterAndSelect
           keydown->hw-combobox#navigate
           click@window->hw-combobox#closeOnClickOutside".squish,

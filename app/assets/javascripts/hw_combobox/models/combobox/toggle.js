@@ -6,10 +6,6 @@ Combobox.Toggle = Base => class extends Base {
     this.expandedValue = true
   }
 
-  openByFocusing() {
-    this._actingCombobox.focus()
-  }
-
   close(inputType) {
     if (this._isOpen) {
       const shouldReopen = this._isMultiselect &&
@@ -37,41 +33,36 @@ Combobox.Toggle = Base => class extends Base {
 
   toggle() {
     if (this.expandedValue) {
-      this._closeAndBlur("hw:toggle")
+      this.close("hw:toggle")
     } else {
-      this.openByFocusing()
+      this.open()
     }
   }
 
   closeOnClickOutside(event) {
     const target = event.target
 
-    if (!this._isOpen) return
+    if (this._isClosed) return
     if (this.mainWrapperTarget.contains(target) && !this._isDialogDismisser(target)) return
     if (this._withinElementBounds(event)) return
 
-    this._closeAndBlur("hw:clickOutside")
+    this.close("hw:clickOutside")
   }
 
   closeOnFocusOutside({ target }) {
-    if (!this._isOpen) return
+    if (this._isClosed) return
     if (this.element.contains(target)) return
 
-    this._closeAndBlur("hw:focusOutside")
+    this.close("hw:focusOutside")
   }
 
   clearOrToggleOnHandleClick() {
     if (this._isQueried) {
       this._clearQuery()
-      this._actingCombobox.focus()
+      this.open()
     } else {
       this.toggle()
     }
-  }
-
-  _closeAndBlur(inputType) {
-    this.close(inputType)
-    this._actingCombobox.blur()
   }
 
   // Some browser extensions like 1Password overlay elements on top of the combobox.
@@ -155,5 +146,9 @@ Combobox.Toggle = Base => class extends Base {
 
   get _isOpen() {
     return this.expandedValue
+  }
+
+  get _isClosed() {
+    return !this._isOpen
   }
 }

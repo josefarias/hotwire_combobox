@@ -100,8 +100,14 @@ module ComboboxAssertionsHelper
       "Expected #{selector} to be scrolled."
   end
 
-  def locator_for(selector)
-    # https://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Matchers#has_field%3F-instance_method
-    selector.delete_prefix("#")
+  def assert_highlighted(selector, text, onwards_from:)
+    assert_equal onwards_from, page.evaluate_script("document.querySelector('#{selector}').selectionStart")
+    assert_equal text.length, page.evaluate_script("document.querySelector('#{selector}').selectionEnd")
   end
+
+  private
+    def locator_for(selector)
+      # https://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Matchers#has_field%3F-instance_method
+      selector.delete_prefix("#")
+    end
 end
