@@ -85,7 +85,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _preselectSingle() {
-    if (this._isSingleSelect && this._hasValueButNoSelection && this._allOptions.length < 100) {
+    if (this._isSingleSelect && this._hasValueButNoSelection) {
       const option = this._optionElementWithValue(this._fieldValue)
       if (option) this._markSelected(option)
     }
