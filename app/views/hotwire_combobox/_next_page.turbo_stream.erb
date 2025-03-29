@@ -2,5 +2,5 @@
 
 <%= turbo_stream.remove hw_pagination_frame_wrapper_id(for_id) %>
 <%= turbo_stream.append hw_listbox_id(for_id) do %>
-  <%= render "hotwire_combobox/pagination", for_id: for_id, src: src %>
+  <%= render "hotwire_combobox/pagination", for_id: for_id, src: src, loading: :lazy %>
 <% end %>
