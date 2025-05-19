@@ -121,6 +121,9 @@ class ComboboxesController < ApplicationController
   def turbo_streamed_block
   end
 
+  def disabled
+  end
+
   private
     delegate :combobox_options, :html_combobox_options, to: "ApplicationController.helpers", private: true
 

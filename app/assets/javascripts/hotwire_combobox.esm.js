@@ -1574,6 +1574,8 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   clearOrToggleOnHandleClick() {
+    if (this.comboboxTarget.disabled) return
+
     if (this._isQueried) {
       this._clearQuery();
       this.open();

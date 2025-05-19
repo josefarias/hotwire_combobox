@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get "custom_attrs", to: "comboboxes#custom_attrs"
   get "custom_events", to: "comboboxes#custom_events"
   get "dialog", to: "comboboxes#dialog"
+  get "disabled", to: "comboboxes#disabled"
   get "enum", to: "comboboxes#enum"
   get "external_clear", to: "comboboxes#external_clear"
   get "form_object", to: "comboboxes#form_object"

@@ -179,4 +179,14 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     visit turbo_streamed_block_path(format: :turbo_stream)
     assert_text "Alabama"
   end
+
+  test "combobox does not open when disabled" do
+    visit disabled_path
+
+    open_combobox "#state-field"
+    assert_closed_combobox
+
+    find('[data-hw-combobox-target="handle"]').click
+    assert_closed_combobox
+  end
 end
