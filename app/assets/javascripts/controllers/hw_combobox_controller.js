@@ -44,6 +44,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
     asyncSrc: String,
     autocompletableAttribute: String,
     autocomplete: String,
+    debounceInterval: Number,
     expanded: Boolean,
     filterableAttribute: String,
     nameWhenNew: String,

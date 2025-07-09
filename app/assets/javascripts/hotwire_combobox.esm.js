@@ -91,7 +91,7 @@ function startsWith(string, substring) {
   return string.toLowerCase().startsWith(substring.toLowerCase())
 }
 
-function debounce(fn, delay = 150) {
+function debounce(fn, delay) {
   let timeoutId = null;
 
   return (...args) => {
@@ -668,7 +668,7 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _initializeFiltering() {
-    this._debouncedFilterAsync = debounce(this._debouncedFilterAsync.bind(this));
+    this._debouncedFilterAsync = debounce(this._debouncedFilterAsync.bind(this), this.debounceIntervalValue);
   }
 
   _filter(inputType) {
@@ -1752,6 +1752,7 @@ class HwComboboxController extends Concerns(...concerns) {
     asyncSrc: String,
     autocompletableAttribute: String,
     autocomplete: String,
+    debounceInterval: Number,
     expanded: Boolean,
     filterableAttribute: String,
     nameWhenNew: String,
