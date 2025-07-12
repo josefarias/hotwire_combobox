@@ -26,6 +26,7 @@ module HotwireCombobox::Component::Markup::Fieldset
         hw_combobox_async_src_value: async_src,
         hw_combobox_prefilled_display_value: prefilled_display,
         hw_combobox_selection_chip_src_value: multiselect_chip_src,
+        hw_combobox_debounce_interval_value: debounce_interval,
         hw_combobox_filterable_attribute_value: "data-filterable-as",
         hw_combobox_autocompletable_attribute_value: "data-autocompletable-as",
         hw_combobox_selected_class: "hw-combobox__option--selected",

@@ -30,7 +30,7 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _initializeFiltering() {
-    this._debouncedFilterAsync = debounce(this._debouncedFilterAsync.bind(this))
+    this._debouncedFilterAsync = debounce(this._debouncedFilterAsync.bind(this), this.debounceIntervalValue)
   }
 
   _filter(inputType) {
