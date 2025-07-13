@@ -122,6 +122,9 @@ class ComboboxesController < ApplicationController
   end
 
   def disabled
+    @disabled_options = State.all.map do |state|
+      { display: state.name, value: state.abbreviation, disabled: state.abbreviation[0] == "A" ? "true" : nil }
+    end
   end
 
   private

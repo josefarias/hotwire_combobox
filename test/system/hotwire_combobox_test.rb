@@ -186,7 +186,24 @@ class HotwireComboboxTest < ApplicationSystemTestCase
     open_combobox "#state-field"
     assert_closed_combobox
 
-    find('[data-hw-combobox-target="handle"]').click
+    find('#state-field').click
     assert_closed_combobox
+  end
+
+  test "combobox does not allow disabled options to be selected" do
+    visit disabled_path
+
+    open_combobox "#disabled-state-field"
+    alaska_option = find('li', text: 'Alaska', match: :first)
+
+    assert_equal 'true', alaska_option[:'aria-disabled']
+    assert_includes alaska_option[:class], 'hw-combobox__option--disabled'
+  end
+
+  test "combobox with disabled options allows selection of enabled options" do
+    visit disabled_path
+    open_combobox "#disabled-state-field"
+    click_on_option "California"
+    assert_combobox_display_and_value "#disabled-state-field", "California", "CA"
   end
 end
