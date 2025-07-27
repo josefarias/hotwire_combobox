@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   get "async", to: "comboboxes#async"
   get "async_html", to: "comboboxes#async_html"
   get "async_preload", to: "comboboxes#async_preload"
+  get "clear_events", to: "comboboxes#clear_events"
   get "conflicting_order", to: "comboboxes#conflicting_order"
   get "custom_attrs", to: "comboboxes#custom_attrs"
   get "custom_events", to: "comboboxes#custom_events"
