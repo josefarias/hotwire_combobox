@@ -21,8 +21,8 @@ Combobox.Selection = Base => class extends Base {
       this._deselect()
     } else if (inputType === "hw:lockInSelection" && this._ensurableOption) {
       this._select(this._ensurableOption, this._softAutocomplete.bind(this))
-    } else if (this._isOpen && this._visibleOptionElements[0]) {
-      this._select(this._visibleOptionElements[0], this._softAutocomplete.bind(this))
+    } else if (this._isOpen && this._selectableOptionElements[0]) {
+      this._select(this._selectableOptionElements[0], this._softAutocomplete.bind(this))
     } else if (this._isOpen) {
       this._resetOptionsAndNotify()
       this._markInvalid()
@@ -80,7 +80,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _selectIndex(index) {
-    const option = wrapAroundAccess(this._visibleOptionElements, index)
+    const option = wrapAroundAccess(this._selectableOptionElements, index)
     this._forceSelectionWithoutFiltering(option)
   }
 
@@ -150,6 +150,6 @@ Combobox.Selection = Base => class extends Base {
   }
 
   get _ensurableOption() {
-    return this._selectedOptionElement || this._visibleOptionElements[0]
+    return this._selectedOptionElement || this._selectableOptionElements[0]
   }
 }

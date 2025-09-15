@@ -1,1 +1,6 @@
+<%= label_tag "state-field", "State (disabled)" %>
 <%= combobox_tag "state", @state_options, id: "state-field", disabled: true %>
+<br>
+
+<%= label_tag "disabled-state-field", "State (with disabled options)" %>
+<%= combobox_tag "state_disabled_options", @disabled_options, id: "disabled-state-field"%>

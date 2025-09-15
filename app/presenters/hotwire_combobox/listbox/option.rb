@@ -18,15 +18,16 @@ class HotwireCombobox::Listbox::Option
   end
 
   private
-    Data = Struct.new :id, :value, :display, :content, :blank, :filterable_as, :autocompletable_as, keyword_init: true
+    Data = Struct.new :id, :value, :display, :content, :blank, :filterable_as, :disabled, :autocompletable_as, keyword_init: true
 
     attr_reader :option
 
     def options
       { id: id, role: :option, tabindex: "-1",
-        class: [ "hw-combobox__option", { "hw-combobox__option--blank": blank? } ],
+        disabled: disabled?,
+        class: [ "hw-combobox__option", { "hw-combobox__option--blank": blank?, "hw-combobox__option--disabled": disabled? } ],
         data: { action: "click->hw-combobox#selectOnClick", filterable_as: filterable_as, autocompletable_as: autocompletable_as, value: value },
-        aria: { selected: false } }
+        aria: { selected: false,  disabled: ("true" if disabled?) } }
     end
 
     def id
@@ -43,5 +44,9 @@ class HotwireCombobox::Listbox::Option
 
     def blank?
       option.try(:blank).present?
+    end
+
+    def disabled?
+      option.try(:disabled).present?
     end
 end

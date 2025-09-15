@@ -60,6 +60,10 @@ function visible(target) {
   return !(target.hidden || target.closest("[hidden]"))
 }
 
+function enabled(target) {
+  return !(target.ariaDisabled === "true" || target.closest("[aria-disabled='true']"))
+}
+
 function wrapAroundAccess(array, index) {
   const first = 0;
   const last = array.length - 1;
@@ -984,7 +988,7 @@ Combobox.Navigation = Base => class extends Base {
       cancel(event);
     },
     End: (event) => {
-      this._selectIndex(this._visibleOptionElements.length - 1);
+      this._selectIndex(this._selectableOptionElements.length - 1);
       cancel(event);
     },
     Enter: (event) => {
@@ -1078,6 +1082,10 @@ Combobox.Options = Base => class extends Base {
     return [ ...this._allFilterableOptionElements ].filter(visible)
   }
 
+  get _selectableOptionElements() {
+    return [ ...this._visibleOptionElements ].filter(enabled)
+  }
+
   get _selectedOptionElement() {
     return this._actingListbox.querySelector("[role=option][aria-selected=true]:not([data-multiselected])")
   }
@@ -1087,7 +1095,7 @@ Combobox.Options = Base => class extends Base {
   }
 
   get _selectedOptionIndex() {
-    return [ ...this._visibleOptionElements ].indexOf(this._selectedOptionElement)
+    return [ ...this._selectableOptionElements ].indexOf(this._selectedOptionElement)
   }
 
   get _isUnjustifiablyBlank() {
@@ -1118,8 +1126,8 @@ Combobox.Selection = Base => class extends Base {
       this._deselect();
     } else if (inputType === "hw:lockInSelection" && this._ensurableOption) {
       this._select(this._ensurableOption, this._softAutocomplete.bind(this));
-    } else if (this._isOpen && this._visibleOptionElements[0]) {
-      this._select(this._visibleOptionElements[0], this._softAutocomplete.bind(this));
+    } else if (this._isOpen && this._selectableOptionElements[0]) {
+      this._select(this._selectableOptionElements[0], this._softAutocomplete.bind(this));
     } else if (this._isOpen) {
       this._resetOptionsAndNotify();
       this._markInvalid();
@@ -1170,7 +1178,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _selectIndex(index) {
-    const option = wrapAroundAccess(this._visibleOptionElements, index);
+    const option = wrapAroundAccess(this._selectableOptionElements, index);
     this._forceSelectionWithoutFiltering(option);
   }
 
@@ -1240,7 +1248,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   get _ensurableOption() {
-    return this._selectedOptionElement || this._visibleOptionElements[0]
+    return this._selectedOptionElement || this._selectableOptionElements[0]
   }
 };
 
@@ -1306,7 +1314,7 @@ var preventDefault = function preventDefault(rawEvent) {
 var setOverflowHidden = function setOverflowHidden(options) {
   // If previousBodyPaddingRight is already set, don't set it again.
   if (previousBodyPaddingRight === undefined) {
-    var _reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
+    var _reserveScrollBarGap = false;
     var scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
 
     if (_reserveScrollBarGap && scrollBarGap > 0) {
@@ -1436,7 +1444,7 @@ var disableBodyScroll = function disableBodyScroll(targetElement, options) {
 
   var lock = {
     targetElement: targetElement,
-    options: options || {}
+    options: {}
   };
 
   locks = [].concat(_toConsumableArray(locks), [lock]);
@@ -1444,7 +1452,7 @@ var disableBodyScroll = function disableBodyScroll(targetElement, options) {
   if (isIosDevice) {
     setPositionFixed();
   } else {
-    setOverflowHidden(options);
+    setOverflowHidden();
   }
 
   if (isIosDevice) {

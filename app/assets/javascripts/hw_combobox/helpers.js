@@ -6,6 +6,10 @@ export function visible(target) {
   return !(target.hidden || target.closest("[hidden]"))
 }
 
+export function enabled(target) {
+  return !(target.ariaDisabled === "true" || target.closest("[aria-disabled='true']"))
+}
+
 export function wrapAroundAccess(array, index) {
   const first = 0
   const last = array.length - 1

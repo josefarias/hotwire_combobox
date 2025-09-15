@@ -1,5 +1,5 @@
 import Combobox from "hw_combobox/models/combobox/base"
-import { visible } from "hw_combobox/helpers"
+import { visible, enabled } from "hw_combobox/helpers"
 
 Combobox.Options = Base => class extends Base {
   _resetOptionsSilently() {
@@ -39,6 +39,10 @@ Combobox.Options = Base => class extends Base {
     return [ ...this._allFilterableOptionElements ].filter(visible)
   }
 
+  get _selectableOptionElements() {
+    return [ ...this._visibleOptionElements ].filter(enabled)
+  }
+
   get _selectedOptionElement() {
     return this._actingListbox.querySelector("[role=option][aria-selected=true]:not([data-multiselected])")
   }
@@ -48,7 +52,7 @@ Combobox.Options = Base => class extends Base {
   }
 
   get _selectedOptionIndex() {
-    return [ ...this._visibleOptionElements ].indexOf(this._selectedOptionElement)
+    return [ ...this._selectableOptionElements ].indexOf(this._selectedOptionElement)
   }
 
   get _isUnjustifiablyBlank() {

@@ -37,6 +37,16 @@ class HotwireCombobox::Listbox::OptionTest < ApplicationViewTestCase
     assert_attrs render(option), tag_name: :li, "data-autocompletable-as": "bar"
   end
 
+  test "renders option with aria-disabled when disabled" do
+    option = { disabled: true }
+    assert_attrs render(option), tag_name: :li, "aria-disabled": "true"
+  end
+
+  test "renders option without aria-disabled when not disabled" do
+    option = { disabled: false }
+    assert_attrs render(option), tag_name: :li
+  end
+
   private
     def render(option)
       view.render HotwireCombobox::Listbox::Option.new(option)
