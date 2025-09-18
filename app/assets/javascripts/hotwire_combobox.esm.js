@@ -350,6 +350,17 @@ Combobox.Events = Base => class extends Base {
     });
   }
 
+  _dispatchClearEvent() {
+    dispatch("hw-combobox:clear", {
+      target: this.element,
+      detail: {
+        previousValue: this._fieldValue,
+        previousDisplay: this._fullQuery,
+        fieldName: this._fieldName
+      }
+    });
+  }
+
   get _eventableDetails() {
     return {
       value: this._incomingFieldValueString,
@@ -1576,7 +1587,8 @@ Combobox.Toggle = Base => class extends Base {
   clearOrToggleOnHandleClick() {
     if (this.comboboxTarget.disabled) return
 
-    if (this._isQueried) {
+    if (this._isQueried || this._hasFieldValue) {
+      this._dispatchClearEvent();
       this._clearQuery();
       this.open();
     } else {
