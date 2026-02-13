@@ -15,7 +15,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2
+          ruby-version: 4.0
           bundler: default
           bundler-cache: true
           rubygems: latest
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: ['3.2', '3.3', '3.4']
+        ruby-version: ["3.3", "3.4", "4.0"]
     steps:
       - name: SQLite3 version
         run: sqlite3 --version
