@@ -645,7 +645,7 @@ async function post(url, options) {
 
 Combobox.Filtering = Base => class extends Base {
   prepareToFilter({ key }) {
-    const intendsToFilter = key.match(/^[a-zA-Z0-9]$|^ArrowDown$/);
+    const intendsToFilter = key.match(/^[\p{L}\p{N}]$|^ArrowDown$|^Backspace$/u);
 
     if (this._isClosed && intendsToFilter) {
       this.open(); // `.open()` sets the appropriate state so the combobox knows it’s open.
