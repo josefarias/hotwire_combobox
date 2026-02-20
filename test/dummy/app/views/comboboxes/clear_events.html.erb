@@ -1,0 +1,29 @@
+<%= tag.style nonce: content_security_policy_nonce do %>
+  .event-log {
+    background: #f8f9fa;
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    font-family: monospace;
+    white-space: pre-wrap;
+    margin: 1rem 0;
+  }
+<% end %>
+
+<div data-controller="combobox--clear-events">
+  <p>Type in the combobox and then click the "×" button to see the clear event details.</p>
+
+  <%= combobox_tag :state, @state_options,
+      id: "state-field",
+      placeholder: "Type to search states...",
+      data: {
+        action: "hw-combobox:clear->combobox--clear-events#onClear"
+      } %>
+
+  <div class="event-log" data-combobox--clear-events-target="clearLog">
+    No clear events yet. Type something and then click the × button.
+  </div>
+
+  <button type="button" data-action="click->combobox--clear-events#clearLogs">
+    Clear Log
+  </button>
+</div>
