@@ -1240,7 +1240,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   get _ensurableOption() {
-    return this._selectedOptionElement || this._visibleOptionElements[0]
+    return this._selectedOptionElement || this._optionElementWithValue(this._fieldValue) || this._visibleOptionElements[0]
   }
 };
 
