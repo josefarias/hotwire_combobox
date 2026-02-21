@@ -1229,9 +1229,9 @@ Combobox.Selection = Base => class extends Base {
 
   get _hasSelection() {
     if (this._isSingleSelect) {
-      this._selectedOptionElement;
+      return this._selectedOptionElement;
     } else {
-      this._multiselectedOptionElements.length > 0;
+      return this._multiselectedOptionElements.length > 0;
     }
   }
 
@@ -1240,7 +1240,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   get _ensurableOption() {
-    return this._selectedOptionElement || this._visibleOptionElements[0]
+    return this._selectedOptionElement || this._optionElementWithValue(this._fieldValue) || this._visibleOptionElements[0]
   }
 };
 
