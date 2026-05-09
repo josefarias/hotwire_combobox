@@ -27,7 +27,7 @@ Combobox.Navigation = Base => class extends Base {
       cancel(event)
     },
     End: (event) => {
-      this._selectIndex(this._visibleOptionElements.length - 1)
+      this._selectIndex(this._selectableOptionElements.length - 1)
       cancel(event)
     },
     Enter: (event) => {
