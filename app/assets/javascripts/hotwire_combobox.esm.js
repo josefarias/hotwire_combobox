@@ -1115,7 +1115,7 @@ Combobox.Selection = Base => class extends Base {
     if (this._shouldTreatAsNewOptionForFiltering(!isDeleteEvent({ inputType: inputType }))) {
       this._selectNew();
     } else if (isDeleteEvent({ inputType: inputType })) {
-      this._deselect();
+      this._deselectAndNotify();
     } else if (inputType === "hw:lockInSelection" && this._ensurableOption) {
       this._select(this._ensurableOption, this._softAutocomplete.bind(this));
     } else if (this._isOpen && this._visibleOptionElements[0]) {
