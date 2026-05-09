@@ -25,6 +25,17 @@ Combobox.Events = Base => class extends Base {
     })
   }
 
+  _dispatchClearEvent() {
+    dispatch("hw-combobox:clear", {
+      target: this.element,
+      detail: {
+        previousValue: this._fieldValue,
+        previousDisplay: this._fullQuery,
+        fieldName: this._fieldName
+      }
+    })
+  }
+
   get _eventableDetails() {
     return {
       value: this._incomingFieldValueString,

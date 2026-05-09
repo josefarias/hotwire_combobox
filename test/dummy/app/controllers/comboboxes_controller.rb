@@ -67,6 +67,9 @@ class ComboboxesController < ApplicationController
   def include_blank
   end
 
+  def clear_events
+  end
+
   def custom_events
   end
 
