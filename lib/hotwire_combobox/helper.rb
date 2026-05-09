@@ -20,8 +20,8 @@ module HotwireCombobox
       render component, &block
     end
 
-    def hw_combobox_options(options, render_in: {}, include_blank: nil, display: :to_combobox_display, **custom_methods)
-      HotwireCombobox::Listbox::Item.collection_for self, options, render_in: render_in, include_blank: include_blank, **custom_methods.merge(display: display)
+    def hw_combobox_options(options, render_in: {}, include_blank: nil, display: :to_combobox_display, value: :to_combobox_value, **custom_methods)
+      HotwireCombobox::Listbox::Item.collection_for self, options, render_in: render_in, include_blank: include_blank, **custom_methods.merge(display: display, value: value)
     end
 
     def hw_paginated_combobox_options(options, for_id: params[:for_id], src: hw_fullpath_for_pagination, next_page: nil, render_in: {}, include_blank: {}, **custom_methods)
@@ -44,7 +44,7 @@ module HotwireCombobox
       render "hotwire_combobox/selection_chip", display: display, value: value, for_id: for_id, remover_attrs: remover_attrs
     end
 
-    def hw_combobox_selection_chips_for(objects, display: :to_combobox_display, value: :id, for_id: params[:for_id])
+    def hw_combobox_selection_chips_for(objects, display: :to_combobox_display, value: :to_combobox_value, for_id: params[:for_id])
       objects.map do |object|
         hw_combobox_selection_chip display: hw_call_method(object, display), value: hw_call_method(object, value), for_id: for_id
       end.then { |chips| safe_join chips }
@@ -54,7 +54,7 @@ module HotwireCombobox
       hw_combobox_selection_chip display: display, value: value, for_id: for_id, remover_attrs: hw_combobox_dismissing_chip_remover_attrs(display, value)
     end
 
-    def hw_dismissing_combobox_selection_chips_for(objects, display: :to_combobox_display, value: :id, for_id: params[:for_id])
+    def hw_dismissing_combobox_selection_chips_for(objects, display: :to_combobox_display, value: :to_combobox_value, for_id: params[:for_id])
       objects.map do |object|
         hw_dismissing_combobox_selection_chip display: hw_call_method(object, display), value: hw_call_method(object, value), for_id: for_id
       end.then { |chips| safe_join chips }
@@ -165,8 +165,11 @@ module HotwireCombobox
           header = "`#{object.class}` does not respond to `##{method}`."
         end
 
-        if method.to_s == "to_combobox_display"
+        case method.to_s
+        when "to_combobox_display"
           header << "\n\nThis method is used to determine how this option should appear in the combobox options list."
+        when "to_combobox_value"
+          header << "\n\nThis method is used to determine the data-value for the option in the combobox options list."
         end
 
         raise NoMethodError, <<~MSG
