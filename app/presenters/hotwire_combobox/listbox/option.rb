@@ -5,7 +5,7 @@ class HotwireCombobox::Listbox::Option
     @option = option.is_a?(Hash) ? Data.new(**option) : option
   end
 
-  def render_in(view)
+  def render_in(view, locals: nil)
     view.tag.li content, **options
   end
 
