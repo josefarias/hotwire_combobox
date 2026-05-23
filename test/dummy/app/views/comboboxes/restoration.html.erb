@@ -1,0 +1,48 @@
+<% event_actions = "hw-combobox:preselection->combobox--restoration#countPreselection hw-combobox:selection->combobox--restoration#countSelection hw-combobox:restoration->combobox--restoration#countRestoration" %>
+
+<div data-controller="combobox--restoration"
+     data-combobox--restoration-hw-combobox-outlet="[data-controller~='hw-combobox']">
+
+  <div class="event-group">
+    <span data-combobox--restoration-target="preselectionCount"></span>
+    <span data-combobox--restoration-target="selectionCount"></span>
+    <span data-combobox--restoration-target="restorationCount"></span>
+  </div>
+
+  <%= button_tag "Restore again", type: "button", id: "restore-again",
+        data: { action: "combobox--restoration#restoreAll" } %>
+
+  <%= combobox_tag "preloaded_state", @state_options,
+        id: "single-preloaded",
+        label: "Single preloaded",
+        data: {
+          action: event_actions,
+          restoration_snapshot: { fieldName: "preloaded_state", value: "MI", display: "Michigan" }.to_json
+        } %>
+
+  <%= combobox_tag "async_movie", movies_path,
+        id: "single-async",
+        label: "Single async",
+        data: {
+          action: event_actions,
+          restoration_snapshot: { fieldName: "async_movie", value: @movie.id, display: @movie.to_combobox_display }.to_json
+        } %>
+
+  <%= combobox_tag "freetext_movie", movies_path(full_search: true),
+        id: "freetext",
+        label: "Freetext",
+        name_when_new: :new_freetext_movie,
+        data: {
+          action: event_actions,
+          restoration_snapshot: { fieldName: "new_freetext_movie", value: "Brand New Movie", display: "Brand New Movie" }.to_json
+        } %>
+
+  <%= combobox_tag "multi_state", State.all,
+        id: "multiselect",
+        label: "Multiselect",
+        multiselect_chip_src: state_chips_path,
+        data: {
+          action: event_actions,
+          restoration_snapshot: { fieldName: "multi_state", value: @restorable_states.map(&:id).join(",") }.to_json
+        } %>
+</div>

@@ -20,6 +20,7 @@ const concerns = [
   Combobox.Navigation,
   Combobox.NewOptions,
   Combobox.Options,
+  Combobox.Restoration,
   Combobox.Selection,
   Combobox.Toggle,
   Combobox.Validity
