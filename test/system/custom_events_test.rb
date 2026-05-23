@@ -108,4 +108,35 @@ class CustomEventsTest < ApplicationSystemTestCase
     assert_text "preselections: 6."
     assert_text "selections: 4."
   end
+
+  test "preselection event fires when clearing via the handle button" do
+    visit custom_events_path
+
+    open_combobox "#required"
+    type_in_combobox "#required", "A Beautiful Mind"
+    click_on_option "A Beautiful Mind"
+
+    assert_text "preselections: 1."
+
+    within "#preselection" do
+      assert_text "value: #{movies(:a_beautiful_mind).id}"
+    end
+
+    within selector_root("#required") do
+      find(".hw-combobox__handle").click
+    end
+
+    assert_text "preselections: 2."
+
+    within "#preselection" do
+      assert_text "event: hw-combobox:preselection"
+      assert_text "value: <empty>"
+      assert_text "previousValue: #{movies(:a_beautiful_mind).id}"
+    end
+  end
+
+  private
+    def selector_root(selector)
+      "fieldset[data-controller~='hw-combobox']:has(#{selector})"
+    end
 end

@@ -350,12 +350,20 @@ Combobox.Events = Base => class extends Base {
     });
   }
 
+  _dispatchRestorationEvent() {
+    dispatch("hw-combobox:restoration", {
+      target: this.element,
+      detail: this._eventableDetails
+    });
+  }
+
   get _eventableDetails() {
     return {
       value: this._incomingFieldValueString,
       display: this._fullQuery,
       query: this._typedQuery,
       fieldName: this._fieldName,
+      originalName: this.originalNameValue,
       isValid: this._valueIsValid
     }
   }
@@ -1098,6 +1106,45 @@ Combobox.Options = Base => class extends Base {
   }
 };
 
+Combobox.Restoration = Base => class extends Base {
+  restore({ fieldName, value, display } = {}) {
+    if (this._isMultiselect) {
+      this._restoreMultiselect({ fieldName, value });
+    } else {
+      this._restoreSingle({ fieldName, value, display });
+    }
+
+    this._dispatchRestorationEvent();
+  }
+
+  _restoreSingle({ fieldName, value, display }) {
+    if (fieldName) this._fieldName = fieldName;
+
+    this.hiddenFieldTarget.value = value || "";
+    this._fullQuery = display || "";
+    this._markQueried();
+    this._preselectSingle();
+    this._markValid();
+  }
+
+  _restoreMultiselect({ fieldName, value }) {
+    if (fieldName) this._fieldName = fieldName;
+
+    this._removeAllChips();
+    this.hiddenFieldTarget.value = value || "";
+    this._resetMultiselectionMarks();
+    this._markMultiPreselected();
+
+    if (value) this._requestChips(this._fieldValueString);
+
+    this._markValid();
+  }
+
+  _removeAllChips() {
+    this.element.querySelectorAll("[data-hw-combobox-chip]").forEach(chip => chip.remove());
+  }
+};
+
 Combobox.Selection = Base => class extends Base {
   selectOnClick({ currentTarget, inputType }) {
     this._forceSelectionAndFilter(currentTarget, inputType);
@@ -1115,7 +1162,7 @@ Combobox.Selection = Base => class extends Base {
     if (this._shouldTreatAsNewOptionForFiltering(!isDeleteEvent({ inputType: inputType }))) {
       this._selectNew();
     } else if (isDeleteEvent({ inputType: inputType })) {
-      this._deselect();
+      this._deselectAndNotify();
     } else if (inputType === "hw:lockInSelection" && this._ensurableOption) {
       this._select(this._ensurableOption, this._softAutocomplete.bind(this));
     } else if (this._isOpen && this._visibleOptionElements[0]) {
@@ -1728,6 +1775,7 @@ const concerns = [
   Combobox.Navigation,
   Combobox.NewOptions,
   Combobox.Options,
+  Combobox.Restoration,
   Combobox.Selection,
   Combobox.Toggle,
   Combobox.Validity

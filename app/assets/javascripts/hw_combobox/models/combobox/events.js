@@ -25,12 +25,20 @@ Combobox.Events = Base => class extends Base {
     })
   }
 
+  _dispatchRestorationEvent() {
+    dispatch("hw-combobox:restoration", {
+      target: this.element,
+      detail: this._eventableDetails
+    })
+  }
+
   get _eventableDetails() {
     return {
       value: this._incomingFieldValueString,
       display: this._fullQuery,
       query: this._typedQuery,
       fieldName: this._fieldName,
+      originalName: this.originalNameValue,
       isValid: this._valueIsValid
     }
   }
