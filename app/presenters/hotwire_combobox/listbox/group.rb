@@ -8,7 +8,7 @@ class HotwireCombobox::Listbox::Group
     @options = options
   end
 
-  def render_in(view)
+  def render_in(view, **)
     view.tag.ul(**group_attrs) do
       view.concat view.tag.li(name, **label_attrs)
 
