@@ -64,7 +64,7 @@ class MultiselectClientTest < ApplicationSystemTestCase
     assert_no_visible_options_with text: "California"
   end
 
-  test "renders prefilled chips from prefilled_chips_attributes when listbox is async" do
+  test "renders prefilled chips from prefilled_chips when listbox is async" do
     visit multiselect_client_async_prefilled_path
 
     assert_closed_combobox

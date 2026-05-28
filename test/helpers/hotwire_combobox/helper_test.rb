@@ -147,12 +147,12 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     assert_attrs CGI.unescape(html), tag_name: "turbo-frame", src: "/foo?ary[]=1&ary[]=2&page=2&format=turbo_stream"
   end
 
-  test "prefilled_chips_attributes serializes a value+display+chip_data seed for each entry" do
+  test "prefilled_chips serializes a value+display+chip_data seed for each entry" do
     states = State.where(name: %w[ Alabama California ]).order(:name)
     tag = combobox_tag :state, "/states",
       chip_template: { partial: "state_chips/chip" },
       chip_attributes: { display: :name, abbreviation: :abbreviation },
-      prefilled_chips_attributes: states,
+      prefilled_chips: states,
       value: states.pluck(:id).join(",")
 
     fieldset = Nokogiri::HTML(tag).at_css("fieldset")
@@ -165,7 +165,7 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     assert_equal "AL", seed.first["chip_data"]["abbreviation"]
   end
 
-  test "prefilled_chips_attributes is omitted from the fieldset when not provided" do
+  test "prefilled_chips is omitted from the fieldset when not provided" do
     tag = combobox_tag :state, [ %w[ Alabama AL ] ]
     fieldset = Nokogiri::HTML(tag).at_css("fieldset")
 

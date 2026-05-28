@@ -14,9 +14,9 @@ module HotwireCombobox
       stylesheet_link_tag HotwireCombobox.stylesheet_path, *args, **kwargs
     end
 
-    def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, chip_attributes: {}, prefilled_chips_attributes: nil, **kwargs, &block)
+    def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, chip_attributes: {}, prefilled_chips: nil, **kwargs, &block)
       options, src = hw_extract_options_and_src options_or_src, render_in, include_blank, chip_attributes
-      prefilled_chips = hw_resolve_prefilled_chips prefilled_chips_attributes, chip_attributes
+      prefilled_chips = hw_resolve_prefilled_chips prefilled_chips, chip_attributes
       component = HotwireCombobox::Component.new self, name, options: options, async_src: src, request: request, chip_attributes: chip_attributes, prefilled_chips: prefilled_chips, **kwargs
       render component, &block
     end

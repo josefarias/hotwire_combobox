@@ -46,6 +46,6 @@
         abbreviation: :abbreviation,
         name_slug: ->(state) { state.name.downcase.parameterize }
       },
-      prefilled_chips_attributes: prefilled,
+      prefilled_chips: prefilled,
       value: prefilled.pluck(:id).join(","),
       placeholder: "Select states" %>
