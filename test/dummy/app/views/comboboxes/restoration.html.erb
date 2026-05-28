@@ -59,4 +59,25 @@
           action: event_actions,
           restoration_snapshot: { fieldName: "multi_state_client", value: State.where(name: %w[ Alabama Alaska ]).order(:name).pluck(:id).join(",") }.to_json
         } %>
+
+  <%= combobox_tag "multi_state_client_async", State.all,
+        id: "multiselect-client-async",
+        label: "Multiselect (client-side chips, restored to ids the listbox doesn't know about)",
+        chip_template: { partial: "state_chips/chip" },
+        chip_attributes: {
+          display: :name,
+          abbreviation: :abbreviation,
+          name_slug: ->(state) { state.name.downcase.parameterize }
+        },
+        data: {
+          action: event_actions,
+          restoration_snapshot: {
+            fieldName: "multi_state_client_async",
+            value: "9001,9002",
+            chips: [
+              { value: "9001", display: "Atlantis",  chip_data: { abbreviation: "AT", name_slug: "atlantis"  } },
+              { value: "9002", display: "Eldorado",  chip_data: { abbreviation: "ED", name_slug: "eldorado"  } }
+            ]
+          }.to_json
+        } %>
 </div>

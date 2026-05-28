@@ -39,7 +39,19 @@ Combobox.Events = Base => class extends Base {
       query: this._typedQuery,
       fieldName: this._fieldName,
       originalName: this.originalNameValue,
-      isValid: this._valueIsValid
+      isValid: this._valueIsValid,
+      chipData: this._currentChipData
     }
+  }
+
+  get _currentChipData() {
+    const value = this._currentSelectionValue
+    if (!value) return null
+
+    const option = this._optionElementWithValue(value)
+    if (!option) return null
+
+    const extras = this._chipExtrasFromOptionElement(option)
+    return Object.keys(extras).length > 0 ? extras : null
   }
 }

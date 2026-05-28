@@ -64,7 +64,7 @@ class RestorationTest < ApplicationSystemTestCase
 
     # The restoration counter reaching the combobox count proves restores ran, so the
     # zeroed change-event counters mean restore stayed silent on the change channel.
-    assert_text "restorations: 5."
+    assert_text "restorations: 6."
     assert_text "preselections: 0."
     assert_text "selections: 0."
   end
@@ -72,11 +72,11 @@ class RestorationTest < ApplicationSystemTestCase
   test "restoring twice does not duplicate chips" do
     visit restoration_path
 
-    assert_selector "[data-hw-combobox-chip]", count: 4
+    assert_selector "[data-hw-combobox-chip]", count: 6
 
     find("#restore-again").click
 
-    assert_selector "[data-hw-combobox-chip]", count: 4
+    assert_selector "[data-hw-combobox-chip]", count: 6
     assert_combobox_value "#multiselect", states(:florida, :illinois).pluck(:id)
   end
 
@@ -96,5 +96,22 @@ class RestorationTest < ApplicationSystemTestCase
     open_combobox "#multiselect-client"
     assert_no_visible_options_with text: "Alabama"
     assert_no_visible_options_with text: "Alaska"
+  end
+
+  test "restores client-side multiselect via chips array when values aren't in the listbox" do
+    visit restoration_path
+
+    assert_combobox_value "#multiselect-client-async", %w[ 9001 9002 ]
+
+    # Atlantis/Eldorado don't exist as options and aren't in prefilled_chips, so the
+    # chips array on the restore snapshot is the only place the display name and
+    # chip_data placeholders can come from. Without it, display would fall back to
+    # the raw value and {{name_slug}}/{{abbreviation}} would render literally.
+    assert_selector "[data-hw-combobox-chip] div.custom-chip > p", text: "Atlantis"
+    assert_selector "[data-hw-combobox-chip] div.custom-chip > p", text: "Eldorado"
+    assert_selector "[data-hw-combobox-chip] span.state.state--atlantis", visible: :all
+    assert_selector "[data-hw-combobox-chip] span.state.state--eldorado", visible: :all
+    assert_selector "[data-hw-combobox-chip] small[data-abbr='AT']", visible: :all
+    assert_selector "[data-hw-combobox-chip] small[data-abbr='ED']", visible: :all
   end
 end

@@ -109,6 +109,37 @@ class CustomEventsTest < ApplicationSystemTestCase
     assert_text "selections: 4."
   end
 
+  test "preselection and selection events include chipData from option data-chip-* attrs" do
+    visit custom_events_path
+
+    open_combobox "#client-multiselect"
+    click_on_option "Alabama"
+
+    within "#preselection" do
+      assert_text "event: hw-combobox:preselection"
+      assert_text "value: #{states(:alabama).id}"
+      assert_text %(chipData: {"display":"Alabama","abbreviation":"AL","name_slug":"alabama"})
+    end
+
+    within "#selection" do
+      assert_text "event: hw-combobox:selection"
+      assert_text "value: #{states(:alabama).id}"
+      assert_text %(chipData: {"display":"Alabama","abbreviation":"AL","name_slug":"alabama"})
+    end
+  end
+
+  test "chipData is empty for options without data-chip-* attrs" do
+    visit custom_events_path
+
+    open_combobox "#allow-new"
+    type_in_combobox "#allow-new", "A Bea"
+
+    within "#preselection" do
+      assert_text "event: hw-combobox:preselection"
+      assert_text "chipData: <empty>"
+    end
+  end
+
   test "preselection event fires when clearing via the handle button" do
     visit custom_events_path
 

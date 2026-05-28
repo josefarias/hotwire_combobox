@@ -119,7 +119,10 @@ Combobox.Multiselect = Base => class extends Base {
   }
 
   _chipMappingFor(value) {
-    const data = this._chipDataFromOption(value) || this._chipDataFromPrefilledChip(value) || { display: String(value) }
+    const data = this._chipDataFromOption(value)
+      || this._chipDataFromRestoredChip(value)
+      || this._chipDataFromPrefilledChip(value)
+      || { display: String(value) }
     return { value: String(value), ...data }
   }
 
@@ -127,16 +130,30 @@ Combobox.Multiselect = Base => class extends Base {
     const option = this._optionElementWithValue(value)
     if (!option) return null
 
-    const data = { display: option.getAttribute(this.autocompletableAttributeValue) || "" }
+    return {
+      display: option.getAttribute(this.autocompletableAttributeValue) || "",
+      ...this._chipExtrasFromOptionElement(option)
+    }
+  }
+
+  _chipExtrasFromOptionElement(option) {
+    const extras = {}
 
     for (const attr of option.attributes) {
       if (attr.name.startsWith(CHIP_DATA_ATTR_PREFIX)) {
         const placeholder = attr.name.slice(CHIP_DATA_ATTR_PREFIX.length).replace(/-/g, "_")
-        data[placeholder] = attr.value
+        extras[placeholder] = attr.value
       }
     }
 
-    return data
+    return extras
+  }
+
+  _chipDataFromRestoredChip(value) {
+    const restoredChip = this._restoredChipFor(value)
+    if (!restoredChip) return null
+
+    return { display: restoredChip.display || "", ...(restoredChip.chip_data || {}) }
   }
 
   _chipDataFromPrefilledChip(value) {
@@ -144,6 +161,12 @@ Combobox.Multiselect = Base => class extends Base {
     if (!prefilledChip) return null
 
     return { display: prefilledChip.display || "", ...(prefilledChip.chip_data || {}) }
+  }
+
+  _restoredChipFor(value) {
+    if (!this._restoredChips) return null
+
+    return this._restoredChips.find(restoredChip => String(restoredChip.value) === String(value))
   }
 
   _prefilledChipFor(value) {
