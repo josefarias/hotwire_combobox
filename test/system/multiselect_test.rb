@@ -91,6 +91,7 @@ class MultiselectTest < ApplicationSystemTestCase
       states(:alabama, :alaska, :michigan).pluck(:id)
 
     # pagination
+    open_combobox "#states-field"
     assert_options_with count: 8 # AL, AK, and MI are served but hidden
     find("#states-field-hw-listbox").scroll_to :bottom
     assert_options_with count: 13

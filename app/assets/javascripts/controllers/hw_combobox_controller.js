@@ -110,11 +110,9 @@ export default class HwComboboxController extends Concerns(...concerns) {
       this._dequeueCallback(callbackId)
       this._resetMultiselectionMarks()
 
-      if (inputType === "hw:multiselectSync") {
-        this.open()
-      } else if (inputType !== "hw:lockInSelection") {
-        this._selectOnQuery(inputType)
-      }
+      if (inputType === "hw:lockInSelection" || inputType === "hw:multiselectSync") return
+
+      this._selectOnQuery(inputType)
     } else {
       await nextRepaint()
       this._runCallback(element)
