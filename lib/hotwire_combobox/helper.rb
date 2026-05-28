@@ -14,9 +14,10 @@ module HotwireCombobox
       stylesheet_link_tag HotwireCombobox.stylesheet_path, *args, **kwargs
     end
 
-    def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, chip_attributes: {}, **kwargs, &block)
+    def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, chip_attributes: {}, prefilled_chips_attributes: nil, **kwargs, &block)
       options, src = hw_extract_options_and_src options_or_src, render_in, include_blank, chip_attributes
-      component = HotwireCombobox::Component.new self, name, options: options, async_src: src, request: request, chip_attributes: chip_attributes, **kwargs
+      prefilled_chips = hw_resolve_prefilled_chips prefilled_chips_attributes, chip_attributes
+      component = HotwireCombobox::Component.new self, name, options: options, async_src: src, request: request, chip_attributes: chip_attributes, prefilled_chips: prefilled_chips, **kwargs
       render component, &block
     end
 
@@ -128,6 +129,16 @@ module HotwireCombobox
           [ hw_combobox_options([]), options_or_src ]
         else
           [ hw_combobox_options(options_or_src, render_in: render_in, include_blank: include_blank, chip_attributes: chip_attributes), nil ]
+        end
+      end
+
+      def hw_resolve_prefilled_chips(collection, chip_attributes)
+        return nil if collection.blank?
+
+        hw_combobox_options(collection, chip_attributes: chip_attributes).map do |option|
+          { value: option.value.to_s,
+            display: option.autocompletable_as.to_s,
+            chip_data: option.chip_data }
         end
       end
 

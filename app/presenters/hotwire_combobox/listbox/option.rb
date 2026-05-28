@@ -17,6 +17,10 @@ class HotwireCombobox::Listbox::Option
     option.try(:autocompletable_as) || option.try(:display)
   end
 
+  def chip_data
+    option.try(:chip_data) || {}
+  end
+
   private
     Data = Struct.new :id, :value, :display, :content, :blank, :filterable_as, :autocompletable_as, :chip_data, keyword_init: true
 
@@ -24,7 +28,7 @@ class HotwireCombobox::Listbox::Option
 
     def options
       data = { action: "click->hw-combobox#selectOnClick", filterable_as: filterable_as, autocompletable_as: autocompletable_as, value: value }
-      option.try(:chip_data)&.each { |key, val| data[:"chip_#{key}"] = val }
+      chip_data&.each { |key, val| data[:"chip_#{key}"] = val }
 
       { id: id, role: :option, tabindex: "-1",
         class: [ "hw-combobox__option", { "hw-combobox__option--blank": blank? } ],

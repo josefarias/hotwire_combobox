@@ -49,6 +49,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
     filterableAttribute: String,
     nameWhenNew: String,
     originalName: String,
+    prefilledChips: Array,
     prefilledDisplay: String,
     selectionChipSrc: String,
     smallViewportMaxWidth: String

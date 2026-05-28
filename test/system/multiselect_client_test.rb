@@ -64,6 +64,20 @@ class MultiselectClientTest < ApplicationSystemTestCase
     assert_no_visible_options_with text: "California"
   end
 
+  test "renders prefilled chips from prefilled_chips_attributes when listbox is async" do
+    visit multiselect_client_async_prefilled_path
+
+    assert_closed_combobox
+    assert_combobox_value "#states-field", states(:alabama, :california).pluck(:id)
+
+    assert_chip_with html_markup: "div.custom-chip > p", text: "Alabama"
+    assert_chip_with html_markup: "div.custom-chip > p", text: "California"
+    assert_chip_with html_markup: "small[data-abbr='AL']", visible: :all
+    assert_chip_with html_markup: "small[data-abbr='CA']", visible: :all
+    assert_chip_with html_markup: "span.state.state--alabama", visible: :all
+    assert_chip_with html_markup: "span.state.state--california", visible: :all
+  end
+
   test "renders client-side chips for free-text new values" do
     visit multiselect_client_new_values_path
 

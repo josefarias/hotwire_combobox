@@ -823,7 +823,7 @@ Combobox.Multiselect = Base => class extends Base {
       this._markNotSelected(option);
       this._markNotMultiselected(option);
     } else {
-      display = params.value; // for new options
+      display = this._prefilledChipFor(params.value)?.display || params.value;
     }
 
     this._removeFromFieldValue(params.value);
@@ -910,10 +910,9 @@ Combobox.Multiselect = Base => class extends Base {
   }
 
   _renderChipForValue(value) {
-    const option = this._optionElementWithValue(value);
     const fragment = this._chipTemplate.content.cloneNode(true);
 
-    this._substituteChipPlaceholders(fragment, this._chipMappingFor(option, value));
+    this._substituteChipPlaceholders(fragment, this._chipMappingFor(value));
 
     const wrapper = document.createElement("div");
     wrapper.setAttribute("data-hw-combobox-chip", "");
@@ -923,24 +922,38 @@ Combobox.Multiselect = Base => class extends Base {
     if (input) input.parentNode.insertBefore(wrapper, input);
   }
 
-  _chipMappingFor(option, value) {
-    const mapping = { value: String(value) };
+  _chipMappingFor(value) {
+    const data = this._chipDataFromOption(value) || this._chipDataFromPrefilledChip(value) || { display: String(value) };
+    return { value: String(value), ...data }
+  }
 
-    if (option) {
-      mapping.display = option.getAttribute(this.autocompletableAttributeValue) || "";
+  _chipDataFromOption(value) {
+    const option = this._optionElementWithValue(value);
+    if (!option) return null
 
-      for (const attr of option.attributes) {
-        if (attr.name.startsWith(CHIP_DATA_ATTR_PREFIX)) {
-          const placeholder = attr.name.slice(CHIP_DATA_ATTR_PREFIX.length).replace(/-/g, "_");
-          mapping[placeholder] = attr.value;
-        }
+    const data = { display: option.getAttribute(this.autocompletableAttributeValue) || "" };
+
+    for (const attr of option.attributes) {
+      if (attr.name.startsWith(CHIP_DATA_ATTR_PREFIX)) {
+        const placeholder = attr.name.slice(CHIP_DATA_ATTR_PREFIX.length).replace(/-/g, "_");
+        data[placeholder] = attr.value;
       }
-    } else {
-      // New option not present in the listbox (free-text); display falls back to the value.
-      mapping.display = String(value);
     }
 
-    return mapping
+    return data
+  }
+
+  _chipDataFromPrefilledChip(value) {
+    const prefilledChip = this._prefilledChipFor(value);
+    if (!prefilledChip) return null
+
+    return { display: prefilledChip.display || "", ...(prefilledChip.chip_data || {}) }
+  }
+
+  _prefilledChipFor(value) {
+    if (!this.hasPrefilledChipsValue) return null
+
+    return this.prefilledChipsValue.find(prefilledChip => String(prefilledChip.value) === String(value))
   }
 
   _substituteChipPlaceholders(node, mapping) {
@@ -1357,9 +1370,9 @@ Combobox.Selection = Base => class extends Base {
 
   get _hasSelection() {
     if (this._isSingleSelect) {
-      this._selectedOptionElement;
+      return !!this._selectedOptionElement
     } else {
-      this._multiselectedOptionElements.length > 0;
+      return this._multiselectedOptionElements.length > 0
     }
   }
 
@@ -1879,6 +1892,7 @@ class HwComboboxController extends Concerns(...concerns) {
     filterableAttribute: String,
     nameWhenNew: String,
     originalName: String,
+    prefilledChips: Array,
     prefilledDisplay: String,
     selectionChipSrc: String,
     smallViewportMaxWidth: String

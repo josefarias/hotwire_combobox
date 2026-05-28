@@ -30,14 +30,15 @@ class HotwireCombobox::Component
     open: false,
     options: [],
     preload: false,
+    prefilled_chips: nil,
     request: nil,
     value: nil, **rest)
     @view, @autocomplete, @id, @name, @value, @form, @async_src, @label, @free_text, @request,
     @preload, @name_when_new, @open, @data, @debounce_interval, @mobile_at, @multiselect_chip_src,
-    @chip_template, @chip_attributes, @options, @dialog_label =
+    @chip_template, @chip_attributes, @prefilled_chips, @options, @dialog_label =
       view, autocomplete, id, name.to_s, value, form, async_src, label, free_text, request,
       preload, name_when_new, open, data, debounce_interval, mobile_at, multiselect_chip_src,
-      chip_template, chip_attributes, options, dialog_label
+      chip_template, chip_attributes, prefilled_chips, options, dialog_label
 
     @combobox_attrs = input.reverse_merge(rest).deep_symbolize_keys
     @association_name = association_name || infer_association_name
@@ -53,7 +54,7 @@ class HotwireCombobox::Component
   private
     attr_reader :view, :autocomplete, :id, :name, :value, :form, :free_text, :open, :request,
       :data, :debounce_interval, :combobox_attrs, :mobile_at, :association_name, :multiselect_chip_src,
-      :chip_template, :chip_attributes, :preload
+      :chip_template, :chip_attributes, :prefilled_chips, :preload
 
     def canonical_id
       @canonical_id ||= id || form&.field_id(name) || SecureRandom.uuid

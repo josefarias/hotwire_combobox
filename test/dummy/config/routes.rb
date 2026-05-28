@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   get "multiselect", to: "comboboxes#multiselect"
   get "multiselect_async_html", to: "comboboxes#multiselect_async_html"
   get "multiselect_client", to: "comboboxes#multiselect_client"
+  get "multiselect_client_async_prefilled", to: "comboboxes#multiselect_client_async_prefilled"
   get "multiselect_client_new_values", to: "comboboxes#multiselect_client_new_values"
   get "multiselect_client_prefilled", to: "comboboxes#multiselect_client_prefilled"
   get "multiselect_custom_events", to: "comboboxes#multiselect_custom_events"

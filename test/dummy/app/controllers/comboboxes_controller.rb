@@ -91,6 +91,9 @@ class ComboboxesController < ApplicationController
   def multiselect_client
   end
 
+  def multiselect_client_async_prefilled
+  end
+
   def multiselect_client_new_values
   end
 
