@@ -32,7 +32,6 @@ export default class HwComboboxController extends Concerns(...concerns) {
     "announcer",
     "combobox",
     "chipDismisser",
-    "closer",
     "dialog", "dialogCombobox", "dialogFocusTrap", "dialogListbox",
     "endOfOptionsStream",
     "handle",
@@ -89,6 +88,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
       this._runCallback(element)
     } else {
       this._preselectSingle()
+      this._resetMultiselectionMarks()
     }
   }
 
@@ -118,10 +118,6 @@ export default class HwComboboxController extends Concerns(...concerns) {
       await nextRepaint()
       this._runCallback(element)
     }
-  }
-
-  closerTargetConnected() {
-    this.close("hw:asyncCloser")
   }
 
   // Use +_printStack+ for debugging purposes

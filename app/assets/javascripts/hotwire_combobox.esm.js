@@ -806,6 +806,9 @@ Combobox.FormField = Base => class extends Base {
   }
 };
 
+const CHIP_PLACEHOLDER_REGEX = /\{\{(\w+)\}\}/g;
+const CHIP_DATA_ATTR_PREFIX = "data-chip-";
+
 Combobox.Multiselect = Base => class extends Base {
   navigateChip(event) {
     this._chipKeyHandlers[event.key]?.call(this, event);
@@ -866,23 +869,26 @@ Combobox.Multiselect = Base => class extends Base {
     }
   }
 
-  async _createChip(shouldReopen) {
+  _createChip() {
     if (!this._isMultiselect) return
 
-    this._beforeClearingMultiselectQuery(async (display, value) => {
+    this._beforeClearingMultiselectQuery((display, value) => {
       this._fullQuery = "";
 
       this._filter("hw:multiselectSync");
-      this._requestChips(value);
+      this._buildChips(value);
       this._addToFieldValue(value);
-
-      if (shouldReopen) {
-        await nextRepaint();
-        this.open();
-      }
 
       this._announceToScreenReader(display, "multi-selected. Press Shift + Tab, then Enter to remove.");
     });
+  }
+
+  _buildChips(values) {
+    if (this._hasChipTemplate) {
+      this._renderChipsClientSide(values);
+    } else if (this.hasSelectionChipSrcValue) {
+      this._requestChips(values);
+    }
   }
 
   async _requestChips(values) {
@@ -893,6 +899,73 @@ Combobox.Multiselect = Base => class extends Base {
         combobox_values: values
       }
     });
+  }
+
+  _renderChipsClientSide(values) {
+    const valueList = Array.isArray(values) ? values : String(values).split(",");
+
+    valueList.filter(value => value.length > 0).forEach(value => {
+      this._renderChipForValue(value);
+    });
+  }
+
+  _renderChipForValue(value) {
+    const option = this._optionElementWithValue(value);
+    const fragment = this._chipTemplate.content.cloneNode(true);
+
+    this._substituteChipPlaceholders(fragment, this._chipMappingFor(option, value));
+
+    const wrapper = document.createElement("div");
+    wrapper.setAttribute("data-hw-combobox-chip", "");
+    wrapper.appendChild(fragment);
+
+    const input = document.getElementById(this.element.dataset.asyncId);
+    if (input) input.parentNode.insertBefore(wrapper, input);
+  }
+
+  _chipMappingFor(option, value) {
+    const mapping = { value: String(value) };
+
+    if (option) {
+      mapping.display = option.getAttribute(this.autocompletableAttributeValue) || "";
+
+      for (const attr of option.attributes) {
+        if (attr.name.startsWith(CHIP_DATA_ATTR_PREFIX)) {
+          const placeholder = attr.name.slice(CHIP_DATA_ATTR_PREFIX.length).replace(/-/g, "_");
+          mapping[placeholder] = attr.value;
+        }
+      }
+    } else {
+      // New option not present in the listbox (free-text); display falls back to the value.
+      mapping.display = String(value);
+    }
+
+    return mapping
+  }
+
+  _substituteChipPlaceholders(node, mapping) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      if (node.nodeValue.includes("{{")) {
+        node.nodeValue = node.nodeValue.replace(CHIP_PLACEHOLDER_REGEX, (match, name) => {
+          return Object.prototype.hasOwnProperty.call(mapping, name) ? mapping[name] : match
+        });
+      }
+      return
+    }
+
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      for (const attr of Array.from(node.attributes)) {
+        if (attr.value.includes("{{")) {
+          attr.value = attr.value.replace(CHIP_PLACEHOLDER_REGEX, (match, name) => {
+            return Object.prototype.hasOwnProperty.call(mapping, name) ? mapping[name] : match
+          });
+        }
+      }
+    }
+
+    for (const child of Array.from(node.childNodes)) {
+      this._substituteChipPlaceholders(child, mapping);
+    }
   }
 
   _beforeClearingMultiselectQuery(callback) {
@@ -945,20 +1018,24 @@ Combobox.Multiselect = Base => class extends Base {
     if (this._isSync) this._resetMultiselectionMarks();
   }
 
-  _focusLastChipDismisser() {
-    this.chipDismisserTargets[this.chipDismisserTargets.length - 1]?.focus();
-  }
-
   _markMultiPreselected() {
     this.element.dataset.multiPreselected = "";
   }
 
   get _isMultiselect() {
-    return this.hasSelectionChipSrcValue
+    return this.hasSelectionChipSrcValue || this._hasChipTemplate
   }
 
   get _isSingleSelect() {
     return !this._isMultiselect
+  }
+
+  get _hasChipTemplate() {
+    return !!this._chipTemplate
+  }
+
+  get _chipTemplate() {
+    return this.element.querySelector("template[data-hw-combobox-chip-template]")
   }
 
   get _isMultiPreselected() {
@@ -1005,8 +1082,11 @@ Combobox.Navigation = Base => class extends Base {
     },
     Backspace: (event) => {
       if (this._isMultiselect && !this._fullQuery) {
-        this._focusLastChipDismisser();
-        cancel(event);
+        const lastDismisser = this.chipDismisserTargets[this.chipDismisserTargets.length - 1];
+        if (lastDismisser) {
+          lastDismisser.click();
+          cancel(event);
+        }
       }
     }
   }
@@ -1135,7 +1215,7 @@ Combobox.Restoration = Base => class extends Base {
     this._resetMultiselectionMarks();
     this._markMultiPreselected();
 
-    if (value) this._requestChips(this._fieldValueString);
+    if (value) this._buildChips(this._fieldValueString);
 
     this._markValid();
   }
@@ -1149,6 +1229,7 @@ Combobox.Selection = Base => class extends Base {
   selectOnClick({ currentTarget, inputType }) {
     this._forceSelectionAndFilter(currentTarget, inputType);
     this.close("hw:optionRoleClick");
+    this._actingCombobox.focus();
   }
 
   _connectSelection() {
@@ -1230,7 +1311,7 @@ Combobox.Selection = Base => class extends Base {
 
   _preselectMultiple() {
     if (this._isMultiselect && this._hasValueButNoSelection) {
-      this._requestChips(this._fieldValueString);
+      this._buildChips(this._fieldValueString);
       this._resetMultiselectionMarks();
     }
   }
@@ -1572,13 +1653,6 @@ Combobox.Toggle = Base => class extends Base {
 
   close(inputType) {
     if (this._isOpen) {
-      const shouldReopen = this._isMultiselect &&
-        this._isSync &&
-        !this._isSmallViewport &&
-        inputType != "hw:clickOutside" &&
-        inputType != "hw:focusOutside" &&
-        inputType != "hw:asyncCloser";
-
       this._lockInSelection();
       this._clearInvalidQuery();
 
@@ -1586,7 +1660,7 @@ Combobox.Toggle = Base => class extends Base {
 
       if (inputType != "hw:keyHandler:escape") {
         this._dispatchSelectionEvent();
-        this._createChip(shouldReopen);
+        this._createChip();
       }
 
       if (this._isSingleSelect && this._selectedOptionElement) {
@@ -1658,6 +1732,7 @@ Combobox.Toggle = Base => class extends Base {
     }
 
     this._actingCombobox.setAttribute("aria-expanded", true); // needs to happen after setting acting combobox
+    this._actingCombobox.focus();
   }
 
   // +._collapse()+ differs from `.close()` in that it might be called by stimulus on connect because
@@ -1787,7 +1862,6 @@ class HwComboboxController extends Concerns(...concerns) {
     "announcer",
     "combobox",
     "chipDismisser",
-    "closer",
     "dialog", "dialogCombobox", "dialogFocusTrap", "dialogListbox",
     "endOfOptionsStream",
     "handle",
@@ -1844,6 +1918,7 @@ class HwComboboxController extends Concerns(...concerns) {
       this._runCallback(element);
     } else {
       this._preselectSingle();
+      this._resetMultiselectionMarks();
     }
   }
 
@@ -1873,10 +1948,6 @@ class HwComboboxController extends Concerns(...concerns) {
       await nextRepaint();
       this._runCallback(element);
     }
-  }
-
-  closerTargetConnected() {
-    this.close("hw:asyncCloser");
   }
 
   // Use +_printStack+ for debugging purposes

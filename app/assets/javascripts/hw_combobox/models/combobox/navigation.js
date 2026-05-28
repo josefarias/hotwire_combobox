@@ -40,8 +40,11 @@ Combobox.Navigation = Base => class extends Base {
     },
     Backspace: (event) => {
       if (this._isMultiselect && !this._fullQuery) {
-        this._focusLastChipDismisser()
-        cancel(event)
+        const lastDismisser = this.chipDismisserTargets[this.chipDismisserTargets.length - 1]
+        if (lastDismisser) {
+          lastDismisser.click()
+          cancel(event)
+        }
       }
     }
   }

@@ -8,13 +8,6 @@ Combobox.Toggle = Base => class extends Base {
 
   close(inputType) {
     if (this._isOpen) {
-      const shouldReopen = this._isMultiselect &&
-        this._isSync &&
-        !this._isSmallViewport &&
-        inputType != "hw:clickOutside" &&
-        inputType != "hw:focusOutside" &&
-        inputType != "hw:asyncCloser"
-
       this._lockInSelection()
       this._clearInvalidQuery()
 
@@ -22,7 +15,7 @@ Combobox.Toggle = Base => class extends Base {
 
       if (inputType != "hw:keyHandler:escape") {
         this._dispatchSelectionEvent()
-        this._createChip(shouldReopen)
+        this._createChip()
       }
 
       if (this._isSingleSelect && this._selectedOptionElement) {
@@ -94,6 +87,7 @@ Combobox.Toggle = Base => class extends Base {
     }
 
     this._actingCombobox.setAttribute("aria-expanded", true) // needs to happen after setting acting combobox
+    this._actingCombobox.focus()
   }
 
   // +._collapse()+ differs from `.close()` in that it might be called by stimulus on connect because

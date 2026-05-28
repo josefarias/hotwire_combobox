@@ -29,7 +29,7 @@ Combobox.Restoration = Base => class extends Base {
     this._resetMultiselectionMarks()
     this._markMultiPreselected()
 
-    if (value) this._requestChips(this._fieldValueString)
+    if (value) this._buildChips(this._fieldValueString)
 
     this._markValid()
   }

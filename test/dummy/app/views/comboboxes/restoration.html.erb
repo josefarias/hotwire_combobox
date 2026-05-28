@@ -45,4 +45,18 @@
           action: event_actions,
           restoration_snapshot: { fieldName: "multi_state", value: @restorable_states.map(&:id).join(",") }.to_json
         } %>
+
+  <%= combobox_tag "multi_state_client", State.all,
+        id: "multiselect-client",
+        label: "Multiselect (client-side chips)",
+        chip_template: { partial: "state_chips/chip" },
+        chip_attributes: {
+          display: :name,
+          abbreviation: :abbreviation,
+          name_slug: ->(state) { state.name.downcase.parameterize }
+        },
+        data: {
+          action: event_actions,
+          restoration_snapshot: { fieldName: "multi_state_client", value: State.where(name: %w[ Alabama Alaska ]).order(:name).pluck(:id).join(",") }.to_json
+        } %>
 </div>

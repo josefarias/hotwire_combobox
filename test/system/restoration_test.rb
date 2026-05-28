@@ -64,7 +64,7 @@ class RestorationTest < ApplicationSystemTestCase
 
     # The restoration counter reaching the combobox count proves restores ran, so the
     # zeroed change-event counters mean restore stayed silent on the change channel.
-    assert_text "restorations: 4."
+    assert_text "restorations: 5."
     assert_text "preselections: 0."
     assert_text "selections: 0."
   end
@@ -72,11 +72,29 @@ class RestorationTest < ApplicationSystemTestCase
   test "restoring twice does not duplicate chips" do
     visit restoration_path
 
-    assert_selector "[data-hw-combobox-chip]", count: 2
+    assert_selector "[data-hw-combobox-chip]", count: 4
 
     find("#restore-again").click
 
-    assert_selector "[data-hw-combobox-chip]", count: 2
+    assert_selector "[data-hw-combobox-chip]", count: 4
     assert_combobox_value "#multiselect", states(:florida, :illinois).pluck(:id)
+  end
+
+  test "restores a client-side multiselect from snapshot using chip_template" do
+    visit restoration_path
+
+    assert_closed_combobox
+    assert_combobox_value "#multiselect-client", states(:alabama, :alaska).pluck(:id)
+
+    # `.custom-chip` is unique to the client-side combobox here; `#multiselect` uses
+    # the default `.hw-combobox__chip` markup, so this selector disambiguates.
+    assert_selector "[data-hw-combobox-chip] div.custom-chip > p", text: "Alabama"
+    assert_selector "[data-hw-combobox-chip] div.custom-chip > p", text: "Alaska"
+    assert_selector "[data-hw-combobox-chip] span.state.state--alabama", visible: :all
+    assert_selector "[data-hw-combobox-chip] span.state.state--alaska", visible: :all
+
+    open_combobox "#multiselect-client"
+    assert_no_visible_options_with text: "Alabama"
+    assert_no_visible_options_with text: "Alaska"
   end
 end

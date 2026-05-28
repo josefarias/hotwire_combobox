@@ -10,10 +10,6 @@ class StateChipsController < ApplicationController
   def create_html
   end
 
-  def create_dismissing
-    render turbo_stream: helpers.dismissing_combobox_selection_chips_for(@states)
-  end
-
   def create_possibly_new
     @states = params[:combobox_values].split(",").map do |value|
       State.find_by(id: value) || OpenStruct.new(to_combobox_display: value, id: value)

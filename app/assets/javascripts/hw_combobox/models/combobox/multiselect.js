@@ -1,6 +1,9 @@
 import Combobox from "hw_combobox/models/combobox/base"
-import { cancel, nextRepaint } from "hw_combobox/helpers"
+import { cancel } from "hw_combobox/helpers"
 import { post } from "hw_combobox/vendor/requestjs"
+
+const CHIP_PLACEHOLDER_REGEX = /\{\{(\w+)\}\}/g
+const CHIP_DATA_ATTR_PREFIX = "data-chip-"
 
 Combobox.Multiselect = Base => class extends Base {
   navigateChip(event) {
@@ -62,23 +65,26 @@ Combobox.Multiselect = Base => class extends Base {
     }
   }
 
-  async _createChip(shouldReopen) {
+  _createChip() {
     if (!this._isMultiselect) return
 
-    this._beforeClearingMultiselectQuery(async (display, value) => {
+    this._beforeClearingMultiselectQuery((display, value) => {
       this._fullQuery = ""
 
       this._filter("hw:multiselectSync")
-      this._requestChips(value)
+      this._buildChips(value)
       this._addToFieldValue(value)
-
-      if (shouldReopen) {
-        await nextRepaint()
-        this.open()
-      }
 
       this._announceToScreenReader(display, "multi-selected. Press Shift + Tab, then Enter to remove.")
     })
+  }
+
+  _buildChips(values) {
+    if (this._hasChipTemplate) {
+      this._renderChipsClientSide(values)
+    } else if (this.hasSelectionChipSrcValue) {
+      this._requestChips(values)
+    }
   }
 
   async _requestChips(values) {
@@ -89,6 +95,73 @@ Combobox.Multiselect = Base => class extends Base {
         combobox_values: values
       }
     })
+  }
+
+  _renderChipsClientSide(values) {
+    const valueList = Array.isArray(values) ? values : String(values).split(",")
+
+    valueList.filter(value => value.length > 0).forEach(value => {
+      this._renderChipForValue(value)
+    })
+  }
+
+  _renderChipForValue(value) {
+    const option = this._optionElementWithValue(value)
+    const fragment = this._chipTemplate.content.cloneNode(true)
+
+    this._substituteChipPlaceholders(fragment, this._chipMappingFor(option, value))
+
+    const wrapper = document.createElement("div")
+    wrapper.setAttribute("data-hw-combobox-chip", "")
+    wrapper.appendChild(fragment)
+
+    const input = document.getElementById(this.element.dataset.asyncId)
+    if (input) input.parentNode.insertBefore(wrapper, input)
+  }
+
+  _chipMappingFor(option, value) {
+    const mapping = { value: String(value) }
+
+    if (option) {
+      mapping.display = option.getAttribute(this.autocompletableAttributeValue) || ""
+
+      for (const attr of option.attributes) {
+        if (attr.name.startsWith(CHIP_DATA_ATTR_PREFIX)) {
+          const placeholder = attr.name.slice(CHIP_DATA_ATTR_PREFIX.length).replace(/-/g, "_")
+          mapping[placeholder] = attr.value
+        }
+      }
+    } else {
+      // New option not present in the listbox (free-text); display falls back to the value.
+      mapping.display = String(value)
+    }
+
+    return mapping
+  }
+
+  _substituteChipPlaceholders(node, mapping) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      if (node.nodeValue.includes("{{")) {
+        node.nodeValue = node.nodeValue.replace(CHIP_PLACEHOLDER_REGEX, (match, name) => {
+          return Object.prototype.hasOwnProperty.call(mapping, name) ? mapping[name] : match
+        })
+      }
+      return
+    }
+
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      for (const attr of Array.from(node.attributes)) {
+        if (attr.value.includes("{{")) {
+          attr.value = attr.value.replace(CHIP_PLACEHOLDER_REGEX, (match, name) => {
+            return Object.prototype.hasOwnProperty.call(mapping, name) ? mapping[name] : match
+          })
+        }
+      }
+    }
+
+    for (const child of Array.from(node.childNodes)) {
+      this._substituteChipPlaceholders(child, mapping)
+    }
   }
 
   _beforeClearingMultiselectQuery(callback) {
@@ -141,20 +214,24 @@ Combobox.Multiselect = Base => class extends Base {
     if (this._isSync) this._resetMultiselectionMarks()
   }
 
-  _focusLastChipDismisser() {
-    this.chipDismisserTargets[this.chipDismisserTargets.length - 1]?.focus()
-  }
-
   _markMultiPreselected() {
     this.element.dataset.multiPreselected = ""
   }
 
   get _isMultiselect() {
-    return this.hasSelectionChipSrcValue
+    return this.hasSelectionChipSrcValue || this._hasChipTemplate
   }
 
   get _isSingleSelect() {
     return !this._isMultiselect
+  }
+
+  get _hasChipTemplate() {
+    return !!this._chipTemplate
+  }
+
+  get _chipTemplate() {
+    return this.element.querySelector("template[data-hw-combobox-chip-template]")
   }
 
   get _isMultiPreselected() {
