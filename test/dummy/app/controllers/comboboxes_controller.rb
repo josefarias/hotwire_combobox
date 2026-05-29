@@ -88,7 +88,16 @@ class ComboboxesController < ApplicationController
   def multiselect
   end
 
-  def multiselect_dismissing
+  def multiselect_client
+  end
+
+  def multiselect_client_async_prefilled
+  end
+
+  def multiselect_client_new_values
+  end
+
+  def multiselect_client_prefilled
   end
 
   def multiselect_async_html

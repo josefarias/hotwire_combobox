@@ -5,6 +5,7 @@ Combobox.Selection = Base => class extends Base {
   selectOnClick({ currentTarget, inputType }) {
     this._forceSelectionAndFilter(currentTarget, inputType)
     this.close("hw:optionRoleClick")
+    this._actingCombobox.focus()
   }
 
   _connectSelection() {
@@ -93,7 +94,7 @@ Combobox.Selection = Base => class extends Base {
 
   _preselectMultiple() {
     if (this._isMultiselect && this._hasValueButNoSelection) {
-      this._requestChips(this._fieldValueString)
+      this._buildChips(this._fieldValueString)
       this._resetMultiselectionMarks()
     }
   }
@@ -139,9 +140,9 @@ Combobox.Selection = Base => class extends Base {
 
   get _hasSelection() {
     if (this._isSingleSelect) {
-      this._selectedOptionElement
+      return !!this._selectedOptionElement
     } else {
-      this._multiselectedOptionElements.length > 0
+      return this._multiselectedOptionElements.length > 0
     }
   }
 

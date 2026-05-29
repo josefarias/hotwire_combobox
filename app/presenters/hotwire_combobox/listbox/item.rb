@@ -1,13 +1,13 @@
 class HotwireCombobox::Listbox::Item
   class << self
-    def collection_for(view, options, render_in:, include_blank:, **custom_methods)
-      new(view, options, render_in: render_in, include_blank: include_blank, **custom_methods).collection
+    def collection_for(view, options, render_in:, include_blank:, chip_attributes: {}, **custom_methods)
+      new(view, options, render_in: render_in, include_blank: include_blank, chip_attributes: chip_attributes, **custom_methods).collection
     end
   end
 
-  def initialize(view, options, render_in:, include_blank:, **custom_methods)
-    @view, @options, @render_in, @include_blank, @custom_methods =
-      view, options, render_in, include_blank, custom_methods
+  def initialize(view, options, render_in:, include_blank:, chip_attributes: {}, **custom_methods)
+    @view, @options, @render_in, @include_blank, @chip_attributes, @custom_methods =
+      view, options, render_in, include_blank, chip_attributes, custom_methods
   end
 
   def collection
@@ -17,7 +17,7 @@ class HotwireCombobox::Listbox::Item
   end
 
   private
-    attr_reader :view, :options, :render_in, :include_blank, :custom_methods
+    attr_reader :view, :options, :render_in, :include_blank, :chip_attributes, :custom_methods
 
     def groups_or_options
       if grouped?
@@ -53,18 +53,21 @@ class HotwireCombobox::Listbox::Item
       when Hash
         option.tap do |attrs|
           attrs[:content] = render_content(object: attrs[:display], attrs: attrs) if render_in.present?
+          attrs[:chip_data] = resolve_chip_data(option) if chip_attributes.present?
         end
       when String
         {}.tap do |attrs|
           attrs[:display] = option
           attrs[:value] = option
           attrs[:content] = render_content(object: attrs[:display], attrs: attrs) if render_in.present?
+          attrs[:chip_data] = resolve_chip_data(option) if chip_attributes.present?
         end
       when Array
         {}.tap do |attrs|
           attrs[:display] = option.first
           attrs[:value] = option.last
           attrs[:content] = render_content(object: attrs[:display], attrs: attrs) if render_in.present?
+          attrs[:chip_data] = resolve_chip_data(option) if chip_attributes.present?
         end
       else
         {}.tap do |attrs|
@@ -77,7 +80,25 @@ class HotwireCombobox::Listbox::Item
           elsif custom_methods[:content]
             attrs[:content] = view.hw_call_method_or_proc(option, custom_methods[:content])
           end
+
+          attrs[:chip_data] = resolve_chip_data(option) if chip_attributes.present?
         end
+      end
+    end
+
+    def resolve_chip_data(option)
+      chip_attributes.each_with_object({}) do |(placeholder, accessor), data|
+        data[placeholder] = chip_value_for(option, accessor)
+      end
+    end
+
+    def chip_value_for(option, accessor)
+      if accessor.is_a?(Proc)
+        accessor.call(option)
+      elsif option.is_a?(Hash)
+        option[accessor.to_sym] || option[accessor.to_s]
+      else
+        view.hw_call_method_or_proc(option, accessor)
       end
     end
 

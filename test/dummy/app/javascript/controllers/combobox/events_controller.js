@@ -35,6 +35,11 @@ export default class extends Controller {
       return _string || "<empty>"
     }
 
+    const castObject = (obj) => {
+      if (obj == null) return "<empty>"
+      return JSON.stringify(obj)
+    }
+
     return `event: ${cast(event.type)}
       value: ${cast(event.detail.value)}.
       display: ${cast(event.detail.display)}.
@@ -45,6 +50,7 @@ export default class extends Controller {
       previousValue: ${cast(event.detail.previousValue)}.
       removedDisplay: ${cast(event.detail.removedDisplay)}.
       removedValue: ${cast(event.detail.removedValue)}.
+      chipData: ${castObject(event.detail.chipData)}.
     `
   }
 }

@@ -21,8 +21,11 @@ Rails.application.routes.draw do
   get "morph", to: "comboboxes#morph"
   get "multiselect", to: "comboboxes#multiselect"
   get "multiselect_async_html", to: "comboboxes#multiselect_async_html"
+  get "multiselect_client", to: "comboboxes#multiselect_client"
+  get "multiselect_client_async_prefilled", to: "comboboxes#multiselect_client_async_prefilled"
+  get "multiselect_client_new_values", to: "comboboxes#multiselect_client_new_values"
+  get "multiselect_client_prefilled", to: "comboboxes#multiselect_client_prefilled"
   get "multiselect_custom_events", to: "comboboxes#multiselect_custom_events"
-  get "multiselect_dismissing", to: "comboboxes#multiselect_dismissing"
   get "multiselect_new_values", to: "comboboxes#multiselect_new_values"
   get "multiselect_prefilled_form", to: "comboboxes#multiselect_prefilled_form"
   get "new_options", to: "comboboxes#new_options"
@@ -54,7 +57,6 @@ Rails.application.routes.draw do
   resources :states, only: :index
   resources :state_chips, only: :create, param: :combobox_value
   post "html_state_chips", to: "state_chips#create_html"
-  post "dismissing_state_chips", to: "state_chips#create_dismissing"
   post "possibly_new_state_chips", to: "state_chips#create_possibly_new"
 
   resources :users, only: :update do

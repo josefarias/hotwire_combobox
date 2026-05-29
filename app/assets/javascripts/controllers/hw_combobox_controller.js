@@ -32,7 +32,6 @@ export default class HwComboboxController extends Concerns(...concerns) {
     "announcer",
     "combobox",
     "chipDismisser",
-    "closer",
     "dialog", "dialogCombobox", "dialogFocusTrap", "dialogListbox",
     "endOfOptionsStream",
     "handle",
@@ -50,6 +49,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
     filterableAttribute: String,
     nameWhenNew: String,
     originalName: String,
+    prefilledChips: Array,
     prefilledDisplay: String,
     selectionChipSrc: String,
     smallViewportMaxWidth: String
@@ -89,6 +89,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
       this._runCallback(element)
     } else {
       this._preselectSingle()
+      this._resetMultiselectionMarks()
     }
   }
 
@@ -109,19 +110,13 @@ export default class HwComboboxController extends Concerns(...concerns) {
       this._dequeueCallback(callbackId)
       this._resetMultiselectionMarks()
 
-      if (inputType === "hw:multiselectSync") {
-        this.open()
-      } else if (inputType !== "hw:lockInSelection") {
-        this._selectOnQuery(inputType)
-      }
+      if (inputType === "hw:lockInSelection" || inputType === "hw:multiselectSync") return
+
+      this._selectOnQuery(inputType)
     } else {
       await nextRepaint()
       this._runCallback(element)
     }
-  }
-
-  closerTargetConnected() {
-    this.close("hw:asyncCloser")
   }
 
   // Use +_printStack+ for debugging purposes

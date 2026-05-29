@@ -147,6 +147,31 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     assert_attrs CGI.unescape(html), tag_name: "turbo-frame", src: "/foo?ary[]=1&ary[]=2&page=2&format=turbo_stream"
   end
 
+  test "prefilled_chips serializes a value+display+chip_data seed for each entry" do
+    states = State.where(name: %w[ Alabama California ]).order(:name)
+    tag = combobox_tag :state, "/states",
+      chip_template: { partial: "state_chips/chip" },
+      chip_attributes: { display: :name, abbreviation: :abbreviation },
+      prefilled_chips: states,
+      value: states.pluck(:id).join(",")
+
+    fieldset = Nokogiri::HTML(tag).at_css("fieldset")
+    seed = JSON.parse(fieldset["data-hw-combobox-prefilled-chips-value"])
+
+    assert_equal 2, seed.length
+    assert_equal states.first.id.to_s, seed.first["value"]
+    assert_equal "Alabama", seed.first["display"]
+    assert_equal "Alabama", seed.first["chip_data"]["display"]
+    assert_equal "AL", seed.first["chip_data"]["abbreviation"]
+  end
+
+  test "prefilled_chips is omitted from the fieldset when not provided" do
+    tag = combobox_tag :state, [ %w[ Alabama AL ] ]
+    fieldset = Nokogiri::HTML(tag).at_css("fieldset")
+
+    assert_nil fieldset["data-hw-combobox-prefilled-chips-value"]
+  end
+
   test "single repeating character values" do
     form = form_with model: OpenStruct.new(run_at: "* * * * *", persisted?: true, model_name: OpenStruct.new(param_key: :foo)), url: "#" do |form|
       form.combobox :run_at, [ "@hourly", "@daily", "@weekly", "@monthly", "@every 4h", "0 12 * * *" ], free_text: true

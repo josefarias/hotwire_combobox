@@ -1,9 +1,9 @@
 import Combobox from "hw_combobox/models/combobox/base"
 
 Combobox.Restoration = Base => class extends Base {
-  restore({ fieldName, value, display } = {}) {
+  restore({ fieldName, value, display, chips } = {}) {
     if (this._isMultiselect) {
-      this._restoreMultiselect({ fieldName, value })
+      this._restoreMultiselect({ fieldName, value, chips })
     } else {
       this._restoreSingle({ fieldName, value, display })
     }
@@ -21,15 +21,16 @@ Combobox.Restoration = Base => class extends Base {
     this._markValid()
   }
 
-  _restoreMultiselect({ fieldName, value }) {
+  _restoreMultiselect({ fieldName, value, chips }) {
     if (fieldName) this._fieldName = fieldName
 
+    this._restoredChips = chips || null
     this._removeAllChips()
     this.hiddenFieldTarget.value = value || ""
     this._resetMultiselectionMarks()
     this._markMultiPreselected()
 
-    if (value) this._requestChips(this._fieldValueString)
+    if (value) this._buildChips(this._fieldValueString)
 
     this._markValid()
   }

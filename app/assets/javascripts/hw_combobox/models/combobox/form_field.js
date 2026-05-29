@@ -42,6 +42,14 @@ Combobox.FormField = Base => class extends Base {
     }
   }
 
+  get _currentSelectionValue() {
+    if (this._isMultiselect) {
+      return this.hiddenFieldTarget.dataset.valueForMultiselect || ""
+    } else {
+      return this.hiddenFieldTarget.value
+    }
+  }
+
   set _fieldValue(value) {
     if (this._isMultiselect) {
       this.hiddenFieldTarget.dataset.valueForMultiselect = value?.replace(/,/g, "")

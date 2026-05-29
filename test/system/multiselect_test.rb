@@ -5,16 +5,23 @@ class MultiselectTest < ApplicationSystemTestCase
     visit multiselect_path
 
     open_combobox "#states-field"
-
     click_on_option "Alabama"
+    assert_closed_combobox
     assert_chip_with text: "Alabama" # wait for async chip creation
+
+    open_combobox "#states-field"
     click_on_option "California"
     assert_chip_with text: "California"
+
+    open_combobox "#states-field"
     click_on_option "Arizona"
     assert_chip_with text: "Arizona"
+
+    open_combobox "#states-field"
     assert_no_visible_options_with text: "Alabama"
     assert_no_visible_options_with text: "California"
     assert_no_visible_options_with text: "Arizona"
+
     assert_combobox_display_and_value \
       "#states-field",
       %w[ Alabama California Arizona ],
@@ -71,6 +78,9 @@ class MultiselectTest < ApplicationSystemTestCase
     open_combobox "#states-field"
 
     assert_option_with text: "Arizona"
+    assert_no_visible_options_with text: "Alabama" # preselected, served but hidden
+    assert_no_visible_options_with text: "Alaska"  # preselected, served but hidden
+
     type_in_combobox "#states-field", "mi"
     assert_selected_option_with text: "Michigan"
     assert_options_with count: 4
@@ -81,6 +91,7 @@ class MultiselectTest < ApplicationSystemTestCase
       states(:alabama, :alaska, :michigan).pluck(:id)
 
     # pagination
+    open_combobox "#states-field"
     assert_options_with count: 8 # AL, AK, and MI are served but hidden
     find("#states-field-hw-listbox").scroll_to :bottom
     assert_options_with count: 13
@@ -114,15 +125,13 @@ class MultiselectTest < ApplicationSystemTestCase
     open_combobox "#user_visited_state_ids"
     type_in_combobox "#user_visited_state_ids", "Lou"
     click_on_option "Louisiana"
-    assert_open_combobox
-    assert_text "Alabama" # combobox is reset and still open
+    assert_closed_combobox
 
     assert_combobox_display_and_value \
       "#user_visited_state_ids",
       %w[ Florida Illinois Louisiana ],
       states(:florida, :illinois, :louisiana).pluck(:id)
 
-    click_away
     find("input[type=submit]").click
     assert_text "User updated"
 
@@ -146,24 +155,6 @@ class MultiselectTest < ApplicationSystemTestCase
       "#user_visited_state_ids",
       %w[ Illinois Louisiana ],
       states(:illinois, :louisiana).pluck(:id)
-  end
-
-  test "multiselect with dismissing streams" do
-    visit multiselect_dismissing_path
-
-    assert_closed_combobox
-
-    open_combobox "#states-field"
-    type_in_combobox "#states-field", "Lou"
-    click_on_option "Louisiana"
-    sleep 1
-    assert_closed_combobox
-
-    open_combobox "#async-states-field"
-    type_in_combobox "#async-states-field", "Lou"
-    click_on_option "Louisiana"
-    sleep 1
-    assert_closed_combobox
   end
 
   test "multiselect custom events" do
@@ -214,6 +205,7 @@ class MultiselectTest < ApplicationSystemTestCase
     assert_text "removals: 1."
 
     click_on_option "Arkansas"
+    open_combobox "#states-field"
     click_on_option "Colorado"
 
     within "#preselection" do
@@ -241,11 +233,6 @@ class MultiselectTest < ApplicationSystemTestCase
       assert_text "removedDisplay: <empty>."
       assert_text "removedValue: <empty>."
     end
-
-    click_away
-
-    assert_text "preselections: 7." # TODO: lockInSelection causes duplicate selection events; shouldn't lock-in unnecessarily
-    assert_text "selections: 4."
   end
 
   test "navigating chips with keyboard" do
@@ -253,7 +240,7 @@ class MultiselectTest < ApplicationSystemTestCase
 
     open_combobox "#user_visited_state_ids"
     assert_combobox_display "#user_visited_state_ids", %w[ Florida Illinois ]
-    type_in_combobox "#user_visited_state_ids", :backspace, :enter
+    type_in_combobox "#user_visited_state_ids", :backspace
     assert_combobox_display "#user_visited_state_ids", %w[ Florida ]
 
     visit multiselect_prefilled_form_path

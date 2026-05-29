@@ -1,0 +1,7 @@
+<%= combobox_tag "states", State.all,
+      id: "states-field",
+      label: "States (new allowed)",
+      chip_template: { partial: "state_chips/simple_chip" },
+      chip_attributes: { display: :name },
+      free_text: true,
+      placeholder: "Select states" %>

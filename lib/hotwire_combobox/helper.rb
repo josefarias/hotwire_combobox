@@ -14,19 +14,20 @@ module HotwireCombobox
       stylesheet_link_tag HotwireCombobox.stylesheet_path, *args, **kwargs
     end
 
-    def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, **kwargs, &block)
-      options, src = hw_extract_options_and_src options_or_src, render_in, include_blank
-      component = HotwireCombobox::Component.new self, name, options: options, async_src: src, request: request, **kwargs
+    def hw_combobox_tag(name, options_or_src = [], render_in: {}, include_blank: nil, chip_attributes: {}, prefilled_chips: nil, **kwargs, &block)
+      options, src = hw_extract_options_and_src options_or_src, render_in, include_blank, chip_attributes
+      prefilled_chips = hw_resolve_prefilled_chips prefilled_chips, chip_attributes
+      component = HotwireCombobox::Component.new self, name, options: options, async_src: src, request: request, chip_attributes: chip_attributes, prefilled_chips: prefilled_chips, **kwargs
       render component, &block
     end
 
-    def hw_combobox_options(options, render_in: {}, include_blank: nil, display: :to_combobox_display, **custom_methods)
-      HotwireCombobox::Listbox::Item.collection_for self, options, render_in: render_in, include_blank: include_blank, **custom_methods.merge(display: display)
+    def hw_combobox_options(options, render_in: {}, include_blank: nil, chip_attributes: {}, display: :to_combobox_display, **custom_methods)
+      HotwireCombobox::Listbox::Item.collection_for self, options, render_in: render_in, include_blank: include_blank, chip_attributes: chip_attributes, **custom_methods.merge(display: display)
     end
 
-    def hw_paginated_combobox_options(options, for_id: params[:for_id], src: hw_fullpath_for_pagination, next_page: nil, render_in: {}, include_blank: {}, **custom_methods)
+    def hw_paginated_combobox_options(options, for_id: params[:for_id], src: hw_fullpath_for_pagination, next_page: nil, render_in: {}, include_blank: {}, chip_attributes: {}, **custom_methods)
       include_blank = hw_first_page? ? include_blank : nil
-      options = hw_combobox_options options, render_in: render_in, include_blank: include_blank, **custom_methods
+      options = hw_combobox_options options, render_in: render_in, include_blank: include_blank, chip_attributes: chip_attributes, **custom_methods
       this_page = render "hotwire_combobox/paginated_options", for_id: for_id, options: options
       next_page = render "hotwire_combobox/next_page", for_id: for_id, src: hw_combobox_next_page_uri(src, next_page, for_id)
 
@@ -50,16 +51,6 @@ module HotwireCombobox
       end.then { |chips| safe_join chips }
     end
 
-    def hw_dismissing_combobox_selection_chip(display:, value:, for_id: params[:for_id])
-      hw_combobox_selection_chip display: display, value: value, for_id: for_id, remover_attrs: hw_combobox_dismissing_chip_remover_attrs(display, value)
-    end
-
-    def hw_dismissing_combobox_selection_chips_for(objects, display: :to_combobox_display, value: :id, for_id: params[:for_id])
-      objects.map do |object|
-        hw_dismissing_combobox_selection_chip display: hw_call_method(object, display), value: hw_call_method(object, value), for_id: for_id
-      end.then { |chips| safe_join chips }
-    end
-
     def hw_combobox_chip_remover_attrs(display:, value:, **kwargs)
       {
         tabindex: "0",
@@ -73,12 +64,6 @@ module HotwireCombobox
       }
     end
 
-    def hw_combobox_dismissing_chip_remover_attrs(display, value)
-      hw_combobox_chip_remover_attrs(display: display, value: value).tap do |attrs|
-        attrs[:data][:hw_combobox_target] = token_list(attrs[:data][:hw_combobox_target], "closer")
-      end
-    end
-
     hw_alias :hw_combobox_style_tag
     hw_alias :hw_combobox_tag
     hw_alias :hw_combobox_options
@@ -87,10 +72,7 @@ module HotwireCombobox
     hw_alias :hw_within_combobox_selection_chip
     hw_alias :hw_combobox_selection_chip
     hw_alias :hw_combobox_selection_chips_for
-    hw_alias :hw_dismissing_combobox_selection_chip
-    hw_alias :hw_dismissing_combobox_selection_chips_for
     hw_alias :hw_combobox_chip_remover_attrs
-    hw_alias :hw_combobox_dismissing_chip_remover_attrs
 
     # private library use only
       def hw_listbox_id(id)
@@ -142,11 +124,21 @@ module HotwireCombobox
         end
       end
 
-      def hw_extract_options_and_src(options_or_src, render_in, include_blank)
+      def hw_extract_options_and_src(options_or_src, render_in, include_blank, chip_attributes)
         if options_or_src.is_a? String
           [ hw_combobox_options([]), options_or_src ]
         else
-          [ hw_combobox_options(options_or_src, render_in: render_in, include_blank: include_blank), nil ]
+          [ hw_combobox_options(options_or_src, render_in: render_in, include_blank: include_blank, chip_attributes: chip_attributes), nil ]
+        end
+      end
+
+      def hw_resolve_prefilled_chips(collection, chip_attributes)
+        return nil if collection.blank?
+
+        hw_combobox_options(collection, chip_attributes: chip_attributes).map do |option|
+          { value: option.value.to_s,
+            display: option.autocompletable_as.to_s,
+            chip_data: option.chip_data }
         end
       end
 

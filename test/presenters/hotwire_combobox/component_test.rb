@@ -54,4 +54,25 @@ class HotwireCombobox::ComponentTest < ApplicationViewTestCase
     assert_equal "Custom Label", component.label
     assert_equal "Dialog Label", component.dialog_label
   end
+
+  test "chip_template_render_options normalizes the chip_template argument" do
+    assert_nil HotwireCombobox::Component.new(view, :foo).chip_template_render_options
+
+    component = HotwireCombobox::Component.new(view, :foo, chip_template: "state_chips/chip")
+    assert_equal({ partial: "state_chips/chip" }, component.chip_template_render_options)
+
+    render_opts = { inline: "<span>{{display}}</span>", type: :html }
+    component = HotwireCombobox::Component.new(view, :foo, chip_template: render_opts)
+    assert_equal render_opts, component.chip_template_render_options
+  end
+
+  test "multiselect? is true when either multiselect_chip_src or chip_template is set" do
+    assert_not HotwireCombobox::Component.new(view, :foo).send(:multiselect?)
+
+    component = HotwireCombobox::Component.new(view, :foo, multiselect_chip_src: "/chips")
+    assert component.send(:multiselect?)
+
+    component = HotwireCombobox::Component.new(view, :foo, chip_template: "state_chips/chip")
+    assert component.send(:multiselect?)
+  end
 end

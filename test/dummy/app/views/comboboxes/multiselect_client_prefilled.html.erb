@@ -1,0 +1,11 @@
+<%= combobox_tag "state", State.all,
+      id: "states-field",
+      label: "States",
+      chip_template: { partial: "state_chips/chip" },
+      chip_attributes: {
+        display: :name,
+        abbreviation: :abbreviation,
+        name_slug: ->(state) { state.name.downcase.parameterize }
+      },
+      value: State.where(name: %w[ Alabama California ]).order(:name).pluck(:id).join(","),
+      placeholder: "Select states" %>
