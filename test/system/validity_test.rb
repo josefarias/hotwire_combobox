@@ -33,6 +33,14 @@ class ValidityTest < ApplicationSystemTestCase
     assert_selector "input#empty-required-single:not([required])"
   end
 
+  test "required single select stays required when the search input has no matching selection" do
+    visit single_select_required_path
+
+    type_in_combobox "#empty-required-single", "foobar"
+    assert_invalid_combobox
+    assert_selector "input#empty-required-single[required]"
+  end
+
   test "required multiselect drops native required once it has chips" do
     visit multiselect_required_path
 

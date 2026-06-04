@@ -72,7 +72,7 @@ Combobox.FormField = Base => class extends Base {
     return !this._hasEmptyCurrentSelection
   }
 
-  get _isBlank() {
+  get _hasBlankValue() {
     return this.hiddenFieldTarget.value === ""
   }
 
