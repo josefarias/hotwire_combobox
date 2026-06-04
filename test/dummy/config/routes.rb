@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   get "multiselect_custom_events", to: "comboboxes#multiselect_custom_events"
   get "multiselect_new_values", to: "comboboxes#multiselect_new_values"
   get "multiselect_prefilled_form", to: "comboboxes#multiselect_prefilled_form"
+  get "multiselect_required", to: "comboboxes#multiselect_required"
   get "new_options", to: "comboboxes#new_options"
   get "open", to: "comboboxes#open"
   get "padded", to: "comboboxes#padded"
@@ -40,6 +41,7 @@ Rails.application.routes.draw do
   get "render_in", to: "comboboxes#render_in"
   get "render_in_locals", to: "comboboxes#render_in_locals"
   get "required", to: "comboboxes#required"
+  get "single_select_required", to: "comboboxes#single_select_required"
   get "restoration", to: "comboboxes#restoration"
   get "turbo_streamed_block", to: "comboboxes#turbo_streamed_block"
 

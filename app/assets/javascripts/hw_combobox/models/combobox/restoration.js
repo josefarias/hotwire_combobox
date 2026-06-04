@@ -18,6 +18,7 @@ Combobox.Restoration = Base => class extends Base {
     this._fullQuery = display || ""
     this._markQueried()
     this._preselectSingle()
+    this._syncRequired()
     this._markValid()
   }
 
@@ -32,6 +33,7 @@ Combobox.Restoration = Base => class extends Base {
 
     if (value) this._buildChips(this._fieldValueString)
 
+    this._syncRequired()
     this._markValid()
   }
 

@@ -237,6 +237,7 @@ Combobox.Multiselect = Base => class extends Base {
 
     newValue.add(String(value))
     this.hiddenFieldTarget.value = Array.from(newValue).join(",")
+    this._syncRequired()
 
     if (this._isSync) this._resetMultiselectionMarks()
   }
@@ -246,6 +247,7 @@ Combobox.Multiselect = Base => class extends Base {
 
     newValue.delete(String(value))
     this.hiddenFieldTarget.value = Array.from(newValue).join(",")
+    this._syncRequired()
 
     if (this._isSync) this._resetMultiselectionMarks()
   }

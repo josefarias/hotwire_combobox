@@ -52,7 +52,7 @@ Combobox.Options = Base => class extends Base {
   }
 
   get _isUnjustifiablyBlank() {
-    const valueIsMissing = this._hasEmptyFieldValue
+    const valueIsMissing = this._hasEmptyCurrentSelection
     const noBlankOptionSelected = !this._selectedOptionElement
 
     return valueIsMissing && noBlankOptionSelected

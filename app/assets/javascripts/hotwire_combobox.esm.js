@@ -802,10 +802,11 @@ Combobox.FormField = Base => class extends Base {
       this.hiddenFieldTarget.dataset.displayForMultiselect = this._fullQuery;
     } else {
       this.hiddenFieldTarget.value = value;
+      this._syncRequired();
     }
   }
 
-  get _hasEmptyFieldValue() {
+  get _hasEmptyCurrentSelection() {
     if (this._isMultiselect) {
       return this.hiddenFieldTarget.dataset.valueForMultiselect == "" || this.hiddenFieldTarget.dataset.valueForMultiselect == "undefined"
     } else {
@@ -813,8 +814,12 @@ Combobox.FormField = Base => class extends Base {
     }
   }
 
-  get _hasFieldValue() {
-    return !this._hasEmptyFieldValue
+  get _hasCurrentSelection() {
+    return !this._hasEmptyCurrentSelection
+  }
+
+  get _hasBlankValue() {
+    return this.hiddenFieldTarget.value === ""
   }
 
   get _fieldName() {
@@ -1061,6 +1066,7 @@ Combobox.Multiselect = Base => class extends Base {
 
     newValue.add(String(value));
     this.hiddenFieldTarget.value = Array.from(newValue).join(",");
+    this._syncRequired();
 
     if (this._isSync) this._resetMultiselectionMarks();
   }
@@ -1070,6 +1076,7 @@ Combobox.Multiselect = Base => class extends Base {
 
     newValue.delete(String(value));
     this.hiddenFieldTarget.value = Array.from(newValue).join(",");
+    this._syncRequired();
 
     if (this._isSync) this._resetMultiselectionMarks();
   }
@@ -1235,7 +1242,7 @@ Combobox.Options = Base => class extends Base {
   }
 
   get _isUnjustifiablyBlank() {
-    const valueIsMissing = this._hasEmptyFieldValue;
+    const valueIsMissing = this._hasEmptyCurrentSelection;
     const noBlankOptionSelected = !this._selectedOptionElement;
 
     return valueIsMissing && noBlankOptionSelected
@@ -1260,6 +1267,7 @@ Combobox.Restoration = Base => class extends Base {
     this._fullQuery = display || "";
     this._markQueried();
     this._preselectSingle();
+    this._syncRequired();
     this._markValid();
   }
 
@@ -1274,6 +1282,7 @@ Combobox.Restoration = Base => class extends Base {
 
     if (value) this._buildChips(this._fieldValueString);
 
+    this._syncRequired();
     this._markValid();
   }
 
@@ -1409,7 +1418,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   get _hasValueButNoSelection() {
-    return this._hasFieldValue && !this._hasSelection
+    return this._hasCurrentSelection && !this._hasSelection
   }
 
   get _hasSelection() {
@@ -1852,6 +1861,23 @@ Combobox.Toggle = Base => class extends Base {
 };
 
 Combobox.Validity = Base => class extends Base {
+  // +required+ can't live on the hidden field where the value is: hidden inputs are barred from
+  // constraint validation. Instead we toggle it on the visible +comboboxTarget+ to track +_hasBlankValue+.
+  // https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#barred-from-constraint-validation
+  _connectRequired() {
+    if (!("hwComboboxRequiredByAuthor" in this.comboboxTarget.dataset)) {
+      this.comboboxTarget.dataset.hwComboboxRequiredByAuthor = this.comboboxTarget.required;
+    }
+
+    this._syncRequired();
+  }
+
+  _syncRequired() {
+    if (this.comboboxTarget.dataset.hwComboboxRequiredByAuthor !== "true") return
+
+    this.comboboxTarget.toggleAttribute("required", this._hasBlankValue);
+  }
+
   _markValid() {
     if (this._valueIsInvalid) return
 
@@ -1885,7 +1911,7 @@ Combobox.Validity = Base => class extends Base {
   // +_valueIsInvalid+ only checks if `comboboxTarget` (and not `_actingCombobox`) is required
   // because the `required` attribute is only forwarded to the `comboboxTarget` element
   get _valueIsInvalid() {
-    const isRequiredAndEmpty = this.comboboxTarget.required && this._hasEmptyFieldValue;
+    const isRequiredAndEmpty = this.comboboxTarget.required && this._hasBlankValue;
     return isRequiredAndEmpty
   }
 };
@@ -1955,6 +1981,7 @@ class HwComboboxController extends Concerns(...concerns) {
   idempotentConnect() {
     this._connectSelection();
     this._connectMultiselect();
+    this._connectRequired();
     this._connectListAutocomplete();
     this._connectDialog();
   }
