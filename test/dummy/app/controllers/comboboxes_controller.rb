@@ -19,6 +19,9 @@ class ComboboxesController < ApplicationController
   def required
   end
 
+  def single_select_required
+  end
+
   def restoration
     @movie = Movie.first || raise("No movie found, load fixtures first.")
     @restorable_states = State.where(name: %w[ Florida Illinois ]).order(:name)
@@ -105,6 +108,9 @@ class ComboboxesController < ApplicationController
 
   def multiselect_prefilled_form
     @user = User.first || raise("No user found, load fixtures first.")
+  end
+
+  def multiselect_required
   end
 
   def multiselect_custom_events

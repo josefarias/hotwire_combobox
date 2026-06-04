@@ -1,6 +1,23 @@
 import Combobox from "hw_combobox/models/combobox/base"
 
 Combobox.Validity = Base => class extends Base {
+  // +required+ can't live on the hidden field where the value is: hidden inputs are barred from
+  // constraint validation. Instead we toggle it on the visible +comboboxTarget+ to track +_isBlank+.
+  // https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#barred-from-constraint-validation
+  _connectRequired() {
+    if (!("hwComboboxRequiredByAuthor" in this.comboboxTarget.dataset)) {
+      this.comboboxTarget.dataset.hwComboboxRequiredByAuthor = this.comboboxTarget.required
+    }
+
+    this._syncRequired()
+  }
+
+  _syncRequired() {
+    if (this.comboboxTarget.dataset.hwComboboxRequiredByAuthor !== "true") return
+
+    this.comboboxTarget.toggleAttribute("required", this._isBlank)
+  }
+
   _markValid() {
     if (this._valueIsInvalid) return
 
@@ -34,7 +51,7 @@ Combobox.Validity = Base => class extends Base {
   // +_valueIsInvalid+ only checks if `comboboxTarget` (and not `_actingCombobox`) is required
   // because the `required` attribute is only forwarded to the `comboboxTarget` element
   get _valueIsInvalid() {
-    const isRequiredAndEmpty = this.comboboxTarget.required && this._hasEmptyFieldValue
+    const isRequiredAndEmpty = this.comboboxTarget.required && this._isBlank
     return isRequiredAndEmpty
   }
 }

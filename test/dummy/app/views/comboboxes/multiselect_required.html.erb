@@ -1,0 +1,14 @@
+<%= combobox_tag "prefilled_state", State.all,
+      id: "prefilled-required-field",
+      label: "Prefilled states",
+      multiselect_chip_src: state_chips_path,
+      value: State.where(name: %w[ Alabama ]).pluck(:id).join(","),
+      required: true,
+      placeholder: "Select states" %>
+
+<%= combobox_tag "empty_state", State.all,
+      id: "empty-required-field",
+      label: "Empty states",
+      multiselect_chip_src: state_chips_path,
+      required: true,
+      placeholder: "Select states" %>
