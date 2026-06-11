@@ -1425,7 +1425,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   get _hasValueButNoSelection() {
-    return this._hasCurrentSelection && !this._hasSelection
+    return !this._hasBlankValue && !this._hasSelection
   }
 
   get _hasSelection() {
