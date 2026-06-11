@@ -64,7 +64,9 @@ Combobox.Filtering = Base => class extends Base {
 
   _clearQuery() {
     this._fullQuery = ""
-    this.filterAndSelect({ inputType: "deleteContentBackward" })
+    this._flushCallbackQueue()
+    this._resetOptionsAndNotify()
+    this._filter("deleteContentBackward")
   }
 
   _markQueried() {

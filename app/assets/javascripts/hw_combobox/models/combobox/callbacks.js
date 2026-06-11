@@ -36,6 +36,11 @@ Combobox.Callbacks = Base => class extends Base {
     this._forgetCallbackExecutionAttempts(callbackId)
   }
 
+  _flushCallbackQueue() {
+    this.callbackQueue = []
+    this.callbackExecutionAttempts = {}
+  }
+
   _forgetCallbackExecutionAttempts(callbackId) {
     delete this.callbackExecutionAttempts[callbackId]
   }
