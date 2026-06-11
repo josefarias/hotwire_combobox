@@ -166,6 +166,28 @@ class CustomEventsTest < ApplicationSystemTestCase
     end
   end
 
+  test "clearing reverts a brand-new value's field name back to the original" do
+    visit custom_events_path
+
+    open_combobox "#allow-new"
+    type_in_combobox "#allow-new", "A Beat"
+
+    within "#preselection" do
+      assert_text "fieldName: new_movie"
+    end
+
+    within selector_root("#allow-new") do
+      find(".hw-combobox__handle").click
+    end
+
+    within "#preselection" do
+      assert_text "event: hw-combobox:preselection"
+      assert_text "value: <empty>"
+      assert_text "fieldName: movie"
+      assert_text "previousValue: A Beat"
+    end
+  end
+
   private
     def selector_root(selector)
       "fieldset[data-controller~='hw-combobox']:has(#{selector})"

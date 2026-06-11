@@ -258,6 +258,11 @@ Combobox.Callbacks = Base => class extends Base {
     this._forgetCallbackExecutionAttempts(callbackId);
   }
 
+  _flushCallbackQueue() {
+    this.callbackQueue = [];
+    this.callbackExecutionAttempts = {};
+  }
+
   _forgetCallbackExecutionAttempts(callbackId) {
     delete this.callbackExecutionAttempts[callbackId];
   }
@@ -722,7 +727,9 @@ Combobox.Filtering = Base => class extends Base {
 
   _clearQuery() {
     this._fullQuery = "";
-    this.filterAndSelect({ inputType: "deleteContentBackward" });
+    this._flushCallbackQueue();
+    this._resetOptionsAndNotify();
+    this._filter("deleteContentBackward");
   }
 
   _markQueried() {
