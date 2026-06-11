@@ -1,6 +1,15 @@
 require "ostruct"
 
 class StateChipsController < ApplicationController
+  # System tests reset this and assert it stays at 0 to prove that
+  # mounting a multiselect with no preselected value doesn't POST to
+  # multiselect_chip_src. Capybara runs the rails server in-process so
+  # the class variable is visible to test asserts.
+  @@request_count = 0
+  def self.request_count; @@request_count; end
+  def self.reset_request_count!; @@request_count = 0; end
+
+  before_action { @@request_count += 1 }
   before_action :set_states, except: :create_possibly_new
 
   def create

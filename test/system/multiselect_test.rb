@@ -289,4 +289,35 @@ class MultiselectTest < ApplicationSystemTestCase
     assert_equal "Newplace", State.unscoped.last.name
     assert_equal %w[ Alabama Newplace ], User.first.visited_states.map(&:name)
   end
+
+  test "multiselect with no preselected value does not POST to multiselect_chip_src on mount" do
+    StateChipsController.reset_request_count!
+
+    visit multiselect_path
+    assert_closed_combobox
+
+    # Mounting an empty multiselect must not fire a chip-request roundtrip.
+    # The bug: _hasValueButNoSelection was gated on _hasCurrentSelection which
+    # reads the transient dataset.valueForMultiselect, not the hidden field's
+    # actual value. The dataset attr is undefined on mount, JS loose-equality
+    # falls through, and _preselectMultiple fires _buildChips("") for every
+    # multiselect on the page — a thundering herd on dashboards with many
+    # multiselect filters.
+    assert_equal 0, StateChipsController.request_count,
+      "multiselect_chip_src endpoint was hit on mount despite no preselected value"
+  end
+
+  test "multiselect with preselected value still POSTs once to render chips on mount" do
+    StateChipsController.reset_request_count!
+
+    visit multiselect_prefilled_form_path
+
+    # Two preselected chips should appear (Jose's visits fixture: florida + illinois).
+    assert_chip_with text: "Florida"
+    assert_chip_with text: "Illinois"
+
+    # Exactly one chip-request roundtrip — the legitimate preselect render.
+    assert_equal 1, StateChipsController.request_count,
+      "preselected multiselect should fire exactly one chip-render POST on mount"
+  end
 end
