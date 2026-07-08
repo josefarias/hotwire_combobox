@@ -92,7 +92,7 @@ module HotwireCombobox
       end
 
       def hw_first_page?
-        params[:page].to_i.zero?
+        params.permit(:page)[:page].to_i.zero?
       end
 
       def hw_uri_with_params(url_or_path, **params)
