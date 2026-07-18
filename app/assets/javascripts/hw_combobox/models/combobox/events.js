@@ -39,6 +39,7 @@ Combobox.Events = Base => class extends Base {
       query: this._typedQuery,
       fieldName: this._fieldName,
       originalName: this.originalNameValue,
+      isNewAndAllowed: this._isNewOptionWithPotentialMatches,
       isValid: this._valueIsValid,
       chipData: this._currentChipData
     }

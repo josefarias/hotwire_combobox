@@ -50,7 +50,7 @@ class CustomEventsTest < ApplicationSystemTestCase
       assert_text "display: A Beat"
       assert_text "query: A Beat"
       assert_text "fieldName: new_movie"
-      assert_text "isNewAndAllowed: <empty>"
+      assert_text "isNewAndAllowed: true"
       assert_text "isValid: true"
     end
 
@@ -92,7 +92,7 @@ class CustomEventsTest < ApplicationSystemTestCase
       assert_text "display: <empty>"
       assert_text "query: <empty>"
       assert_text "fieldName: movie"
-      assert_text "isNewAndAllowed: <empty>"
+      assert_text "isNewAndAllowed: false"
       assert_text "isValid: false"
     end
 
@@ -105,6 +105,13 @@ class CustomEventsTest < ApplicationSystemTestCase
     within "#preselection" do
       assert_text "previousValue: #{movies(:the_godfather_part_ii).id}"
     end
+
+    within "#selection" do
+      assert_text "event: hw-combobox:selection"
+      assert_text "value: #{movies(:the_godfather_part_iii).id}"
+      assert_text "isNewAndAllowed: false"
+    end
+
     assert_text "preselections: 6."
     assert_text "selections: 4."
   end
