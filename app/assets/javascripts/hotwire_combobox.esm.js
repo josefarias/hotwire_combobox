@@ -342,9 +342,15 @@ Combobox.Events = Base => class extends Base {
   }
 
   _dispatchSelectionEvent() {
+    const previousValue = this._previousSelectionValue;
+
+    if (previousValue === this._incomingFieldValueString) return
+
+    this._previousSelectionValue = this._incomingFieldValueString;
+
     dispatch("hw-combobox:selection", {
       target: this.element,
-      detail: this._eventableDetails
+      detail: { ...this._eventableDetails, previousValue }
     });
   }
 
@@ -1307,6 +1313,8 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _connectSelection() {
+    this._previousSelectionValue = this._incomingFieldValueString;
+
     if (this.hasPrefilledDisplayValue) {
       this._fullQuery = this.prefilledDisplayValue;
       this._markQueried();
