@@ -35,10 +35,6 @@ Combobox.Multiselect = Base => class extends Base {
     this._dispatchRemovalEvent({ removedDisplay: display, removedValue: params.value })
   }
 
-  hideChipsForCache() {
-    this.element.querySelectorAll("[data-hw-combobox-chip]").forEach(chip => chip.hidden = true)
-  }
-
   _chipKeyHandlers = {
     Backspace: (event) => {
       this.removeChip(event)
