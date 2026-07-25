@@ -50,8 +50,9 @@ class CustomEventsTest < ApplicationSystemTestCase
       assert_text "display: A Beat"
       assert_text "query: A Beat"
       assert_text "fieldName: new_movie"
-      assert_text "isNewAndAllowed: <empty>"
+      assert_text "isNewAndAllowed: true"
       assert_text "isValid: true"
+      assert_text "previousValue: <empty>"
     end
 
     open_combobox "#required"
@@ -85,15 +86,11 @@ class CustomEventsTest < ApplicationSystemTestCase
 
     click_away
 
-    assert_text "selections: 2."
+    # The committed value never changed (empty in, empty out), so no selection
+    # fires — the previous selection ("A Beat") still stands.
+    assert_text "selections: 1."
     within "#selection" do
-      assert_text "event: hw-combobox:selection"
-      assert_text "value: <empty>"
-      assert_text "display: <empty>"
-      assert_text "query: <empty>"
-      assert_text "fieldName: movie"
-      assert_text "isNewAndAllowed: <empty>"
-      assert_text "isValid: false"
+      assert_text "value: A Beat"
     end
 
     open_combobox "#required"
@@ -105,8 +102,34 @@ class CustomEventsTest < ApplicationSystemTestCase
     within "#preselection" do
       assert_text "previousValue: #{movies(:the_godfather_part_ii).id}"
     end
+
+    within "#selection" do
+      assert_text "event: hw-combobox:selection"
+      assert_text "value: #{movies(:the_godfather_part_iii).id}"
+      assert_text "isNewAndAllowed: false"
+      assert_text "previousValue: #{movies(:the_godfather_part_ii).id}"
+    end
+
     assert_text "preselections: 6."
-    assert_text "selections: 4."
+    assert_text "selections: 3."
+  end
+
+  test "reopening and closing without changing the value does not fire a selection" do
+    visit custom_events_path
+
+    open_combobox "#required"
+    type_in_combobox "#required", "The Godfather"
+    click_on_option "The Godfather Part II"
+    assert_text "selections: 1."
+
+    open_combobox "#required"
+    click_away
+    assert_text "selections: 1."
+
+    within "#selection" do
+      assert_text "value: #{movies(:the_godfather_part_ii).id}"
+      assert_text "previousValue: <empty>"
+    end
   end
 
   test "preselection and selection events include chipData from option data-chip-* attrs" do

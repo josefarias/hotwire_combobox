@@ -9,6 +9,8 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _connectSelection() {
+    this._previousSelectionValue = this._incomingFieldValueString
+
     if (this.hasPrefilledDisplayValue) {
       this._fullQuery = this.prefilledDisplayValue
       this._markQueried()

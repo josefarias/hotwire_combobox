@@ -190,7 +190,7 @@ class MultiselectTest < ApplicationSystemTestCase
       assert_text "display: Michigan"
       assert_text "query: Mi."
       assert_text "fieldName: states"
-      assert_text "isNewAndAllowed: <empty>"
+      assert_text "isNewAndAllowed: false"
       assert_text "isValid: true"
       assert_text "previousValue: <empty>"
     end
@@ -227,9 +227,9 @@ class MultiselectTest < ApplicationSystemTestCase
       assert_text "display: Colorado."
       assert_text "query: <empty>."
       assert_text "fieldName: states."
-      assert_text "isNewAndAllowed: <empty>."
+      assert_text "isNewAndAllowed: false."
       assert_text "isValid: true."
-      assert_text "previousValue: <empty>."
+      assert_text "previousValue: #{states(:arkansas).id}."
       assert_text "removedDisplay: <empty>."
       assert_text "removedValue: <empty>."
     end
