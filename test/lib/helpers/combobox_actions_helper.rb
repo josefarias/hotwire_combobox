@@ -7,6 +7,25 @@ module ComboboxActionsHelper
     find(selector).send_keys(*text)
   end
 
+  # Simulates the keydown events some soft keyboards and autofill overlays emit,
+  # which carry no `key` at all.
+  def type_unidentifiable_key_in_combobox(selector)
+    page.execute_script <<~JS, find(selector)
+      arguments[0].dispatchEvent(new Event("keydown", { bubbles: true }))
+    JS
+  end
+
+  def recording_stimulus_errors
+    page.execute_script <<~JS
+      window.recordedStimulusErrors = []
+      window.Stimulus.handleError = error => window.recordedStimulusErrors.push(error.message)
+    JS
+
+    yield
+
+    page.evaluate_script "window.recordedStimulusErrors"
+  end
+
   def delete_from_combobox(selector, text, original:)
     find(selector).then do |input|
       original.chars.each { input.send_keys(:arrow_right) }
