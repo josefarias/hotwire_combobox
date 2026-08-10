@@ -5,7 +5,8 @@ import { get } from "hw_combobox/vendor/requestjs"
 
 Combobox.Filtering = Base => class extends Base {
   prepareToFilter({ key }) {
-    const intendsToFilter = key.match(/^[a-zA-Z0-9]$|^ArrowDown$/)
+    // Some soft keyboards and autofill overlays emit keydown events without a `key`.
+    const intendsToFilter = key?.match(/^[a-zA-Z0-9]$|^ArrowDown$/)
 
     if (this._isClosed && intendsToFilter) {
       this.open() // `.open()` sets the appropriate state so the combobox knows it’s open.
