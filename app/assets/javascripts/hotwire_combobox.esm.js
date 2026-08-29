@@ -1956,6 +1956,8 @@ class HwComboboxController extends Concerns(...concerns) {
     }
   }
 
+  // Set by the server on every filter response. A closing dialog moves this element,
+  // which reconnects it, so the input type is spent to keep that move from replaying.
   _claimUnhandledInputType(element) {
     const inputType = element.dataset.inputType;
     delete element.dataset.inputType;
