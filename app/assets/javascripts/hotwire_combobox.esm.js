@@ -597,7 +597,7 @@ async function post(url, options) {
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-const UNSPECIFIED_INPUT_TYPE = "hw:filter";
+const UNSPECIFIED_INPUT_TYPE = "hw:unspecifiedInput";
 
 Combobox.Filtering = Base => class extends Base {
   prepareToFilter({ key }) {

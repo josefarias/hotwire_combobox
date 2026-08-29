@@ -3,7 +3,7 @@ import Combobox from "hw_combobox/models/combobox/base"
 import { applyFilter, debounce, unselectedPortion } from "hw_combobox/helpers"
 import { get } from "hw_combobox/vendor/requestjs"
 
-const UNSPECIFIED_INPUT_TYPE = "hw:filter"
+const UNSPECIFIED_INPUT_TYPE = "hw:unspecifiedInput"
 
 Combobox.Filtering = Base => class extends Base {
   prepareToFilter({ key }) {
