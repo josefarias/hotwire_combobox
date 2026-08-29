@@ -70,6 +70,8 @@ export default class HwComboboxController extends Concerns(...concerns) {
 
   disconnect() {
     this._disconnectDialog()
+    this._abortSupersededFilter()
+    this._dispatchSettledEvent()
   }
 
   expandedValueChanged() {
@@ -87,6 +89,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
 
     if (inputType) {
       this._selectOnQueryUnlessAlreadySelected(inputType)
+      this._dispatchSettledEvent()
     } else {
       this._preselectSingle()
     }
