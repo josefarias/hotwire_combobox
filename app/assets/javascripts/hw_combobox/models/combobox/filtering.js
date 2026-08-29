@@ -3,6 +3,8 @@ import Combobox from "hw_combobox/models/combobox/base"
 import { applyFilter, debounce, unselectedPortion } from "hw_combobox/helpers"
 import { get } from "hw_combobox/vendor/requestjs"
 
+const UNSPECIFIED_INPUT_TYPE = "hw:unspecifiedInput"
+
 Combobox.Filtering = Base => class extends Base {
   prepareToFilter({ key }) {
     // Some soft keyboards and autofill overlays emit keydown events without a `key`.
@@ -49,14 +51,27 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   async _filterAsync(inputType) {
+    this._abortSupersededFilter()
+    this._filterAbortController = new AbortController()
+
     const query = {
       q: this._fullQuery,
-      input_type: inputType,
-      for_id: this.element.dataset.asyncId,
-      callback_id: this._enqueueCallback()
+      input_type: inputType || UNSPECIFIED_INPUT_TYPE,
+      for_id: this.element.dataset.asyncId
     }
 
-    await get(this.asyncSrcValue, { responseKind: "turbo-stream", query })
+    try {
+      await get(this.asyncSrcValue, {
+        responseKind: "turbo-stream", query, signal: this._filterAbortController.signal
+      })
+    } catch (error) {
+      if (error.name !== "AbortError") throw error
+    }
+  }
+
+  _abortSupersededFilter() {
+    this._filterAbortController?.abort()
+    this._filterAbortController = null
   }
 
   _filterSync() {
@@ -65,7 +80,7 @@ Combobox.Filtering = Base => class extends Base {
 
   _clearQuery() {
     this._fullQuery = ""
-    this._flushCallbackQueue()
+    this._abortSupersededFilter()
     this._resetOptionsAndNotify()
     this._filter("deleteContentBackward")
   }

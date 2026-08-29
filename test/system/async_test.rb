@@ -32,18 +32,24 @@ class AsyncTest < ApplicationSystemTestCase
     end
   end
 
-  test "async autocomplete selections don't trample over each other" do
-    visit async_path
+  # t=0     type "a", 150ms debounce starts
+  # t=0.15  request A fires, q=a, stalled by the server until t=0.65
+  # t=0.30  type "l" — A is out but unanswered — 150ms debounce restarts
+  # t=0.45  request B fires, q=al, answered at once
+  # t=0.65  A would land, after B
+  # t=1.0   assert
+  test "a superseded query can't trample the one that replaced it" do
+    visit slow_async_path
 
-    on_slow_device delay: 0.5 do
-      open_combobox "#movie-field"
-      type_in_combobox "#movie-field", "a"
-      sleep 0.3 # less than the delay, more than the debounce
-      type_in_combobox "#movie-field", "l"
-      sleep 0.7 # more than the delay
+    open_combobox "#movie-field"
+    type_in_combobox "#movie-field", "a"
+    while_the_stalled_response_is_still_in_flight
+    type_in_combobox "#movie-field", "l"
+    once_the_stalled_response_would_have_landed
 
-      assert_equal "addin", current_selection_contents
-    end
+    assert_equal "addin", current_selection_contents
+    assert_text "Aladdin"
+    assert_no_text "12 Angry Men"
   end
 
   test "substring matching in async free-text combobox" do
@@ -59,4 +65,13 @@ class AsyncTest < ApplicationSystemTestCase
     visit async_preload_path
     assert_options_with count: 5, visible: :hidden
   end
+
+  private
+    def while_the_stalled_response_is_still_in_flight
+      sleep ComboboxesController::SLOW_ASYNC_LATENCY * 0.6
+    end
+
+    def once_the_stalled_response_would_have_landed
+      sleep ComboboxesController::SLOW_ASYNC_LATENCY * 1.4
+    end
 end
