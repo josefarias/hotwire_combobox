@@ -1,9 +1,6 @@
 import Combobox from "hw_combobox/models/combobox"
-import { Concerns, sleep } from "hw_combobox/helpers"
-import { nextRepaint } from "hw_combobox/helpers"
+import { Concerns } from "hw_combobox/helpers"
 import { Controller } from "@hotwired/stimulus"
-
-window.HOTWIRE_COMBOBOX_STREAM_DELAY = 0 // ms, for testing purposes
 
 const concerns = [
   Controller,
@@ -11,7 +8,6 @@ const concerns = [
   Combobox.Announcements,
   Combobox.AsyncLoading,
   Combobox.Autocomplete,
-  Combobox.Callbacks,
   Combobox.Dialog,
   Combobox.Events,
   Combobox.Filtering,
@@ -58,7 +54,6 @@ export default class HwComboboxController extends Concerns(...concerns) {
   initialize() {
     this._initializeActors()
     this._initializeFiltering()
-    this._initializeCallbacks()
   }
 
   connect() {
@@ -85,38 +80,23 @@ export default class HwComboboxController extends Concerns(...concerns) {
     }
   }
 
-  async endOfOptionsStreamTargetConnected(element) {
-    if (element.dataset.callbackId) {
-      this._runCallback(element)
-    } else {
+  // Only one filter request is ever in flight, so whatever arrives here is the
+  // answer to the query the combobox holds. An `inputType` marks it as a filter
+  // response; without one this is the list's first render.
+  //
+  // The marker is consumed because this element reconnects without a new response
+  // behind it: closing a dialog hands the options back to the inline listbox, and
+  // moving the element makes Stimulus announce it again.
+  endOfOptionsStreamTargetConnected(element) {
+    const inputType = element.dataset.inputType
+    delete element.dataset.inputType
+
+    this._resetMultiselectionMarks()
+
+    if (!inputType) {
       this._preselectSingle()
-      this._resetMultiselectionMarks()
-    }
-  }
-
-  async _runCallback(element) {
-    const callbackId = element.dataset.callbackId
-
-    if (this._callbackAttemptsExceeded(callbackId)) {
-      return this._dequeueCallback(callbackId)
-    } else {
-      this._recordCallbackAttempt(callbackId)
-    }
-
-    if (this._isNextCallback(callbackId)) {
-      const inputType = element.dataset.inputType
-      const delay = window.HOTWIRE_COMBOBOX_STREAM_DELAY
-
-      if (delay) await sleep(delay)
-      this._dequeueCallback(callbackId)
-      this._resetMultiselectionMarks()
-
-      if (inputType === "hw:lockInSelection" || inputType === "hw:multiselectSync") return
-
+    } else if (inputType !== "hw:lockInSelection" && inputType !== "hw:multiselectSync") {
       this._selectOnQuery(inputType)
-    } else {
-      await nextRepaint()
-      this._runCallback(element)
     }
   }
 

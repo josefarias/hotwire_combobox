@@ -32,18 +32,18 @@ class AsyncTest < ApplicationSystemTestCase
     end
   end
 
-  test "async autocomplete selections don't trample over each other" do
-    visit async_path
+  test "a superseded query can't trample the one that replaced it" do
+    visit slow_async_path # holds the response for "a" open for half a second
 
-    on_slow_device delay: 0.5 do
-      open_combobox "#movie-field"
-      type_in_combobox "#movie-field", "a"
-      sleep 0.3 # less than the delay, more than the debounce
-      type_in_combobox "#movie-field", "l"
-      sleep 0.7 # more than the delay
+    open_combobox "#movie-field"
+    type_in_combobox "#movie-field", "a"
+    sleep 0.3 # past the debounce, while the response for "a" is still in flight
+    type_in_combobox "#movie-field", "l"
+    sleep 0.7 # long enough for the response for "a" to have arrived
 
-      assert_equal "addin", current_selection_contents
-    end
+    assert_equal "addin", current_selection_contents
+    assert_text "Aladdin"
+    assert_no_text "12 Angry Men"
   end
 
   test "substring matching in async free-text combobox" do

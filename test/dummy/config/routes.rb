@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   get "render_in_locals", to: "comboboxes#render_in_locals"
   get "required", to: "comboboxes#required"
   get "single_select_required", to: "comboboxes#single_select_required"
+  get "slow_async", to: "comboboxes#slow_async"
   get "restoration", to: "comboboxes#restoration"
   get "turbo_streamed_block", to: "comboboxes#turbo_streamed_block"
 

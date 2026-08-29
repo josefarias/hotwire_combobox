@@ -105,10 +105,6 @@ function isDeleteEvent(event) {
   return event.inputType === "deleteContentBackward" || event.inputType === "deleteWordBackward"
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 function unselectedPortion(element) {
   if (element.selectionStart === element.selectionEnd) {
     return element.value
@@ -132,31 +128,6 @@ function dispatch(eventName, { target, cancelable, detail } = {}) {
   }
 
   return event
-}
-
-function nextRepaint() {
-  if (document.visibilityState === "hidden") {
-    return nextEventLoopTick()
-  } else {
-    return nextAnimationFrame()
-  }
-}
-
-function nextAnimationFrame() {
-  return new Promise((resolve) => requestAnimationFrame(() => resolve()))
-}
-
-function nextEventLoopTick() {
-  return new Promise((resolve) => setTimeout(() => resolve(), 0))
-}
-
-function randomUUID() {
-  const uuidPattern = "10000000-1000-4000-8000-100000000000";
-
-  return uuidPattern.replace(/[018]/g, (match) => {
-    const randomByte = crypto.getRandomValues(new Uint8Array(1))[0];
-    return (match ^ (randomByte & 15) >> (match / 4)).toString(16)
-  })
 }
 
 Combobox.Autocomplete = Base => class extends Base {
@@ -220,55 +191,6 @@ Combobox.Autocomplete = Base => class extends Base {
 
   get _immediatelyAutocompletableValue() {
     return this._ensurableOption?.getAttribute(this.autocompletableAttributeValue)
-  }
-};
-
-const MAX_CALLBACK_ATTEMPTS = 3;
-
-Combobox.Callbacks = Base => class extends Base {
-  _initializeCallbacks() {
-    this.callbackQueue = [];
-    this.callbackExecutionAttempts = {};
-  }
-
-  _enqueueCallback() {
-    const callbackId = randomUUID();
-    this.callbackQueue.push(callbackId);
-    return callbackId
-  }
-
-  _isNextCallback(callbackId) {
-    return this._nextCallback === callbackId
-  }
-
-  _callbackAttemptsExceeded(callbackId) {
-    return this._callbackAttempts(callbackId) > MAX_CALLBACK_ATTEMPTS
-  }
-
-  _callbackAttempts(callbackId) {
-    return this.callbackExecutionAttempts[callbackId] || 0
-  }
-
-  _recordCallbackAttempt(callbackId) {
-    this.callbackExecutionAttempts[callbackId] = this._callbackAttempts(callbackId) + 1;
-  }
-
-  _dequeueCallback(callbackId) {
-    this.callbackQueue = this.callbackQueue.filter(id => id !== callbackId);
-    this._forgetCallbackExecutionAttempts(callbackId);
-  }
-
-  _flushCallbackQueue() {
-    this.callbackQueue = [];
-    this.callbackExecutionAttempts = {};
-  }
-
-  _forgetCallbackExecutionAttempts(callbackId) {
-    delete this.callbackExecutionAttempts[callbackId];
-  }
-
-  get _nextCallback() {
-    return this.callbackQueue[0]
   }
 };
 
@@ -718,15 +640,33 @@ Combobox.Filtering = Base => class extends Base {
     this._filterAsync(inputType);
   }
 
+  // A combobox only cares about the options for what it holds right now, so a new
+  // query cancels the one it supersedes. That leaves one request in flight, which
+  // is what keeps the list and the selection it drives from describing two queries.
   async _filterAsync(inputType) {
+    this._abortFilter();
+    this._filterAbortController = new AbortController();
+
     const query = {
       q: this._fullQuery,
-      input_type: inputType,
-      for_id: this.element.dataset.asyncId,
-      callback_id: this._enqueueCallback()
+      // Always non-empty: the response carries it back, and its presence is what
+      // marks the stream as an answer to a filter rather than the list's first render.
+      input_type: inputType || "hw:filter",
+      for_id: this.element.dataset.asyncId
     };
 
-    await get(this.asyncSrcValue, { responseKind: "turbo-stream", query });
+    try {
+      await get(this.asyncSrcValue, {
+        responseKind: "turbo-stream", query, signal: this._filterAbortController.signal
+      });
+    } catch (error) {
+      if (error.name !== "AbortError") throw error
+    }
+  }
+
+  _abortFilter() {
+    this._filterAbortController?.abort();
+    this._filterAbortController = null;
   }
 
   _filterSync() {
@@ -735,7 +675,7 @@ Combobox.Filtering = Base => class extends Base {
 
   _clearQuery() {
     this._fullQuery = "";
-    this._flushCallbackQueue();
+    this._abortFilter();
     this._resetOptionsAndNotify();
     this._filter("deleteContentBackward");
   }
@@ -1929,15 +1869,12 @@ Combobox.Validity = Base => class extends Base {
   }
 };
 
-window.HOTWIRE_COMBOBOX_STREAM_DELAY = 0; // ms, for testing purposes
-
 const concerns = [
   Controller,
   Combobox.Actors,
   Combobox.Announcements,
   Combobox.AsyncLoading,
   Combobox.Autocomplete,
-  Combobox.Callbacks,
   Combobox.Dialog,
   Combobox.Events,
   Combobox.Filtering,
@@ -1984,7 +1921,6 @@ class HwComboboxController extends Concerns(...concerns) {
   initialize() {
     this._initializeActors();
     this._initializeFiltering();
-    this._initializeCallbacks();
   }
 
   connect() {
@@ -2011,38 +1947,23 @@ class HwComboboxController extends Concerns(...concerns) {
     }
   }
 
-  async endOfOptionsStreamTargetConnected(element) {
-    if (element.dataset.callbackId) {
-      this._runCallback(element);
-    } else {
+  // Only one filter request is ever in flight, so whatever arrives here is the
+  // answer to the query the combobox holds. An `inputType` marks it as a filter
+  // response; without one this is the list's first render.
+  //
+  // The marker is consumed because this element reconnects without a new response
+  // behind it: closing a dialog hands the options back to the inline listbox, and
+  // moving the element makes Stimulus announce it again.
+  endOfOptionsStreamTargetConnected(element) {
+    const inputType = element.dataset.inputType;
+    delete element.dataset.inputType;
+
+    this._resetMultiselectionMarks();
+
+    if (!inputType) {
       this._preselectSingle();
-      this._resetMultiselectionMarks();
-    }
-  }
-
-  async _runCallback(element) {
-    const callbackId = element.dataset.callbackId;
-
-    if (this._callbackAttemptsExceeded(callbackId)) {
-      return this._dequeueCallback(callbackId)
-    } else {
-      this._recordCallbackAttempt(callbackId);
-    }
-
-    if (this._isNextCallback(callbackId)) {
-      const inputType = element.dataset.inputType;
-      const delay = window.HOTWIRE_COMBOBOX_STREAM_DELAY;
-
-      if (delay) await sleep(delay);
-      this._dequeueCallback(callbackId);
-      this._resetMultiselectionMarks();
-
-      if (inputType === "hw:lockInSelection" || inputType === "hw:multiselectSync") return
-
+    } else if (inputType !== "hw:lockInSelection" && inputType !== "hw:multiselectSync") {
       this._selectOnQuery(inputType);
-    } else {
-      await nextRepaint();
-      this._runCallback(element);
     }
   }
 

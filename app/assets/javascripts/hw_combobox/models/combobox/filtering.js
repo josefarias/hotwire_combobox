@@ -48,15 +48,33 @@ Combobox.Filtering = Base => class extends Base {
     this._filterAsync(inputType)
   }
 
+  // A combobox only cares about the options for what it holds right now, so a new
+  // query cancels the one it supersedes. That leaves one request in flight, which
+  // is what keeps the list and the selection it drives from describing two queries.
   async _filterAsync(inputType) {
+    this._abortFilter()
+    this._filterAbortController = new AbortController()
+
     const query = {
       q: this._fullQuery,
-      input_type: inputType,
-      for_id: this.element.dataset.asyncId,
-      callback_id: this._enqueueCallback()
+      // Always non-empty: the response carries it back, and its presence is what
+      // marks the stream as an answer to a filter rather than the list's first render.
+      input_type: inputType || "hw:filter",
+      for_id: this.element.dataset.asyncId
     }
 
-    await get(this.asyncSrcValue, { responseKind: "turbo-stream", query })
+    try {
+      await get(this.asyncSrcValue, {
+        responseKind: "turbo-stream", query, signal: this._filterAbortController.signal
+      })
+    } catch (error) {
+      if (error.name !== "AbortError") throw error
+    }
+  }
+
+  _abortFilter() {
+    this._filterAbortController?.abort()
+    this._filterAbortController = null
   }
 
   _filterSync() {
@@ -65,7 +83,7 @@ Combobox.Filtering = Base => class extends Base {
 
   _clearQuery() {
     this._fullQuery = ""
-    this._flushCallbackQueue()
+    this._abortFilter()
     this._resetOptionsAndNotify()
     this._filter("deleteContentBackward")
   }
