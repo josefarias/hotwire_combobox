@@ -45,6 +45,8 @@ class ComboboxesController < ApplicationController
   def async_preload
   end
 
+  SLOW_ASYNC_LATENCY = 0.5
+
   def slow_async
   end
 

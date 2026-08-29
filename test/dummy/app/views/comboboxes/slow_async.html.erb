@@ -1,1 +1,2 @@
-<%= combobox_tag "movie", movies_path(slow_query: "a", latency: 0.5), id: "movie-field", label: "Choose your movie!" %>
+<%= combobox_tag "movie", movies_path(slow_query: "a", latency: ComboboxesController::SLOW_ASYNC_LATENCY),
+      id: "movie-field", label: "Choose your movie!" %>

@@ -597,6 +597,8 @@ async function post(url, options) {
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+const UNSPECIFIED_INPUT_TYPE = "hw:filter";
+
 Combobox.Filtering = Base => class extends Base {
   prepareToFilter({ key }) {
     // Some soft keyboards and autofill overlays emit keydown events without a `key`.
@@ -640,18 +642,13 @@ Combobox.Filtering = Base => class extends Base {
     this._filterAsync(inputType);
   }
 
-  // A combobox only cares about the options for what it holds right now, so a new
-  // query cancels the one it supersedes. That leaves one request in flight, which
-  // is what keeps the list and the selection it drives from describing two queries.
   async _filterAsync(inputType) {
-    this._abortFilter();
+    this._abortSupersededFilter();
     this._filterAbortController = new AbortController();
 
     const query = {
       q: this._fullQuery,
-      // Always non-empty: the response carries it back, and its presence is what
-      // marks the stream as an answer to a filter rather than the list's first render.
-      input_type: inputType || "hw:filter",
+      input_type: inputType || UNSPECIFIED_INPUT_TYPE,
       for_id: this.element.dataset.asyncId
     };
 
@@ -664,7 +661,7 @@ Combobox.Filtering = Base => class extends Base {
     }
   }
 
-  _abortFilter() {
+  _abortSupersededFilter() {
     this._filterAbortController?.abort();
     this._filterAbortController = null;
   }
@@ -675,7 +672,7 @@ Combobox.Filtering = Base => class extends Base {
 
   _clearQuery() {
     this._fullQuery = "";
-    this._abortFilter();
+    this._abortSupersededFilter();
     this._resetOptionsAndNotify();
     this._filter("deleteContentBackward");
   }
@@ -1947,24 +1944,29 @@ class HwComboboxController extends Concerns(...concerns) {
     }
   }
 
-  // Only one filter request is ever in flight, so whatever arrives here is the
-  // answer to the query the combobox holds. An `inputType` marks it as a filter
-  // response; without one this is the list's first render.
-  //
-  // The marker is consumed because this element reconnects without a new response
-  // behind it: closing a dialog hands the options back to the inline listbox, and
-  // moving the element makes Stimulus announce it again.
   endOfOptionsStreamTargetConnected(element) {
-    const inputType = element.dataset.inputType;
-    delete element.dataset.inputType;
+    const inputType = this._claimUnhandledInputType(element);
 
     this._resetMultiselectionMarks();
 
-    if (!inputType) {
+    if (inputType) {
+      this._selectOnQueryUnlessAlreadySelected(inputType);
+    } else {
       this._preselectSingle();
-    } else if (inputType !== "hw:lockInSelection" && inputType !== "hw:multiselectSync") {
-      this._selectOnQuery(inputType);
     }
+  }
+
+  _claimUnhandledInputType(element) {
+    const inputType = element.dataset.inputType;
+    delete element.dataset.inputType;
+
+    return inputType
+  }
+
+  _selectOnQueryUnlessAlreadySelected(inputType) {
+    if (inputType === "hw:lockInSelection" || inputType === "hw:multiselectSync") return
+
+    this._selectOnQuery(inputType);
   }
 
   // Use +_printStack+ for debugging purposes

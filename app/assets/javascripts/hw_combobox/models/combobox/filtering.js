@@ -3,6 +3,8 @@ import Combobox from "hw_combobox/models/combobox/base"
 import { applyFilter, debounce, unselectedPortion } from "hw_combobox/helpers"
 import { get } from "hw_combobox/vendor/requestjs"
 
+const UNSPECIFIED_INPUT_TYPE = "hw:filter"
+
 Combobox.Filtering = Base => class extends Base {
   prepareToFilter({ key }) {
     // Some soft keyboards and autofill overlays emit keydown events without a `key`.
@@ -48,18 +50,13 @@ Combobox.Filtering = Base => class extends Base {
     this._filterAsync(inputType)
   }
 
-  // A combobox only cares about the options for what it holds right now, so a new
-  // query cancels the one it supersedes. That leaves one request in flight, which
-  // is what keeps the list and the selection it drives from describing two queries.
   async _filterAsync(inputType) {
-    this._abortFilter()
+    this._abortSupersededFilter()
     this._filterAbortController = new AbortController()
 
     const query = {
       q: this._fullQuery,
-      // Always non-empty: the response carries it back, and its presence is what
-      // marks the stream as an answer to a filter rather than the list's first render.
-      input_type: inputType || "hw:filter",
+      input_type: inputType || UNSPECIFIED_INPUT_TYPE,
       for_id: this.element.dataset.asyncId
     }
 
@@ -72,7 +69,7 @@ Combobox.Filtering = Base => class extends Base {
     }
   }
 
-  _abortFilter() {
+  _abortSupersededFilter() {
     this._filterAbortController?.abort()
     this._filterAbortController = null
   }
@@ -83,7 +80,7 @@ Combobox.Filtering = Base => class extends Base {
 
   _clearQuery() {
     this._fullQuery = ""
-    this._abortFilter()
+    this._abortSupersededFilter()
     this._resetOptionsAndNotify()
     this._filter("deleteContentBackward")
   }

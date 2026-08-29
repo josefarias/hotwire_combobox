@@ -33,13 +33,13 @@ class AsyncTest < ApplicationSystemTestCase
   end
 
   test "a superseded query can't trample the one that replaced it" do
-    visit slow_async_path # holds the response for "a" open for half a second
+    visit slow_async_path
 
     open_combobox "#movie-field"
     type_in_combobox "#movie-field", "a"
-    sleep 0.3 # past the debounce, while the response for "a" is still in flight
+    while_the_stalled_response_is_still_in_flight
     type_in_combobox "#movie-field", "l"
-    sleep 0.7 # long enough for the response for "a" to have arrived
+    once_the_stalled_response_would_have_landed
 
     assert_equal "addin", current_selection_contents
     assert_text "Aladdin"
@@ -59,4 +59,13 @@ class AsyncTest < ApplicationSystemTestCase
     visit async_preload_path
     assert_options_with count: 5, visible: :hidden
   end
+
+  private
+    def while_the_stalled_response_is_still_in_flight
+      sleep ComboboxesController::SLOW_ASYNC_LATENCY * 0.6
+    end
+
+    def once_the_stalled_response_would_have_landed
+      sleep ComboboxesController::SLOW_ASYNC_LATENCY * 1.4
+    end
 end

@@ -80,24 +80,29 @@ export default class HwComboboxController extends Concerns(...concerns) {
     }
   }
 
-  // Only one filter request is ever in flight, so whatever arrives here is the
-  // answer to the query the combobox holds. An `inputType` marks it as a filter
-  // response; without one this is the list's first render.
-  //
-  // The marker is consumed because this element reconnects without a new response
-  // behind it: closing a dialog hands the options back to the inline listbox, and
-  // moving the element makes Stimulus announce it again.
   endOfOptionsStreamTargetConnected(element) {
-    const inputType = element.dataset.inputType
-    delete element.dataset.inputType
+    const inputType = this._claimUnhandledInputType(element)
 
     this._resetMultiselectionMarks()
 
-    if (!inputType) {
+    if (inputType) {
+      this._selectOnQueryUnlessAlreadySelected(inputType)
+    } else {
       this._preselectSingle()
-    } else if (inputType !== "hw:lockInSelection" && inputType !== "hw:multiselectSync") {
-      this._selectOnQuery(inputType)
     }
+  }
+
+  _claimUnhandledInputType(element) {
+    const inputType = element.dataset.inputType
+    delete element.dataset.inputType
+
+    return inputType
+  }
+
+  _selectOnQueryUnlessAlreadySelected(inputType) {
+    if (inputType === "hw:lockInSelection" || inputType === "hw:multiselectSync") return
+
+    this._selectOnQuery(inputType)
   }
 
   // Use +_printStack+ for debugging purposes
