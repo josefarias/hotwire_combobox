@@ -38,8 +38,6 @@ Combobox.Events = Base => class extends Base {
     })
   }
 
-  // Announced from the keystroke, not from the request, so the window a submit has
-  // to survive covers the debounce it waits out as well as the flight.
   _dispatchPendingEvent() {
     if (this._isPending) return
 
