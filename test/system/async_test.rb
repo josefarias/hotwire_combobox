@@ -32,6 +32,12 @@ class AsyncTest < ApplicationSystemTestCase
     end
   end
 
+  # t=0     type "a", 150ms debounce starts
+  # t=0.15  request A fires, q=a, stalled by the server until t=0.65
+  # t=0.30  type "l" — A is out but unanswered
+  # t=0.45  request B fires, q=al, answered at once
+  # t=0.65  A would land, after B
+  # t=1.0   assert
   test "a superseded query can't trample the one that replaced it" do
     visit slow_async_path
 
