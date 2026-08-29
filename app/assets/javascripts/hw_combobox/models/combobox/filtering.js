@@ -33,11 +33,13 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _initializeFiltering() {
+    this._isPending = false
     this._debouncedFilterAsync = debounce(this._debouncedFilterAsync.bind(this), this.debounceIntervalValue)
   }
 
   _filter(inputType) {
     if (this._isAsync) {
+      this._dispatchPendingEvent()
       this._debouncedFilterAsync(inputType)
     } else {
       this._filterSync()
@@ -65,7 +67,10 @@ Combobox.Filtering = Base => class extends Base {
         responseKind: "turbo-stream", query, signal: this._filterAbortController.signal
       })
     } catch (error) {
-      if (error.name !== "AbortError") throw error
+      if (error.name !== "AbortError") {
+        this._dispatchSettledEvent()
+        throw error
+      }
     }
   }
 

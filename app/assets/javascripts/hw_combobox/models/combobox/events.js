@@ -38,6 +38,32 @@ Combobox.Events = Base => class extends Base {
     })
   }
 
+  // Announced from the keystroke, not from the request, so the window a submit has
+  // to survive covers the debounce it waits out as well as the flight.
+  _dispatchPendingEvent() {
+    if (this._isPending) return
+
+    this._isPending = true
+    this._forAllComboboxes(el => el.toggleAttribute("data-pending", true))
+
+    dispatch("hw-combobox:pending", {
+      target: this.element,
+      detail: this._eventableDetails
+    })
+  }
+
+  _dispatchSettledEvent() {
+    if (!this._isPending) return
+
+    this._isPending = false
+    this._forAllComboboxes(el => el.toggleAttribute("data-pending", false))
+
+    dispatch("hw-combobox:settled", {
+      target: this.element,
+      detail: this._eventableDetails
+    })
+  }
+
   get _eventableDetails() {
     return {
       value: this._incomingFieldValueString,
