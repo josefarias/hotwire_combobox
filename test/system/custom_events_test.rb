@@ -256,6 +256,29 @@ class CustomEventsTest < ApplicationSystemTestCase
     end
   end
 
+  test "escape announces a free text value it leaves committed" do
+    visit custom_events_path
+    assert_text "Ready to listen for hw-combobox events!"
+
+    open_combobox "#allow-new"
+    type_in_combobox "#allow-new", "A Beat"
+    assert_text "preselections: 1."
+    assert_no_text "event: hw-combobox:selection"
+
+    type_in_combobox "#allow-new", :escape
+    assert_closed_combobox
+
+    assert_combobox_display_and_value "#allow-new", "A Beat", "A Beat"
+    assert_text "selections: 1."
+    within "#selection" do
+      assert_text "event: hw-combobox:selection"
+      assert_text "value: A Beat"
+      assert_text "fieldName: new_movie"
+      assert_text "isNewAndAllowed: true"
+      assert_text "previousValue: <empty>"
+    end
+  end
+
   test "clearing announces the selection it removed" do
     visit custom_events_path
     assert_text "Ready to listen for hw-combobox events!"
