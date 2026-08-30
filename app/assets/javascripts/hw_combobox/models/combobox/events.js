@@ -11,12 +11,10 @@ Combobox.Events = Base => class extends Base {
     })
   }
 
-  _dispatchSelectionEvent() {
-    const previousValue = this._previousSelectionValue
-
+  _dispatchSelectionEvent(previousValue) {
     if (previousValue === this._incomingFieldValueString) return
 
-    this._previousSelectionValue = this._incomingFieldValueString
+    this._lastSelectedValue = this._incomingFieldValueString
 
     dispatch("hw-combobox:selection", {
       target: this.element,

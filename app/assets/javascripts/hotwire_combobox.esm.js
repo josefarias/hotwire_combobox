@@ -263,12 +263,10 @@ Combobox.Events = Base => class extends Base {
     });
   }
 
-  _dispatchSelectionEvent() {
-    const previousValue = this._previousSelectionValue;
-
+  _dispatchSelectionEvent(previousValue) {
     if (previousValue === this._incomingFieldValueString) return
 
-    this._previousSelectionValue = this._incomingFieldValueString;
+    this._lastSelectedValue = this._incomingFieldValueString;
 
     dispatch("hw-combobox:selection", {
       target: this.element,
@@ -700,6 +698,13 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _clearQuery() {
+    const previousValue = this._incomingFieldValueString;
+
+    this._resetQuery();
+    this._dispatchSelectionEvent(previousValue);
+  }
+
+  _resetQuery() {
     this._fullQuery = "";
     this._abortSupersededFilter();
     this._resetOptionsAndNotify();
@@ -1276,8 +1281,6 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _connectSelection() {
-    this._previousSelectionValue = this._incomingFieldValueString;
-
     if (this.hasPrefilledDisplayValue) {
       this._fullQuery = this.prefilledDisplayValue;
       this._markQueried();
@@ -1703,10 +1706,9 @@ Combobox.Toggle = Base => class extends Base {
 
       this.expandedValue = false;
 
-      if (inputType != "hw:keyHandler:escape") {
-        this._dispatchSelectionEvent();
-        this._createChip();
-      }
+      this._dispatchSelectionEvent(this._lastSelectedValue);
+
+      if (inputType != "hw:keyHandler:escape") this._createChip();
 
       if (this._isSingleSelect && this._selectedOptionElement) {
         this._announceToScreenReader(this._displayForOptionElement(this._selectedOptionElement), "selected");
@@ -1766,6 +1768,8 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   _expand() {
+    this._lastSelectedValue = this._incomingFieldValueString;
+
     if (this._isSync) {
       this._preselectSingle();
     }
@@ -1826,7 +1830,7 @@ Combobox.Toggle = Base => class extends Base {
   _clearInvalidQuery() {
     if (this._isUnjustifiablyBlank) {
       this._deselect();
-      this._clearQuery();
+      this._resetQuery();
     }
   }
 

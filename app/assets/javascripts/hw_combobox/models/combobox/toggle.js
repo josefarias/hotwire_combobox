@@ -13,10 +13,9 @@ Combobox.Toggle = Base => class extends Base {
 
       this.expandedValue = false
 
-      if (inputType != "hw:keyHandler:escape") {
-        this._dispatchSelectionEvent()
-        this._createChip()
-      }
+      this._dispatchSelectionEvent(this._lastSelectedValue)
+
+      if (inputType != "hw:keyHandler:escape") this._createChip()
 
       if (this._isSingleSelect && this._selectedOptionElement) {
         this._announceToScreenReader(this._displayForOptionElement(this._selectedOptionElement), "selected")
@@ -76,6 +75,8 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   _expand() {
+    this._lastSelectedValue = this._incomingFieldValueString
+
     if (this._isSync) {
       this._preselectSingle()
     }
@@ -136,7 +137,7 @@ Combobox.Toggle = Base => class extends Base {
   _clearInvalidQuery() {
     if (this._isUnjustifiablyBlank) {
       this._deselect()
-      this._clearQuery()
+      this._resetQuery()
     }
   }
 
