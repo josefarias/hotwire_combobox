@@ -211,6 +211,40 @@ class CustomEventsTest < ApplicationSystemTestCase
     end
   end
 
+  test "escape announces the selection it leaves committed" do
+    visit custom_events_path
+    assert_text "Ready to listen for hw-combobox events!"
+
+    open_combobox "#required"
+    type_in_combobox "#required", "A Bea"
+    assert_selected_option_with text: "A Beautiful Mind"
+    assert_text "preselections: 1."
+    assert_no_text "event: hw-combobox:selection"
+
+    type_in_combobox "#required", :escape
+    assert_closed_combobox
+
+    assert_combobox_display_and_value "#required", "A Beautiful Mind", movies(:a_beautiful_mind).id
+    assert_text "selections: 1."
+    within "#selection" do
+      assert_text "event: hw-combobox:selection"
+      assert_text "value: #{movies(:a_beautiful_mind).id}"
+      assert_text "display: A Beautiful Mind"
+      assert_text "previousValue: <empty>"
+    end
+  end
+
+  test "escape on an unchanged combobox announces nothing" do
+    visit custom_events_path
+    assert_text "Ready to listen for hw-combobox events!"
+
+    open_combobox "#required"
+    type_in_combobox "#required", :escape
+    assert_closed_combobox
+
+    assert_no_text "event: hw-combobox:selection"
+  end
+
   private
     def selector_root(selector)
       "fieldset[data-controller~='hw-combobox']:has(#{selector})"
