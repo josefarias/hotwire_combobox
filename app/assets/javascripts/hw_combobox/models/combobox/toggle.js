@@ -13,7 +13,7 @@ Combobox.Toggle = Base => class extends Base {
 
       this.expandedValue = false
 
-      if (this._selectionSettledOnSomethingNew) this._dispatchSelectionEvent(this._valueWhenExpanded)
+      if (this._selectionChanged) this._dispatchSelectionEvent(this._lastSelectedValue)
 
       if (inputType != "hw:keyHandler:escape") this._createChip()
 
@@ -75,7 +75,7 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   _expand() {
-    this._valueWhenExpanded = this._incomingFieldValueString
+    this._lastSelectedValue = this._incomingFieldValueString
 
     if (this._isSync) {
       this._preselectSingle()
@@ -141,8 +141,8 @@ Combobox.Toggle = Base => class extends Base {
     }
   }
 
-  get _selectionSettledOnSomethingNew() {
-    return this._incomingFieldValueString !== this._valueWhenExpanded
+  get _selectionChanged() {
+    return this._incomingFieldValueString !== this._lastSelectedValue
   }
 
   get _isOpen() {

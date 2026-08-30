@@ -277,6 +277,31 @@ class CustomEventsTest < ApplicationSystemTestCase
     end
   end
 
+  test "clearing mid-session leaves the next selection reporting the value it really replaced" do
+    visit custom_events_path
+    assert_text "Ready to listen for hw-combobox events!"
+
+    open_combobox "#required"
+    type_in_combobox "#required", "A Beautiful Mind"
+    click_on_option "A Beautiful Mind"
+    assert_text "selections: 1."
+
+    open_combobox "#required"
+    within selector_root("#required") do
+      find(".hw-combobox__handle").click
+    end
+    assert_text "selections: 2."
+
+    type_in_combobox "#required", "The Godfather Part II"
+    click_on_option "The Godfather Part II"
+
+    assert_text "selections: 3."
+    within "#selection" do
+      assert_text "value: #{movies(:the_godfather_part_ii).id}"
+      assert_text "previousValue: <empty>"
+    end
+  end
+
   test "a second escape clears the combobox and announces that too" do
     visit custom_events_path
     assert_text "Ready to listen for hw-combobox events!"

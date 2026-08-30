@@ -263,10 +263,9 @@ Combobox.Events = Base => class extends Base {
     });
   }
 
-  // Callers decide whether anything was chosen — navigating the options is not a
-  // selection, so only the acts that settle what the field would submit announce one,
-  // and each one knows the value it settled away from.
   _dispatchSelectionEvent(previousValue) {
+    this._lastSelectedValue = this._incomingFieldValueString;
+
     dispatch("hw-combobox:selection", {
       target: this.element,
       detail: { ...this._eventableDetails, previousValue }
@@ -1706,7 +1705,7 @@ Combobox.Toggle = Base => class extends Base {
 
       this.expandedValue = false;
 
-      if (this._selectionSettledOnSomethingNew) this._dispatchSelectionEvent(this._valueWhenExpanded);
+      if (this._selectionChanged) this._dispatchSelectionEvent(this._lastSelectedValue);
 
       if (inputType != "hw:keyHandler:escape") this._createChip();
 
@@ -1768,7 +1767,7 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   _expand() {
-    this._valueWhenExpanded = this._incomingFieldValueString;
+    this._lastSelectedValue = this._incomingFieldValueString;
 
     if (this._isSync) {
       this._preselectSingle();
@@ -1834,8 +1833,8 @@ Combobox.Toggle = Base => class extends Base {
     }
   }
 
-  get _selectionSettledOnSomethingNew() {
-    return this._incomingFieldValueString !== this._valueWhenExpanded
+  get _selectionChanged() {
+    return this._incomingFieldValueString !== this._lastSelectedValue
   }
 
   get _isOpen() {
