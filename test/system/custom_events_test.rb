@@ -234,6 +234,48 @@ class CustomEventsTest < ApplicationSystemTestCase
     end
   end
 
+  test "clearing announces the selection it removed" do
+    visit custom_events_path
+    assert_text "Ready to listen for hw-combobox events!"
+
+    open_combobox "#required"
+    type_in_combobox "#required", "A Beautiful Mind"
+    click_on_option "A Beautiful Mind"
+    assert_text "selections: 1."
+
+    within selector_root("#required") do
+      find(".hw-combobox__handle").click
+    end
+
+    assert_text "selections: 2."
+    within "#selection" do
+      assert_text "event: hw-combobox:selection"
+      assert_text "value: <empty>"
+      assert_text "previousValue: #{movies(:a_beautiful_mind).id}"
+    end
+  end
+
+  test "a second escape clears the combobox and announces that too" do
+    visit custom_events_path
+    assert_text "Ready to listen for hw-combobox events!"
+
+    open_combobox "#required"
+    type_in_combobox "#required", "A Bea"
+    assert_selected_option_with text: "A Beautiful Mind"
+    type_in_combobox "#required", :escape
+    assert_closed_combobox
+    assert_text "selections: 1."
+
+    send_keys :escape
+
+    assert_combobox_display_and_value "#required", "", nil
+    assert_text "selections: 2."
+    within "#selection" do
+      assert_text "value: <empty>"
+      assert_text "previousValue: #{movies(:a_beautiful_mind).id}"
+    end
+  end
+
   test "escape on an unchanged combobox announces nothing" do
     visit custom_events_path
     assert_text "Ready to listen for hw-combobox events!"

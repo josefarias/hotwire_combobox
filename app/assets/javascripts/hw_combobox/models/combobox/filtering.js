@@ -87,6 +87,7 @@ Combobox.Filtering = Base => class extends Base {
     this._fullQuery = ""
     this._abortSupersededFilter()
     this._resetOptionsAndNotify()
+    this._dispatchSelectionEvent()
     this._filter("deleteContentBackward")
   }
 
