@@ -264,6 +264,8 @@ Combobox.Events = Base => class extends Base {
   }
 
   _dispatchSelectionEvent(previousValue) {
+    if (previousValue === this._incomingFieldValueString) return
+
     this._lastSelectedValue = this._incomingFieldValueString;
 
     dispatch("hw-combobox:selection", {
@@ -699,8 +701,7 @@ Combobox.Filtering = Base => class extends Base {
     const previousValue = this._incomingFieldValueString;
 
     this._resetQuery();
-
-    if (previousValue !== this._incomingFieldValueString) this._dispatchSelectionEvent(previousValue);
+    this._dispatchSelectionEvent(previousValue);
   }
 
   _resetQuery() {
@@ -1705,7 +1706,7 @@ Combobox.Toggle = Base => class extends Base {
 
       this.expandedValue = false;
 
-      if (this._selectionChanged) this._dispatchSelectionEvent(this._lastSelectedValue);
+      this._dispatchSelectionEvent(this._lastSelectedValue);
 
       if (inputType != "hw:keyHandler:escape") this._createChip();
 
@@ -1831,10 +1832,6 @@ Combobox.Toggle = Base => class extends Base {
       this._deselect();
       this._resetQuery();
     }
-  }
-
-  get _selectionChanged() {
-    return this._incomingFieldValueString !== this._lastSelectedValue
   }
 
   get _isOpen() {

@@ -12,6 +12,8 @@ Combobox.Events = Base => class extends Base {
   }
 
   _dispatchSelectionEvent(previousValue) {
+    if (previousValue === this._incomingFieldValueString) return
+
     this._lastSelectedValue = this._incomingFieldValueString
 
     dispatch("hw-combobox:selection", {
