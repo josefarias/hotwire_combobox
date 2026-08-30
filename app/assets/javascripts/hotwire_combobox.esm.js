@@ -263,13 +263,10 @@ Combobox.Events = Base => class extends Base {
     });
   }
 
-  _dispatchSelectionEvent() {
-    const previousValue = this._previousSelectionValue;
-
-    if (previousValue === this._incomingFieldValueString) return
-
-    this._previousSelectionValue = this._incomingFieldValueString;
-
+  // Callers decide whether anything was chosen — navigating the options is not a
+  // selection, so only the acts that settle what the field would submit announce one,
+  // and each one knows the value it settled away from.
+  _dispatchSelectionEvent(previousValue) {
     dispatch("hw-combobox:selection", {
       target: this.element,
       detail: { ...this._eventableDetails, previousValue }
@@ -700,10 +697,17 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _clearQuery() {
+    const previousValue = this._incomingFieldValueString;
+
+    this._resetQuery();
+
+    if (previousValue !== this._incomingFieldValueString) this._dispatchSelectionEvent(previousValue);
+  }
+
+  _resetQuery() {
     this._fullQuery = "";
     this._abortSupersededFilter();
     this._resetOptionsAndNotify();
-    this._dispatchSelectionEvent();
     this._filter("deleteContentBackward");
   }
 
@@ -1277,8 +1281,6 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _connectSelection() {
-    this._previousSelectionValue = this._incomingFieldValueString;
-
     if (this.hasPrefilledDisplayValue) {
       this._fullQuery = this.prefilledDisplayValue;
       this._markQueried();
@@ -1704,7 +1706,7 @@ Combobox.Toggle = Base => class extends Base {
 
       this.expandedValue = false;
 
-      this._dispatchSelectionEvent();
+      if (this._selectionSettledOnSomethingNew) this._dispatchSelectionEvent(this._valueWhenExpanded);
 
       if (inputType != "hw:keyHandler:escape") this._createChip();
 
@@ -1766,6 +1768,8 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   _expand() {
+    this._valueWhenExpanded = this._incomingFieldValueString;
+
     if (this._isSync) {
       this._preselectSingle();
     }
@@ -1826,8 +1830,12 @@ Combobox.Toggle = Base => class extends Base {
   _clearInvalidQuery() {
     if (this._isUnjustifiablyBlank) {
       this._deselect();
-      this._clearQuery();
+      this._resetQuery();
     }
+  }
+
+  get _selectionSettledOnSomethingNew() {
+    return this._incomingFieldValueString !== this._valueWhenExpanded
   }
 
   get _isOpen() {

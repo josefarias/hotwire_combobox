@@ -211,6 +211,28 @@ class CustomEventsTest < ApplicationSystemTestCase
     end
   end
 
+  test "clearing a value that was never committed still announces the selection" do
+    visit custom_events_path
+
+    open_combobox "#allow-new"
+    type_in_combobox "#allow-new", "A Beat"
+    within "#preselection" do
+      assert_text "value: A Beat"
+    end
+    assert_no_text "event: hw-combobox:selection"
+
+    within selector_root("#allow-new") do
+      find(".hw-combobox__handle").click
+    end
+
+    assert_text "selections: 1."
+    within "#selection" do
+      assert_text "event: hw-combobox:selection"
+      assert_text "value: <empty>"
+      assert_text "previousValue: A Beat"
+    end
+  end
+
   test "escape announces the selection it leaves committed" do
     visit custom_events_path
     assert_text "Ready to listen for hw-combobox events!"

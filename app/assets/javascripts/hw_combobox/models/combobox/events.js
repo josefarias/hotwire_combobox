@@ -11,13 +11,10 @@ Combobox.Events = Base => class extends Base {
     })
   }
 
-  _dispatchSelectionEvent() {
-    const previousValue = this._previousSelectionValue
-
-    if (previousValue === this._incomingFieldValueString) return
-
-    this._previousSelectionValue = this._incomingFieldValueString
-
+  // Callers decide whether anything was chosen — navigating the options is not a
+  // selection, so only the acts that settle what the field would submit announce one,
+  // and each one knows the value it settled away from.
+  _dispatchSelectionEvent(previousValue) {
     dispatch("hw-combobox:selection", {
       target: this.element,
       detail: { ...this._eventableDetails, previousValue }

@@ -84,10 +84,17 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _clearQuery() {
+    const previousValue = this._incomingFieldValueString
+
+    this._resetQuery()
+
+    if (previousValue !== this._incomingFieldValueString) this._dispatchSelectionEvent(previousValue)
+  }
+
+  _resetQuery() {
     this._fullQuery = ""
     this._abortSupersededFilter()
     this._resetOptionsAndNotify()
-    this._dispatchSelectionEvent()
     this._filter("deleteContentBackward")
   }
 
