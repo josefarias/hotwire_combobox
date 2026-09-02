@@ -52,6 +52,16 @@ class AsyncTest < ApplicationSystemTestCase
     assert_no_text "12 Angry Men"
   end
 
+  test "a superseded page can't trample the src that replaced it" do
+    visit rescoped_async_path
+
+    rescope_combobox "#movie-field", movies_path(starting_with: "Wh")
+    open_combobox "#movie-field"
+
+    assert_text "Whiplash"
+    assert_no_text "Aladdin"
+  end
+
   test "substring matching in async free-text combobox" do
     visit freetext_async_path
 
@@ -67,6 +77,12 @@ class AsyncTest < ApplicationSystemTestCase
   end
 
   private
+    def rescope_combobox(selector, src)
+      page.execute_script <<~JS
+        document.querySelector("#{selector}").closest("fieldset").dataset.hwComboboxAsyncSrcValue = "#{src}"
+      JS
+    end
+
     def while_the_stalled_response_is_still_in_flight
       sleep ComboboxesController::SLOW_ASYNC_LATENCY * 0.6
     end
