@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   get "prefilled_form", to: "comboboxes#prefilled_form"
   get "prefilled_free_text", to: "comboboxes#prefilled_free_text"
   get "prefilled_html", to: "comboboxes#prefilled_html"
+  get "rescoped_async", to: "comboboxes#rescoped_async"
   get "render_in", to: "comboboxes#render_in"
   get "render_in_locals", to: "comboboxes#render_in_locals"
   get "required", to: "comboboxes#required"
