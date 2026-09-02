@@ -62,6 +62,20 @@ class AsyncTest < ApplicationSystemTestCase
     assert_no_text "Aladdin"
   end
 
+  test "a page that lands after a selection can't mint it as new" do
+    visit freetext_async_path
+
+    open_combobox "#movie-field"
+    type_in_combobox "#movie-field", "few"
+    assert_text "A Few Good Men"
+    click_on_option "A Few Good Men"
+
+    land_a_page_with_input_type "insertText", for_id: "movie-field"
+
+    assert_combobox_display_and_value "#movie-field", "A Few Good Men", movies(:a_few_good_men).id
+    assert_proper_combobox_name_choice original: :movie, new: :new_movie, proper: :original
+  end
+
   test "substring matching in async free-text combobox" do
     visit freetext_async_path
 
@@ -77,6 +91,20 @@ class AsyncTest < ApplicationSystemTestCase
   end
 
   private
+    def land_a_page_with_input_type(input_type, for_id:)
+      page.execute_script <<~JS
+        (() => {
+          var listbox = document.getElementById("#{for_id}-hw-listbox")
+          listbox.replaceChildren()
+
+          var wrapper = document.createElement("li")
+          wrapper.dataset.hwComboboxTarget = "endOfOptionsStream"
+          wrapper.dataset.inputType = "#{input_type}"
+          listbox.appendChild(wrapper)
+        })()
+      JS
+    end
+
     def rescope_combobox(selector, src)
       page.execute_script <<~JS
         document.querySelector("#{selector}").closest("fieldset").dataset.hwComboboxAsyncSrcValue = "#{src}"

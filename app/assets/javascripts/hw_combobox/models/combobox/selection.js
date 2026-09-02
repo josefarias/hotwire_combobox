@@ -45,6 +45,7 @@ Combobox.Selection = Base => class extends Base {
     autocompleteStrategy(option)
 
     this._fieldValue = option.dataset.value
+    this._committedDisplay = option.getAttribute(this.autocompletableAttributeValue)
     this._markSelected(option)
     this._markValid()
     this._dispatchPreselectionEvent({ isNewAndAllowed: false, previousValue: previousValue })
@@ -56,6 +57,7 @@ Combobox.Selection = Base => class extends Base {
     const previousValue = this._fieldValueString
 
     this._resetOptionsSilently()
+    this._committedDisplay = null
     this._fieldValue = this._fullQuery
     this._fieldName = this.nameWhenNewValue
     this._markValid()
@@ -69,6 +71,7 @@ Combobox.Selection = Base => class extends Base {
       this._markNotSelected(this._selectedOptionElement)
     }
 
+    this._committedDisplay = null
     this._fieldValue = ""
     this._setActiveDescendant("")
 
