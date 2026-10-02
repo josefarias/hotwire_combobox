@@ -3,9 +3,12 @@ import Combobox from "hw_combobox/models/combobox/base"
 import { applyFilter, debounce, unselectedPortion } from "hw_combobox/helpers"
 import { get } from "hw_combobox/vendor/requestjs"
 
+const UNSPECIFIED_INPUT_TYPE = "hw:unspecifiedInput"
+
 Combobox.Filtering = Base => class extends Base {
   prepareToFilter({ key }) {
-    const intendsToFilter = key.match(/^[a-zA-Z0-9]$|^ArrowDown$/)
+    // Some soft keyboards and autofill overlays emit keydown events without a `key`.
+    const intendsToFilter = key?.match(/^[a-zA-Z0-9]$|^ArrowDown$/)
 
     if (this._isClosed && intendsToFilter) {
       this.open() // `.open()` sets the appropriate state so the combobox knows it’s open.
@@ -30,11 +33,13 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _initializeFiltering() {
+    this._isPending = false
     this._debouncedFilterAsync = debounce(this._debouncedFilterAsync.bind(this), this.debounceIntervalValue)
   }
 
   _filter(inputType) {
     if (this._isAsync) {
+      this._dispatchPendingEvent()
       this._debouncedFilterAsync(inputType)
     } else {
       this._filterSync()
@@ -48,14 +53,30 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   async _filterAsync(inputType) {
+    this._abortSupersededFilter()
+    this._filterAbortController = new AbortController()
+
     const query = {
       q: this._fullQuery,
-      input_type: inputType,
-      for_id: this.element.dataset.asyncId,
-      callback_id: this._enqueueCallback()
+      input_type: inputType || UNSPECIFIED_INPUT_TYPE,
+      for_id: this.element.dataset.asyncId
     }
 
-    await get(this.asyncSrcValue, { responseKind: "turbo-stream", query })
+    try {
+      await get(this.asyncSrcValue, {
+        responseKind: "turbo-stream", query, signal: this._filterAbortController.signal
+      })
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        this._dispatchSettledEvent()
+        throw error
+      }
+    }
+  }
+
+  _abortSupersededFilter() {
+    this._filterAbortController?.abort()
+    this._filterAbortController = null
   }
 
   _filterSync() {
@@ -63,8 +84,17 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   _clearQuery() {
+    const previousValue = this._incomingFieldValueString
+
+    this._resetQuery()
+    this._dispatchSelectionEvent(previousValue)
+  }
+
+  _resetQuery() {
     this._fullQuery = ""
-    this.filterAndSelect({ inputType: "deleteContentBackward" })
+    this._abortSupersededFilter()
+    this._resetOptionsAndNotify()
+    this._filter("deleteContentBackward")
   }
 
   _markQueried() {

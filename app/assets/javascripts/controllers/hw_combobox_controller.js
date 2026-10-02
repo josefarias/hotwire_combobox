@@ -1,9 +1,6 @@
 import Combobox from "hw_combobox/models/combobox"
-import { Concerns, sleep } from "hw_combobox/helpers"
-import { nextRepaint } from "hw_combobox/helpers"
+import { Concerns } from "hw_combobox/helpers"
 import { Controller } from "@hotwired/stimulus"
-
-window.HOTWIRE_COMBOBOX_STREAM_DELAY = 0 // ms, for testing purposes
 
 const concerns = [
   Controller,
@@ -11,7 +8,6 @@ const concerns = [
   Combobox.Announcements,
   Combobox.AsyncLoading,
   Combobox.Autocomplete,
-  Combobox.Callbacks,
   Combobox.Dialog,
   Combobox.Events,
   Combobox.Filtering,
@@ -32,7 +28,6 @@ export default class HwComboboxController extends Concerns(...concerns) {
     "announcer",
     "combobox",
     "chipDismisser",
-    "closer",
     "dialog", "dialogCombobox", "dialogFocusTrap", "dialogListbox",
     "endOfOptionsStream",
     "handle",
@@ -50,6 +45,7 @@ export default class HwComboboxController extends Concerns(...concerns) {
     filterableAttribute: String,
     nameWhenNew: String,
     originalName: String,
+    prefilledChips: Array,
     prefilledDisplay: String,
     selectionChipSrc: String,
     smallViewportMaxWidth: String
@@ -58,7 +54,6 @@ export default class HwComboboxController extends Concerns(...concerns) {
   initialize() {
     this._initializeActors()
     this._initializeFiltering()
-    this._initializeCallbacks()
   }
 
   connect() {
@@ -68,12 +63,15 @@ export default class HwComboboxController extends Concerns(...concerns) {
   idempotentConnect() {
     this._connectSelection()
     this._connectMultiselect()
+    this._connectRequired()
     this._connectListAutocomplete()
     this._connectDialog()
   }
 
   disconnect() {
     this._disconnectDialog()
+    this._abortSupersededFilter()
+    this._dispatchSettledEvent()
   }
 
   expandedValueChanged() {
@@ -84,44 +82,32 @@ export default class HwComboboxController extends Concerns(...concerns) {
     }
   }
 
-  async endOfOptionsStreamTargetConnected(element) {
-    if (element.dataset.callbackId) {
-      this._runCallback(element)
+  endOfOptionsStreamTargetConnected(element) {
+    const inputType = this._claimUnhandledInputType(element)
+
+    this._resetMultiselectionMarks()
+
+    if (inputType) {
+      this._selectOnQueryUnlessAlreadySelected(inputType)
+      this._dispatchSettledEvent()
     } else {
       this._preselectSingle()
     }
   }
 
-  async _runCallback(element) {
-    const callbackId = element.dataset.callbackId
+  // Set by the server on every filter response. A closing dialog moves this element,
+  // which reconnects it, so the input type is spent to keep that move from replaying.
+  _claimUnhandledInputType(element) {
+    const inputType = element.dataset.inputType
+    delete element.dataset.inputType
 
-    if (this._callbackAttemptsExceeded(callbackId)) {
-      return this._dequeueCallback(callbackId)
-    } else {
-      this._recordCallbackAttempt(callbackId)
-    }
-
-    if (this._isNextCallback(callbackId)) {
-      const inputType = element.dataset.inputType
-      const delay = window.HOTWIRE_COMBOBOX_STREAM_DELAY
-
-      if (delay) await sleep(delay)
-      this._dequeueCallback(callbackId)
-      this._resetMultiselectionMarks()
-
-      if (inputType === "hw:multiselectSync") {
-        this.open()
-      } else if (inputType !== "hw:lockInSelection") {
-        this._selectOnQuery(inputType)
-      }
-    } else {
-      await nextRepaint()
-      this._runCallback(element)
-    }
+    return inputType
   }
 
-  closerTargetConnected() {
-    this.close("hw:asyncCloser")
+  _selectOnQueryUnlessAlreadySelected(inputType) {
+    if (inputType === "hw:lockInSelection" || inputType === "hw:multiselectSync") return
+
+    this._selectOnQuery(inputType)
   }
 
   // Use +_printStack+ for debugging purposes

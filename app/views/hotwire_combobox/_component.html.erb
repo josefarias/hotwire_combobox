@@ -5,6 +5,12 @@
 
   <%= hidden_field_tag hidden_field_attrs.delete(:name), hidden_field_attrs.delete(:value), **hidden_field_attrs %>
 
+  <% if component.chip_template_render_options %>
+    <%= tag.template data: { hw_combobox_chip_template: "" } do %>
+      <%= render(**component.chip_template_render_options) %>
+    <% end %>
+  <% end %>
+
   <%= tag.div **component.main_wrapper_attrs do %>
     <%= tag.style nonce: content_security_policy_nonce do %>
       <%# Essential styles defined here, removing these would break the combobox %>

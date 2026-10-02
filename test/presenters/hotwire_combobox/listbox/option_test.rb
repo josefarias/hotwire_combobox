@@ -37,6 +37,19 @@ class HotwireCombobox::Listbox::OptionTest < ApplicationViewTestCase
     assert_attrs render(option), tag_name: :li, "data-autocompletable-as": "bar"
   end
 
+  test "chip_data renders as data-chip-* attributes on the option" do
+    option = { chip_data: { display: "Alabama", abbreviation: "AL", name_slug: "alabama" } }
+    html = render(option)
+
+    assert_attrs html, tag_name: :li, "data-chip-display": "Alabama"
+    assert_attrs html, tag_name: :li, "data-chip-abbreviation": "AL"
+    assert_attrs html, tag_name: :li, "data-chip-name-slug": "alabama"
+  end
+
+  test "no data-chip-* attributes appear when chip_data is absent" do
+    assert_no_match "data-chip-", render(display: "Alabama")
+  end
+
   private
     def render(option)
       view.render HotwireCombobox::Listbox::Option.new(option)

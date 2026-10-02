@@ -1,0 +1,51 @@
+<%= tag.style nonce: content_security_policy_nonce do %>
+  .custom-chip {
+    align-items: center;
+    border: var(--hw-border-width--slim) solid var(--hw-border-color);
+    border-radius: 9999px;
+    display: flex;
+    font-size: var(--hw-selection-chip-font-size);
+    line-height: var(--hw-line-height);
+    padding: 0 1rem;
+  }
+
+  .state {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 100%;
+    margin-right: 0.5rem;
+    position: relative;
+  }
+
+  .state::before {
+    content: '';
+    position: absolute;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(<%= asset_path('us.png') %>);
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 100%;
+  }
+
+  .state--alabama::before { background-image: url(<%= asset_path('alabama.png') %>); }
+  .state--california::before { background-image: url(<%= asset_path('us.png') %>); }
+<% end %>
+
+<% prefilled = State.where(name: %w[ Alabama California ]).order(:name) %>
+
+<%= combobox_tag "state", states_path,
+      id: "states-field",
+      label: "States",
+      chip_template: { partial: "state_chips/chip" },
+      chip_attributes: {
+        display: :name,
+        abbreviation: :abbreviation,
+        name_slug: ->(state) { state.name.downcase.parameterize }
+      },
+      prefilled_chips: prefilled,
+      value: prefilled.pluck(:id).join(","),
+      placeholder: "Select states" %>

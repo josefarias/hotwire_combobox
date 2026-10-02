@@ -5,6 +5,7 @@ Combobox.Selection = Base => class extends Base {
   selectOnClick({ currentTarget, inputType }) {
     this._forceSelectionAndFilter(currentTarget, inputType)
     this.close("hw:optionRoleClick")
+    this._actingCombobox.focus()
   }
 
   _connectSelection() {
@@ -44,6 +45,7 @@ Combobox.Selection = Base => class extends Base {
     autocompleteStrategy(option)
 
     this._fieldValue = option.dataset.value
+    this._committedDisplay = option.getAttribute(this.autocompletableAttributeValue)
     this._markSelected(option)
     this._markValid()
     this._dispatchPreselectionEvent({ isNewAndAllowed: false, previousValue: previousValue })
@@ -55,6 +57,7 @@ Combobox.Selection = Base => class extends Base {
     const previousValue = this._fieldValueString
 
     this._resetOptionsSilently()
+    this._committedDisplay = null
     this._fieldValue = this._fullQuery
     this._fieldName = this.nameWhenNewValue
     this._markValid()
@@ -68,6 +71,7 @@ Combobox.Selection = Base => class extends Base {
       this._markNotSelected(this._selectedOptionElement)
     }
 
+    this._committedDisplay = null
     this._fieldValue = ""
     this._setActiveDescendant("")
 
@@ -93,7 +97,7 @@ Combobox.Selection = Base => class extends Base {
 
   _preselectMultiple() {
     if (this._isMultiselect && this._hasValueButNoSelection) {
-      this._requestChips(this._fieldValueString)
+      this._buildChips(this._fieldValueString)
       this._resetMultiselectionMarks()
     }
   }
@@ -134,12 +138,12 @@ Combobox.Selection = Base => class extends Base {
   }
 
   get _hasValueButNoSelection() {
-    return this._hasFieldValue && !this._hasSelection
+    return this._hasCurrentSelection && !this._hasSelection
   }
 
   get _hasSelection() {
     if (this._isSingleSelect) {
-      return this._selectedOptionElement
+      return !!this._selectedOptionElement
     } else {
       return this._multiselectedOptionElements.length > 0
     }
@@ -150,6 +154,6 @@ Combobox.Selection = Base => class extends Base {
   }
 
   get _ensurableOption() {
-    return this._selectedOptionElement || this._optionElementWithValue(this._fieldValue) || this._visibleOptionElements[0]
+    return this._selectedOptionElement || this._visibleOptionElements[0]
   }
 }

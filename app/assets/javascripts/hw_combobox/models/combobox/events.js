@@ -11,10 +11,14 @@ Combobox.Events = Base => class extends Base {
     })
   }
 
-  _dispatchSelectionEvent() {
+  _dispatchSelectionEvent(previousValue) {
+    if (previousValue === this._incomingFieldValueString) return
+
+    this._lastSelectedValue = this._incomingFieldValueString
+
     dispatch("hw-combobox:selection", {
       target: this.element,
-      detail: this._eventableDetails
+      detail: { ...this._eventableDetails, previousValue }
     })
   }
 
@@ -32,6 +36,30 @@ Combobox.Events = Base => class extends Base {
     })
   }
 
+  _dispatchPendingEvent() {
+    if (this._isPending) return
+
+    this._isPending = true
+    this._forAllComboboxes(el => el.toggleAttribute("data-pending", true))
+
+    dispatch("hw-combobox:pending", {
+      target: this.element,
+      detail: this._eventableDetails
+    })
+  }
+
+  _dispatchSettledEvent() {
+    if (!this._isPending) return
+
+    this._isPending = false
+    this._forAllComboboxes(el => el.toggleAttribute("data-pending", false))
+
+    dispatch("hw-combobox:settled", {
+      target: this.element,
+      detail: this._eventableDetails
+    })
+  }
+
   get _eventableDetails() {
     return {
       value: this._incomingFieldValueString,
@@ -39,7 +67,20 @@ Combobox.Events = Base => class extends Base {
       query: this._typedQuery,
       fieldName: this._fieldName,
       originalName: this.originalNameValue,
-      isValid: this._valueIsValid
+      isNewAndAllowed: this._isNewOptionWithPotentialMatches,
+      isValid: this._valueIsValid,
+      chipData: this._currentChipData
     }
+  }
+
+  get _currentChipData() {
+    const value = this._currentSelectionValue
+    if (!value) return null
+
+    const option = this._optionElementWithValue(value)
+    if (!option) return null
+
+    const extras = this._chipExtrasFromOptionElement(option)
+    return Object.keys(extras).length > 0 ? extras : null
   }
 }

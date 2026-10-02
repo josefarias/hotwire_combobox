@@ -51,10 +51,6 @@ export function isDeleteEvent(event) {
   return event.inputType === "deleteContentBackward" || event.inputType === "deleteWordBackward"
 }
 
-export function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 export function unselectedPortion(element) {
   if (element.selectionStart === element.selectionEnd) {
     return element.value
@@ -78,29 +74,4 @@ export function dispatch(eventName, { target, cancelable, detail } = {}) {
   }
 
   return event
-}
-
-export function nextRepaint() {
-  if (document.visibilityState === "hidden") {
-    return nextEventLoopTick()
-  } else {
-    return nextAnimationFrame()
-  }
-}
-
-export function nextAnimationFrame() {
-  return new Promise((resolve) => requestAnimationFrame(() => resolve()))
-}
-
-export function nextEventLoopTick() {
-  return new Promise((resolve) => setTimeout(() => resolve(), 0))
-}
-
-export function randomUUID() {
-  const uuidPattern = "10000000-1000-4000-8000-100000000000"
-
-  return uuidPattern.replace(/[018]/g, (match) => {
-    const randomByte = crypto.getRandomValues(new Uint8Array(1))[0]
-    return (match ^ (randomByte & 15) >> (match / 4)).toString(16)
-  })
 }

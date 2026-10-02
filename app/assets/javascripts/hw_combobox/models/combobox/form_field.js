@@ -42,16 +42,25 @@ Combobox.FormField = Base => class extends Base {
     }
   }
 
+  get _currentSelectionValue() {
+    if (this._isMultiselect) {
+      return this.hiddenFieldTarget.dataset.valueForMultiselect || ""
+    } else {
+      return this.hiddenFieldTarget.value
+    }
+  }
+
   set _fieldValue(value) {
     if (this._isMultiselect) {
       this.hiddenFieldTarget.dataset.valueForMultiselect = value?.replace(/,/g, "")
       this.hiddenFieldTarget.dataset.displayForMultiselect = this._fullQuery
     } else {
       this.hiddenFieldTarget.value = value
+      this._syncRequired()
     }
   }
 
-  get _hasEmptyFieldValue() {
+  get _hasEmptyCurrentSelection() {
     if (this._isMultiselect) {
       return this.hiddenFieldTarget.dataset.valueForMultiselect == "" || this.hiddenFieldTarget.dataset.valueForMultiselect == "undefined"
     } else {
@@ -59,8 +68,12 @@ Combobox.FormField = Base => class extends Base {
     }
   }
 
-  get _hasFieldValue() {
-    return !this._hasEmptyFieldValue
+  get _hasCurrentSelection() {
+    return !this._hasEmptyCurrentSelection
+  }
+
+  get _hasBlankValue() {
+    return this.hiddenFieldTarget.value === ""
   }
 
   get _fieldName() {

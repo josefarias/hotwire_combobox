@@ -25,6 +25,7 @@ module HotwireCombobox::Component::Markup::Fieldset
         hw_combobox_small_viewport_max_width_value: mobile_at,
         hw_combobox_async_src_value: async_src,
         hw_combobox_prefilled_display_value: prefilled_display,
+        hw_combobox_prefilled_chips_value: prefilled_chips_json,
         hw_combobox_selection_chip_src_value: multiselect_chip_src,
         hw_combobox_debounce_interval_value: debounce_interval,
         hw_combobox_filterable_attribute_value: "data-filterable-as",
@@ -43,5 +44,9 @@ module HotwireCombobox::Component::Markup::Fieldset
       else
         options.find_by_value(hidden_field_value)&.autocompletable_as || hidden_field_value
       end
+    end
+
+    def prefilled_chips_json
+      prefilled_chips.to_json if prefilled_chips.present?
     end
 end

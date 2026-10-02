@@ -1,0 +1,6 @@
+<div class="custom-chip">
+  <span class="state state--{{name_slug}}"></span>
+  <p>{{display}}</p>
+  <small data-abbr="{{abbreviation}}" hidden>{{abbreviation}}</small>
+  <%= tag.span **combobox_chip_remover_attrs(display: "{{display}}", value: "{{value}}", class: "custom-remover") %>
+</div>

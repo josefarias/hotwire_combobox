@@ -42,7 +42,8 @@ Combobox.Autocomplete = Base => class extends Base {
   }
 
   get _isExactAutocompleteMatch() {
-    return this._immediatelyAutocompletableValue === this._fullQuery
+    return this._immediatelyAutocompletableValue === this._fullQuery ||
+      this._committedDisplay === this._fullQuery
   }
 
   // All `_isExactAutocompleteMatch` matches are `_isPartialAutocompleteMatch` matches

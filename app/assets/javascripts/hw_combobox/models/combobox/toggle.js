@@ -8,22 +8,14 @@ Combobox.Toggle = Base => class extends Base {
 
   close(inputType) {
     if (this._isOpen) {
-      const shouldReopen = this._isMultiselect &&
-        this._isSync &&
-        !this._isSmallViewport &&
-        inputType != "hw:clickOutside" &&
-        inputType != "hw:focusOutside" &&
-        inputType != "hw:asyncCloser"
-
       this._lockInSelection()
       this._clearInvalidQuery()
 
       this.expandedValue = false
 
-      if (inputType != "hw:keyHandler:escape") {
-        this._dispatchSelectionEvent()
-        this._createChip(shouldReopen)
-      }
+      this._dispatchSelectionEvent(this._lastSelectedValue)
+
+      if (inputType != "hw:keyHandler:escape") this._createChip()
 
       if (this._isSingleSelect && this._selectedOptionElement) {
         this._announceToScreenReader(this._displayForOptionElement(this._selectedOptionElement), "selected")
@@ -83,6 +75,8 @@ Combobox.Toggle = Base => class extends Base {
   }
 
   _expand() {
+    this._lastSelectedValue = this._incomingFieldValueString
+
     if (this._isSync) {
       this._preselectSingle()
     }
@@ -94,6 +88,7 @@ Combobox.Toggle = Base => class extends Base {
     }
 
     this._actingCombobox.setAttribute("aria-expanded", true) // needs to happen after setting acting combobox
+    this._actingCombobox.focus()
   }
 
   // +._collapse()+ differs from `.close()` in that it might be called by stimulus on connect because
@@ -142,7 +137,7 @@ Combobox.Toggle = Base => class extends Base {
   _clearInvalidQuery() {
     if (this._isUnjustifiablyBlank) {
       this._deselect()
-      this._clearQuery()
+      this._resetQuery()
     }
   }
 

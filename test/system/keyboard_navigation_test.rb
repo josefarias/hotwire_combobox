@@ -140,4 +140,22 @@ class KeyboardNavigationTest < ApplicationSystemTestCase
     assert_combobox_display_and_value "#state-field", "Michigan", "MI"
     assert_selected_option_with text: "Michigan"
   end
+
+  test "a keydown without a key leaves a closed listbox alone" do
+    visit html_options_path
+
+    open_combobox "#state-field"
+    type_in_combobox "#state-field", :escape
+    assert_closed_combobox
+
+    errors = recording_stimulus_errors do
+      type_unidentifiable_key_in_combobox "#state-field"
+    end
+
+    assert_empty errors
+    assert_closed_combobox
+
+    send_keys "m"
+    assert_open_combobox
+  end
 end

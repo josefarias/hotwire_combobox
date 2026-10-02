@@ -30,4 +30,17 @@
     <%= combobox_tag :movie, movies_path, id: "allow-new", placeholder: "allow-new", name_when_new: :new_movie, data: { action: "hw-combobox:preselection->combobox--events#showPreselection hw-combobox:selection->combobox--events#showSelection" } %>
     <%= combobox_tag :movie, movies_path, id: "required", placeholder: "required", required: true, data: { action: "hw-combobox:preselection->combobox--events#showPreselection hw-combobox:selection->combobox--events#showSelection" } %>
   </div>
+
+  <div class="event-group">
+    <%= combobox_tag :state, State.all,
+          id: "client-multiselect",
+          placeholder: "client-multiselect",
+          chip_template: { partial: "state_chips/chip" },
+          chip_attributes: {
+            display: :name,
+            abbreviation: :abbreviation,
+            name_slug: ->(state) { state.name.downcase.parameterize }
+          },
+          data: { action: "hw-combobox:preselection->combobox--events#showPreselection hw-combobox:selection->combobox--events#showSelection" } %>
+  </div>
 </div>

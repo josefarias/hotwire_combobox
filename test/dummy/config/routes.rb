@@ -21,10 +21,14 @@ Rails.application.routes.draw do
   get "morph", to: "comboboxes#morph"
   get "multiselect", to: "comboboxes#multiselect"
   get "multiselect_async_html", to: "comboboxes#multiselect_async_html"
+  get "multiselect_client", to: "comboboxes#multiselect_client"
+  get "multiselect_client_async_prefilled", to: "comboboxes#multiselect_client_async_prefilled"
+  get "multiselect_client_new_values", to: "comboboxes#multiselect_client_new_values"
+  get "multiselect_client_prefilled", to: "comboboxes#multiselect_client_prefilled"
   get "multiselect_custom_events", to: "comboboxes#multiselect_custom_events"
-  get "multiselect_dismissing", to: "comboboxes#multiselect_dismissing"
   get "multiselect_new_values", to: "comboboxes#multiselect_new_values"
   get "multiselect_prefilled_form", to: "comboboxes#multiselect_prefilled_form"
+  get "multiselect_required", to: "comboboxes#multiselect_required"
   get "new_options", to: "comboboxes#new_options"
   get "open", to: "comboboxes#open"
   get "padded", to: "comboboxes#padded"
@@ -34,9 +38,12 @@ Rails.application.routes.draw do
   get "prefilled_form", to: "comboboxes#prefilled_form"
   get "prefilled_free_text", to: "comboboxes#prefilled_free_text"
   get "prefilled_html", to: "comboboxes#prefilled_html"
+  get "rescoped_async", to: "comboboxes#rescoped_async"
   get "render_in", to: "comboboxes#render_in"
   get "render_in_locals", to: "comboboxes#render_in_locals"
   get "required", to: "comboboxes#required"
+  get "single_select_required", to: "comboboxes#single_select_required"
+  get "slow_async", to: "comboboxes#slow_async"
   get "restoration", to: "comboboxes#restoration"
   get "turbo_streamed_block", to: "comboboxes#turbo_streamed_block"
 
@@ -54,7 +61,6 @@ Rails.application.routes.draw do
   resources :states, only: :index
   resources :state_chips, only: :create, param: :combobox_value
   post "html_state_chips", to: "state_chips#create_html"
-  post "dismissing_state_chips", to: "state_chips#create_dismissing"
   post "possibly_new_state_chips", to: "state_chips#create_possibly_new"
 
   resources :users, only: :update do

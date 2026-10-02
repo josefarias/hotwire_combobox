@@ -26,7 +26,6 @@ module HotwireCombobox::Component::Markup::Input
         click@window->hw-combobox#closeOnClickOutside
         focusin@window->hw-combobox#closeOnFocusOutside
         turbo:before-stream-render@document->hw-combobox#rerouteListboxStreamToDialog
-        turbo:before-cache@document->hw-combobox#hideChipsForCache
         turbo:morph-element->hw-combobox#idempotentConnect
       ].append(data.delete(:action)).compact.join(" ")
 
