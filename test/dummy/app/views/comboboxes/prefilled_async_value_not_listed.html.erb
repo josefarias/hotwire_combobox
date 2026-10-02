@@ -1,0 +1,8 @@
+<%# The prefilled home state (Florida) is not among the options the src returns %>
+<%= form_with model: @user do |form| %>
+  <%= form.label "Home State (filtered src)", for: "filtered-home-state" %>
+  <%= form.combobox :home_state_id, states_path(q: "Mi"), id: "filtered-home-state" %>
+
+  <%= form.label "Home State (paginated src)", for: "paginated-home-state" %>
+  <%= form.combobox :home_state_id, states_path(page: 1), id: "paginated-home-state" %>
+<% end %>
