@@ -263,6 +263,10 @@ Combobox.Dialog = Base => class extends Base {
   get _dialogIsOpen() {
     return this.dialogTarget.open
   }
+
+  get _isActingInDialog() {
+    return this._actingCombobox === this.dialogComboboxTarget
+  }
 };
 
 Combobox.Events = Base => class extends Base {
@@ -1756,6 +1760,10 @@ Combobox.Toggle = Base => class extends Base {
     this.close("hw:focusOutside");
   }
 
+  closeOnDialogDismissal() {
+    this.close("hw:dialogDismissal");
+  }
+
   clearOrToggleOnHandleClick() {
     if (this.comboboxTarget.disabled) return
 
@@ -1804,7 +1812,9 @@ Combobox.Toggle = Base => class extends Base {
   _collapse() {
     this._actingCombobox.setAttribute("aria-expanded", false); // needs to happen before resetting acting combobox
 
-    if (this._dialogIsOpen) {
+    // A dialog dismissed from outside the combobox (e.g. a native back gesture) is
+    // already closed, but it still holds the query and the options.
+    if (this._dialogIsOpen || this._isActingInDialog) {
       this._closeInDialog();
     } else {
       this._closeInline();

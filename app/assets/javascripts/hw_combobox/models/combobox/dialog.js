@@ -57,4 +57,8 @@ Combobox.Dialog = Base => class extends Base {
   get _dialogIsOpen() {
     return this.dialogTarget.open
   }
+
+  get _isActingInDialog() {
+    return this._actingCombobox === this.dialogComboboxTarget
+  }
 }
