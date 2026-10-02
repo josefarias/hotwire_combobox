@@ -22,6 +22,25 @@ class DialogTest < ApplicationSystemTestCase
     end
   end
 
+  test "dialog dismissed from outside the combobox" do
+    on_small_screen do
+      visit async_html_path
+
+      open_combobox "#movie-field"
+      within "dialog" do
+        type_in_combobox "#movie-field-hw-dialog-combobox", "whi"
+        assert_selected_option_with text: "Whiplash"
+      end
+
+      page.execute_script "document.querySelector('dialog[open]').close()"
+      assert_closed_combobox
+      assert_combobox_display_and_value "#movie-field", "Whiplash", movies(:whiplash).id
+
+      open_combobox "#movie-field"
+      assert_selector "dialog[open]"
+    end
+  end
+
   test "no scrolling behind dialog" do
     # On mobile Safari — Manually test opening combobox, selecting, then re-opening.
 

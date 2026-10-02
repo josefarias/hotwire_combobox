@@ -6,7 +6,7 @@ module HotwireCombobox::Component::Markup::Dialog
   def dialog_attrs
     customize :dialog, base: {
       class: "hw-combobox__dialog", role: :dialog, data: {
-      action: "keydown->hw-combobox#navigate", hw_combobox_target: "dialog" } }
+      action: "keydown->hw-combobox#navigate close->hw-combobox#closeOnDialogDismissal", hw_combobox_target: "dialog" } }
   end
 
   def dialog_label
