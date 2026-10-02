@@ -1295,7 +1295,6 @@ Combobox.Selection = Base => class extends Base {
   _connectSelection() {
     if (this.hasPrefilledDisplayValue) {
       this._fullQuery = this.prefilledDisplayValue;
-      this._committedDisplay = this.prefilledDisplayValue;
       this._markQueried();
     }
   }
@@ -1428,15 +1427,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   get _shouldLockInSelection() {
-    return this._isQueried && !!this._ensurableOption && !this._isNewOptionWithPotentialMatches &&
-      !this._isUnlistedCommittedSelection
-  }
-
-  // The committed value isn't among the loaded options (the src filters it out, or it's on a page
-  // not loaded yet) and the query still names it: nothing to lock in, the value stands.
-  get _isUnlistedCommittedSelection() {
-    return this._isSingleSelect && !!this._fieldValueString && this._committedDisplay === this._fullQuery &&
-      !this._optionElementWithValue(this._fieldValue)
+    return this._isQueried && !!this._ensurableOption && !this._isNewOptionWithPotentialMatches
   }
 
   get _ensurableOption() {
