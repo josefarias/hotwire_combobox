@@ -1297,7 +1297,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _connectSelection() {
-    if (this.hasPrefilledDisplayValue) {
+    if (this.hasPrefilledDisplayValue && !this._isQueried) {
       this._fullQuery = this.prefilledDisplayValue;
       this._markQueried();
     }
