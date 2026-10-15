@@ -44,6 +44,7 @@ Rails.application.routes.draw do
   get "required", to: "comboboxes#required"
   get "single_select_required", to: "comboboxes#single_select_required"
   get "slow_async", to: "comboboxes#slow_async"
+  get "slow_async_long_debounce", to: "comboboxes#slow_async_long_debounce"
   get "restoration", to: "comboboxes#restoration"
   get "turbo_streamed_block", to: "comboboxes#turbo_streamed_block"
 
