@@ -35,6 +35,7 @@ Rails.application.routes.draw do
   get "plain", to: "comboboxes#plain"
   get "prefilled", to: "comboboxes#prefilled"
   get "prefilled_async", to: "comboboxes#prefilled_async"
+  get "prefilled_async_value_not_listed", to: "comboboxes#prefilled_async_value_not_listed"
   get "prefilled_form", to: "comboboxes#prefilled_form"
   get "prefilled_free_text", to: "comboboxes#prefilled_free_text"
   get "prefilled_html", to: "comboboxes#prefilled_html"
