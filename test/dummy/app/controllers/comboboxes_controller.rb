@@ -50,6 +50,9 @@ class ComboboxesController < ApplicationController
   def slow_async
   end
 
+  def slow_async_long_debounce
+  end
+
   def rescoped_async
   end
 

@@ -669,6 +669,7 @@ Combobox.Filtering = Base => class extends Base {
 
   _filter(inputType) {
     if (this._isAsync) {
+      this._abortSupersededFilter();
       this._dispatchPendingEvent();
       this._debouncedFilterAsync(inputType);
     } else {
@@ -683,7 +684,6 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   async _filterAsync(inputType) {
-    this._abortSupersededFilter();
     this._filterAbortController = new AbortController();
 
     const query = {
@@ -722,7 +722,6 @@ Combobox.Filtering = Base => class extends Base {
 
   _resetQuery() {
     this._fullQuery = "";
-    this._abortSupersededFilter();
     this._resetOptionsAndNotify();
     this._filter("deleteContentBackward");
   }
