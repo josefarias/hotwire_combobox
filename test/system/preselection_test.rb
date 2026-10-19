@@ -22,6 +22,16 @@ class PreselectionTest < ApplicationSystemTestCase
     assert_option_with text: "Oregon"
   end
 
+  test "combobox with prefilled free text value that holds quotes" do
+    visit prefilled_free_text_path
+
+    assert_combobox_display_and_value "#quoted-state-field", %(Bob's "Oregon"), %(Bob's "Oregon")
+
+    open_combobox "#quoted-state-field"
+    assert_no_visible_selected_option
+    assert_option_with text: "Oregon"
+  end
+
   test "html combobox with prefilled value" do
     visit prefilled_html_path
 

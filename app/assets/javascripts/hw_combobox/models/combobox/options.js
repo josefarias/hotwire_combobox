@@ -16,7 +16,7 @@ Combobox.Options = Base => class extends Base {
   }
 
   _optionElementWithValue(value) {
-    return this._actingListbox.querySelector(`[${this.filterableAttributeValue}][data-value='${value}']`)
+    return this._actingListbox.querySelector(`[${this.filterableAttributeValue}][data-value='${CSS.escape(value)}']`)
   }
 
   _displayForOptionElement(element) {

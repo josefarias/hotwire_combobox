@@ -289,4 +289,26 @@ class MultiselectTest < ApplicationSystemTestCase
     assert_equal "Newplace", State.unscoped.last.name
     assert_equal %w[ Alabama Newplace ], User.first.visited_states.map(&:name)
   end
+
+  test "multiselect with new options that hold quotes" do
+    visit multiselect_new_values_path
+
+    open_combobox "#states-field"
+
+    click_on_option "Alabama"
+    assert_chip_with text: "Alabama"
+    type_in_combobox "#states-field", "Contriv'ed > Example", :enter
+    assert_chip_with text: "Contriv'ed > Example"
+
+    assert_combobox_display_and_value \
+      "#states-field",
+      [ "Alabama", "Contriv'ed > Example" ],
+      [ states(:alabama).id, "Contriv'ed > Example" ]
+
+    remove_chip "Contriv'ed > Example"
+    assert_combobox_display_and_value \
+      "#states-field",
+      %w[ Alabama ],
+      [ states(:alabama).id ]
+  end
 end
