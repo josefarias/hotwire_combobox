@@ -41,6 +41,31 @@ class DialogTest < ApplicationSystemTestCase
     end
   end
 
+  test "going back to a page from Turbo's cache reopens a dialog left open" do
+    on_small_screen do
+      visit plain_path
+
+      open_combobox "#state-field"
+      assert_selector "dialog:modal"
+
+      page.execute_script "Turbo.visit('#{prefilled_path}')"
+      assert_current_path prefilled_path
+      go_back
+
+      assert_current_path plain_path
+      assert_selector "dialog:modal"
+
+      within "dialog" do
+        type_in_combobox "#state-field-hw-dialog-combobox", "mic"
+        assert_selected_option_with text: "Michigan"
+      end
+
+      click_away
+      assert_combobox_display_and_value "#state-field", "Michigan", "MI"
+      assert_no_selector "dialog[open]"
+    end
+  end
+
   test "no scrolling behind dialog" do
     # On mobile Safari — Manually test opening combobox, selecting, then re-opening.
 
