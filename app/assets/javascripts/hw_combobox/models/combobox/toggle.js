@@ -113,12 +113,8 @@ Combobox.Toggle = Base => class extends Base {
     this._moveArtifactsToDialog()
     this._preventFocusingComboboxAfterClosingDialog()
     this._preventBodyScroll()
-
-    // A page restored from Turbo's cache clones a dialog left open with its `open` attribute,
-    // but the clone isn't modal, and `showModal()` throws on a dialog that's open but not modal.
     this.dialogTarget.removeAttribute("open")
     this.dialogTarget.showModal()
-
     this._resizeDialog()
   }
 
