@@ -113,6 +113,7 @@ Combobox.Toggle = Base => class extends Base {
     this._moveArtifactsToDialog()
     this._preventFocusingComboboxAfterClosingDialog()
     this._preventBodyScroll()
+    this.dialogTarget.removeAttribute("open")
     this.dialogTarget.showModal()
     this._resizeDialog()
   }
