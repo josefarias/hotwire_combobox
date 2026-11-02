@@ -129,6 +129,33 @@ class HotwireCombobox::HelperTest < ApplicationViewTestCase
     assert_attrs tag, tag_name: "fieldset", "data-hw-combobox-name-when-new-value": "bar"
   end
 
+  test "value_when_new starts the combobox on a new value" do
+    tag = combobox_tag :movie, "some_path", name_when_new: :new_movie, value_when_new: "The Room"
+
+    assert_attrs tag, type: "hidden", name: "new_movie", value: "The Room"
+    assert_attrs tag, tag_name: "fieldset",
+      "data-hw-combobox-original-name-value": "movie", "data-hw-combobox-prefilled-display-value": "The Room"
+  end
+
+  test "value_when_new wins over the field's own value" do
+    form = ActionView::Helpers::FormBuilder.new :user, OpenStruct.new(state_id: 1), self, {}
+    tag = combobox_tag :state_id, [], form: form, name_when_new: "user[new_state]", value_when_new: "Newplace"
+
+    assert_attrs tag, type: "hidden", name: "user[new_state]", value: "Newplace"
+    assert_attrs tag, tag_name: "fieldset", "data-hw-combobox-original-name-value": "user[state_id]"
+  end
+
+  test "a blank value_when_new leaves the combobox on its own field" do
+    assert_attrs combobox_tag(:movie, "some_path", name_when_new: :new_movie, value_when_new: ""), type: "hidden", name: "movie"
+  end
+
+  test "value_when_new needs a name for new values, and a single-select combobox" do
+    assert_raises(ActiveModel::ValidationError) { combobox_tag :foo, value_when_new: "bar" }
+    assert_raises(ActiveModel::ValidationError) { combobox_tag :foo, multiselect_chip_src: "some_path", free_text: true, value_when_new: "bar" }
+
+    assert_nothing_raised { combobox_tag :foo, free_text: true, value_when_new: "bar" }
+  end
+
   test "hw_paginated_combobox_options includes existing params in the default next page src, but excludes transient params" do
     request.expects(:path).returns("/foo")
     request.expects(:query_parameters).returns({ bar: "baz", qux: "quux", page: "1000", input_type: "insertText" }.with_indifferent_access)
