@@ -1,5 +1,5 @@
 class ComboboxesController < ApplicationController
-  before_action :set_states, except: %i[ new_options grouped_options ]
+  before_action :set_states, except: %i[ new_options prefilled_new grouped_options ]
 
   def plain
   end
@@ -31,6 +31,9 @@ class ComboboxesController < ApplicationController
   end
 
   def new_options
+  end
+
+  def prefilled_new
   end
 
   def inline_autocomplete

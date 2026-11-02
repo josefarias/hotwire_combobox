@@ -20,7 +20,7 @@ module HotwireCombobox::Component::Markup::Fieldset
         controller: view.token_list("hw-combobox", data[:controller]),
         hw_combobox_expanded_value: open,
         hw_combobox_name_when_new_value: name_when_new,
-        hw_combobox_original_name_value: hidden_field_name,
+        hw_combobox_original_name_value: original_field_name,
         hw_combobox_autocomplete_value: autocomplete,
         hw_combobox_small_viewport_max_width_value: mobile_at,
         hw_combobox_async_src_value: async_src,
@@ -35,6 +35,7 @@ module HotwireCombobox::Component::Markup::Fieldset
     end
 
     def prefilled_display
+      return value_when_new if holds_new_value?
       return if multiselect? || !hidden_field_value
 
       if async_src && associated_object
