@@ -162,4 +162,20 @@ class SelectionTest < ApplicationSystemTestCase
       assert_selector ".hw-combobox__input[data-queried]"
     end
   end
+
+  test "going back to a page from Turbo's cache keeps the selection made before leaving it" do
+    visit prefilled_path
+    assert_combobox_display_and_value "#state-field", "Michigan", "MI"
+
+    open_combobox "#state-field"
+    click_on_option "Alabama"
+    assert_combobox_display_and_value "#state-field", "Alabama", "AL"
+
+    find(".comboboxes-nav a", exact_text: "plain").click
+    assert_current_path plain_path
+    go_back
+
+    assert_current_path prefilled_path
+    assert_combobox_display_and_value "#state-field", "Alabama", "AL"
+  end
 end

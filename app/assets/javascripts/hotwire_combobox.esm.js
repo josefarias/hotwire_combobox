@@ -263,6 +263,10 @@ Combobox.Dialog = Base => class extends Base {
   get _dialogIsOpen() {
     return this.dialogTarget.open
   }
+
+  get _isActingInDialog() {
+    return this._actingCombobox === this.dialogComboboxTarget
+  }
 };
 
 Combobox.Events = Base => class extends Base {
@@ -665,6 +669,7 @@ Combobox.Filtering = Base => class extends Base {
 
   _filter(inputType) {
     if (this._isAsync) {
+      this._abortSupersededFilter();
       this._dispatchPendingEvent();
       this._debouncedFilterAsync(inputType);
     } else {
@@ -679,7 +684,6 @@ Combobox.Filtering = Base => class extends Base {
   }
 
   async _filterAsync(inputType) {
-    this._abortSupersededFilter();
     this._filterAbortController = new AbortController();
 
     const query = {
@@ -718,7 +722,6 @@ Combobox.Filtering = Base => class extends Base {
 
   _resetQuery() {
     this._fullQuery = "";
-    this._abortSupersededFilter();
     this._resetOptionsAndNotify();
     this._filter("deleteContentBackward");
   }
@@ -1200,7 +1203,7 @@ Combobox.Options = Base => class extends Base {
   }
 
   _optionElementWithValue(value) {
-    return this._actingListbox.querySelector(`[${this.filterableAttributeValue}][data-value='${value}']`)
+    return this._actingListbox.querySelector(`[${this.filterableAttributeValue}][data-value='${CSS.escape(value)}']`)
   }
 
   _displayForOptionElement(element) {
@@ -1293,7 +1296,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _connectSelection() {
-    if (this.hasPrefilledDisplayValue) {
+    if (this.hasPrefilledDisplayValue && !this._isQueried) {
       this._fullQuery = this.prefilledDisplayValue;
       this._markQueried();
     }
@@ -1756,6 +1759,10 @@ Combobox.Toggle = Base => class extends Base {
     this.close("hw:focusOutside");
   }
 
+  closeOnDialogDismissal() {
+    this.close("hw:dialogDismissal");
+  }
+
   clearOrToggleOnHandleClick() {
     if (this.comboboxTarget.disabled) return
 
@@ -1804,7 +1811,9 @@ Combobox.Toggle = Base => class extends Base {
   _collapse() {
     this._actingCombobox.setAttribute("aria-expanded", false); // needs to happen before resetting acting combobox
 
-    if (this._dialogIsOpen) {
+    // A dialog dismissed from outside the combobox (e.g. a native back gesture) is
+    // already closed, but it still holds the query and the options.
+    if (this._dialogIsOpen || this._isActingInDialog) {
       this._closeInDialog();
     } else {
       this._closeInline();
@@ -1815,6 +1824,7 @@ Combobox.Toggle = Base => class extends Base {
     this._moveArtifactsToDialog();
     this._preventFocusingComboboxAfterClosingDialog();
     this._preventBodyScroll();
+    this.dialogTarget.removeAttribute("open");
     this.dialogTarget.showModal();
     this._resizeDialog();
   }

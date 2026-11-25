@@ -1,5 +1,5 @@
 class ComboboxesController < ApplicationController
-  before_action :set_states, except: %i[ new_options grouped_options ]
+  before_action :set_states, except: %i[ new_options prefilled_new grouped_options ]
 
   def plain
   end
@@ -33,6 +33,9 @@ class ComboboxesController < ApplicationController
   def new_options
   end
 
+  def prefilled_new
+  end
+
   def inline_autocomplete
   end
 
@@ -48,6 +51,9 @@ class ComboboxesController < ApplicationController
   SLOW_ASYNC_LATENCY = 0.5
 
   def slow_async
+  end
+
+  def slow_async_long_debounce
   end
 
   def rescoped_async

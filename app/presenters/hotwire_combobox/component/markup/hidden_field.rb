@@ -11,10 +11,15 @@ module HotwireCombobox::Component::Markup::HiddenField
     end
 
     def hidden_field_name
+      holds_new_value? ? name_when_new.to_s : original_field_name
+    end
+
+    def original_field_name
       form&.field_name(name) || name
     end
 
     def hidden_field_value
+      return value_when_new if holds_new_value?
       return value if value
 
       if form_object&.try(:defined_enums)&.try(:[], name)

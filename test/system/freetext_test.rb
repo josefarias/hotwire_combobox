@@ -67,6 +67,38 @@ class FreetextTest < ApplicationSystemTestCase
     assert_nil new_user.home_state
   end
 
+  test "a combobox can start on a new value" do
+    assert_difference -> { State.count }, +1 do
+      visit prefilled_new_path
+
+      assert_combobox_display_and_value "#allow-new", "Newplace", "Newplace"
+      assert_proper_combobox_name_choice \
+        original: "user[favorite_state_id]",
+        new: "user[favorite_state_attributes][name]",
+        proper: :new
+
+      find("input[type=submit]").click
+      assert_text "User created"
+    end
+
+    assert_equal "Newplace", User.last.favorite_state.name
+  end
+
+  test "a combobox that starts on a new value goes back to its own field for an existing option" do
+    visit prefilled_new_path
+
+    open_combobox "#allow-new"
+    delete_from_combobox "#allow-new", "Newplace", original: "Newplace"
+    type_in_combobox "#allow-new", "Alabama"
+    click_on_option "Alabama"
+
+    assert_combobox_display_and_value "#allow-new", "Alabama", states(:alabama).id
+    assert_proper_combobox_name_choice \
+      original: "user[favorite_state_id]",
+      new: "user[favorite_state_attributes][name]",
+      proper: :original
+  end
+
   test "going back and forth between new and existing options" do
     visit new_options_path
 

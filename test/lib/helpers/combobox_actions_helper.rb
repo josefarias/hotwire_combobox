@@ -42,7 +42,7 @@ module ComboboxActionsHelper
   end
 
   def remove_chip(text)
-    find("[aria-label='Remove #{text}']").click
+    find(:element, "aria-label": "Remove #{text}").click
   end
 
   def on_small_screen

@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   get "prefilled", to: "comboboxes#prefilled"
   get "prefilled_async", to: "comboboxes#prefilled_async"
   get "prefilled_async_value_not_listed", to: "comboboxes#prefilled_async_value_not_listed"
+  get "prefilled_new", to: "comboboxes#prefilled_new"
   get "prefilled_form", to: "comboboxes#prefilled_form"
   get "prefilled_free_text", to: "comboboxes#prefilled_free_text"
   get "prefilled_html", to: "comboboxes#prefilled_html"
@@ -45,6 +46,7 @@ Rails.application.routes.draw do
   get "required", to: "comboboxes#required"
   get "single_select_required", to: "comboboxes#single_select_required"
   get "slow_async", to: "comboboxes#slow_async"
+  get "slow_async_long_debounce", to: "comboboxes#slow_async_long_debounce"
   get "restoration", to: "comboboxes#restoration"
   get "turbo_streamed_block", to: "comboboxes#turbo_streamed_block"
 
