@@ -1263,6 +1263,7 @@ Combobox.Restoration = Base => class extends Base {
     this.hiddenFieldTarget.value = value || "";
     this._fullQuery = display || "";
     this._markQueried();
+    this._commitHeldSelection();
     this._preselectSingle();
     this._syncRequired();
     this._markValid();
@@ -1300,6 +1301,13 @@ Combobox.Selection = Base => class extends Base {
       this._fullQuery = this.prefilledDisplayValue;
       this._markQueried();
     }
+
+    this._commitHeldSelection();
+  }
+
+  _commitHeldSelection() {
+    const holdsExistingOption = this._isSingleSelect && this._hasCurrentSelection && !this._holdsNewValue;
+    this._committedDisplay = holdsExistingOption ? this._fullQuery : null;
   }
 
   _selectOnQuery(inputType) {
@@ -1434,7 +1442,21 @@ Combobox.Selection = Base => class extends Base {
   }
 
   get _ensurableOption() {
+    if (this._hasUnlistedCommittedSelection) return null
+
     return this._selectedOptionElement || this._visibleOptionElements[0]
+  }
+
+  get _hasUnlistedCommittedSelection() {
+    return !this._selectedOptionElement && this._queryNamesCommittedSelection
+  }
+
+  get _queryNamesCommittedSelection() {
+    return !!this._committedDisplay && this._committedDisplay === this._fullQuery
+  }
+
+  get _holdsNewValue() {
+    return !!this.nameWhenNewValue && this._fieldName === this.nameWhenNewValue
   }
 };
 

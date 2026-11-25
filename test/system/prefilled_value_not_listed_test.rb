@@ -9,6 +9,7 @@ class PrefilledValueNotListedTest < ApplicationSystemTestCase
     assert_combobox_display_and_value "#filtered-home-state", "Florida", states(:florida).id
 
     open_combobox "#filtered-home-state"
+    assert_option_with text: "Michigan"
     click_away
 
     assert_combobox_display_and_value "#filtered-home-state", "Florida", states(:florida).id
@@ -20,6 +21,7 @@ class PrefilledValueNotListedTest < ApplicationSystemTestCase
     assert_combobox_display_and_value "#paginated-home-state", "Florida", states(:florida).id
 
     open_combobox "#paginated-home-state"
+    assert_option_with text: "Alabama"
     click_away
 
     assert_combobox_display_and_value "#paginated-home-state", "Florida", states(:florida).id

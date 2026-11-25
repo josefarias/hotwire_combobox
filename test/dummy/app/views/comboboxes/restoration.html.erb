@@ -28,6 +28,14 @@
           restoration_snapshot: { fieldName: "async_movie", value: @movie.id, display: @movie.to_combobox_display }.to_json
         } %>
 
+  <%= combobox_tag "unlisted_state", states_path(q: "Mi"),
+        id: "single-async-unlisted",
+        label: "Single async (restored to a value the src doesn't list)",
+        data: {
+          action: event_actions,
+          restoration_snapshot: { fieldName: "unlisted_state", value: @unlisted_state.id, display: @unlisted_state.name }.to_json
+        } %>
+
   <%= combobox_tag "freetext_movie", movies_path(full_search: true),
         id: "freetext",
         label: "Freetext",

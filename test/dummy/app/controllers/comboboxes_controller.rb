@@ -25,6 +25,7 @@ class ComboboxesController < ApplicationController
   def restoration
     @movie = Movie.first || raise("No movie found, load fixtures first.")
     @restorable_states = State.where(name: %w[ Florida Illinois ]).order(:name)
+    @unlisted_state = State.find_by!(name: "Florida")
   end
 
   def formbuilder
