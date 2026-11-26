@@ -34,4 +34,8 @@ Combobox.NewOptions = Base => class extends Base {
   get _isNewOptionWithPotentialMatches() {
     return this._isQueried && this._allowNew && !this._isExactAutocompleteMatch
   }
+
+  get _holdsNewOption() {
+    return this._allowNew && this._fieldName === this.nameWhenNewValue
+  }
 }

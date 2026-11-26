@@ -18,7 +18,7 @@ Combobox.Selection = Base => class extends Base {
   }
 
   _commitHeldSelection() {
-    const holdsExistingOption = this._isSingleSelect && this._hasCurrentSelection && !this._holdsNewValue
+    const holdsExistingOption = this._isSingleSelect && this._hasCurrentSelection && !this._holdsNewOption
     this._committedDisplay = holdsExistingOption ? this._fullQuery : null
   }
 
@@ -172,9 +172,5 @@ Combobox.Selection = Base => class extends Base {
 
   get _queryNamesCommittedSelection() {
     return !!this._committedDisplay && this._committedDisplay === this._fullQuery
-  }
-
-  get _holdsNewValue() {
-    return !!this.nameWhenNewValue && this._fieldName === this.nameWhenNewValue
   }
 }
