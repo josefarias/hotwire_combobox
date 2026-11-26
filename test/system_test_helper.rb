@@ -1,6 +1,7 @@
 require "test_helper"
 require "capybara/rails"
 require "selenium/webdriver"
+require "lib/support/chrome_storage_reset"
 require "application_system_test_case"
 
 Capybara.default_max_wait_time = 10
