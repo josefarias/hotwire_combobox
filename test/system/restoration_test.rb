@@ -20,6 +20,18 @@ class RestorationTest < ApplicationSystemTestCase
     assert_combobox_display_and_value "#single-async", movie.to_combobox_display, movie.id
   end
 
+  test "keeps a restored async selection the src doesn't list" do
+    visit restoration_path
+
+    assert_combobox_display_and_value "#single-async-unlisted", "Florida", states(:florida).id
+
+    open_combobox "#single-async-unlisted"
+    assert_option_with text: "Michigan"
+    click_away
+
+    assert_combobox_display_and_value "#single-async-unlisted", "Florida", states(:florida).id
+  end
+
   test "restores a freetext new value" do
     visit restoration_path
 
@@ -64,7 +76,7 @@ class RestorationTest < ApplicationSystemTestCase
 
     # The restoration counter reaching the combobox count proves restores ran, so the
     # zeroed change-event counters mean restore stayed silent on the change channel.
-    assert_text "restorations: 6."
+    assert_text "restorations: 7."
     assert_text "preselections: 0."
     assert_text "selections: 0."
   end

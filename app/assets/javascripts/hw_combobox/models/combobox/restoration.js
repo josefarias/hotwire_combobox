@@ -17,6 +17,7 @@ Combobox.Restoration = Base => class extends Base {
     this.hiddenFieldTarget.value = value || ""
     this._fullQuery = display || ""
     this._markQueried()
+    this._commitHeldSelection()
     this._preselectSingle()
     this._syncRequired()
     this._markValid()
